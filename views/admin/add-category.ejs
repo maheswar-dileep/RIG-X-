@@ -1,0 +1,61 @@
+<div class="col-md-6 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Add Category</h4>
+            <form action="/admin/add-category" method="post">
+                <p id="err" class="text-danger"></p>
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" class="form-control form-control-lg" placeholder="category name"
+                        aria-label="Username" name="name" id="category">
+                </div>
+                <button type="button" onclick="validation()" class="btn btn-primary ml-3 mr-2 col-md-2">Submit</button>
+                <button class="btn btn-light">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function validation() {
+
+        const category = document.getElementById("category").value;
+        const err = document.getElementById("err");
+        let flag = 1
+
+        if (category == "") {
+            err.innerText = 'This field is required'
+            flag = 2
+        }
+
+
+        if (flag == 1) {
+            submit(category)
+        }
+    }
+
+    function submit(category) {
+        fetch('/admin/add-category', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: category
+            })
+
+        })
+
+            .then((Response) => Response.json())
+            .then((res) => {
+                if (res.value == 'success') {
+                    window.location.href = '/admin/category'
+                } else {
+                    document.getElementById("err").innerText = "Category already exists"
+                }
+            })
+
+    }
+
+</script>

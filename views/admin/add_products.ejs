@@ -22,12 +22,11 @@
 
 
                     <div class="form-group col-md-5">
-                        <label for="exampleSelectGender">Category</label>
-                        <select class="form-control" id="exampleSelectGender" name="category">
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Male</option>
-                            <option>Female</option>
+                        <label>Category</label>
+                        <select class="form-control " name="category">
+                            <% category.forEach((categoryn)=>{ %>
+                                <option class="text-dark"><%-categoryn.name%></option>
+                                <% }) %> 
                         </select>
                     </div>
 

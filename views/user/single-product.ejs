@@ -1,27 +1,6 @@
 <main class="main">
-    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-        <div class="container d-flex align-items-center">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Centered</li>
-            </ol>
 
-            <nav class="product-pager ml-auto" aria-label="Product">
-                <a class="product-pager-link product-pager-prev" href="#" aria-label="Previous" tabindex="-1">
-                    <i class="icon-angle-left"></i>
-                    <span>Prev</span>
-                </a>
-
-                <a class="product-pager-link product-pager-next" href="#" aria-label="Next" tabindex="-1">
-                    <span>Next</span>
-                    <i class="icon-angle-right"></i>
-                </a>
-            </nav><!-- End .pager-nav -->
-        </div><!-- End .container -->
-    </nav><!-- End .breadcrumb-nav -->
-
-    <div class="page-content">
+    <div class="page-content mt-5">
         <div class="container">
             <div class="product-details-top mb-2">
                 <div class="row">
@@ -29,7 +8,7 @@
                         <div class="product-gallery product-gallery-vertical">
                             <div class="row">
                                 <figure class="product-main-image">
-                                    <img id="product-zoom" src="images/products/single/centered/1.jpg" data-zoom-image="images/products/single/centered/1-big.jpg" alt="product image">
+                                    <img id="product-zoom" src="/product-images/<%-product._id%>.jpg" data-zoom-image="/product-images/<%-product._id%>.jpg" alt="product image">
 
                                     <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                                         <i class="icon-arrows"></i>
@@ -37,20 +16,20 @@
                                 </figure><!-- End .product-main-image -->
 
                                 <div id="product-zoom-gallery" class="product-image-gallery">
-                                    <a class="product-gallery-item active" href="#" data-image="images/products/single/centered/1.jpg" data-zoom-image="images/products/single/centered/1-big.jpg">
-                                        <img src="images/products/single/centered/1-small.jpg" alt="product side">
+                                    <a class="product-gallery-item active" href="#" data-image="/product-images/<%-product._id%>.jpg" data-zoom-image="/product-images/<%-product._id%>.jpg">
+                                        <img src="/product-images/<%-product._id%>.jpg" alt="product side">
                                     </a>
 
-                                    <a class="product-gallery-item" href="#" data-image="images/products/single/centered/2.jpg" data-zoom-image="images/products/single/centered/2-big.jpg">
-                                        <img src="images/products/single/centered/2-small.jpg" alt="product cross">
+                                    <a class="product-gallery-item" href="#" data-image="/product-images/<%-product._id%>.jpg" data-zoom-image="/product-images/<%-product._id%>.jpg">
+                                        <img src="/product-images/<%-product._id%>.jpg" alt="product cross">
                                     </a>
 
-                                    <a class="product-gallery-item" href="#" data-image="images/products/single/centered/3.jpg" data-zoom-image="images/products/single/centered/3-big.jpg">
-                                        <img src="images/products/single/centered/3-small.jpg" alt="product with model">
+                                    <a class="product-gallery-item" href="#" data-image="/product-images/<%-product._id%>.jpg" data-zoom-image="/product-images/<%-product._id%>.jpg    --">
+                                        <img src="/product-images/<%-product._id%>.jpg" alt="product with model">
                                     </a>
 
-                                    <a class="product-gallery-item" href="#" data-image="images/products/single/centered/4.jpg" data-zoom-image="images/products/single/centered/4-big.jpg">
-                                        <img src="images/products/single/centered/4-small.jpg" alt="product back">
+                                    <a class="product-gallery-item" href="#" data-image="/product-images/<%-product._id%>.jpg" data-zoom-image="/product-images/<%-product._id%>.jpg">
+                                        <img src="/product-images/<%-product._id%>.jpg" alt="product back">
                                     </a>
                                 </div><!-- End .product-image-gallery -->
                             </div><!-- End .row -->
@@ -59,7 +38,7 @@
 
                     <div class="col-md-6">
                         <div class="product-details product-details-centered">
-                            <h1 class="product-title">Beige metal hoop tote bag</h1><!-- End .product-title -->
+                            <h1 class="product-title"><%- product.name %> </h1><!-- End .product-title -->
 
                             <div class="ratings-container">
                                 <div class="ratings">
@@ -69,36 +48,12 @@
                             </div><!-- End .rating-container -->
 
                             <div class="product-price">
-                                $76.00
+                                ₹<%-product.price %> 
                             </div><!-- End .product-price -->
 
                             <div class="product-content">
-                                <p>Sed egestas, ante et vulputate volutpat, eros pede semper est, vitae luctus metus libero eu augue. Morbi purus libero.</p>
+                                <p><%- product.description%> </p>
                             </div><!-- End .product-content -->
-
-                            <div class="details-filter-row details-row-size">
-                                <label>Color:</label>
-
-                                <div class="product-nav product-nav-dots">
-                                    <a href="#" class="active" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
-                                    <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                                </div><!-- End .product-nav -->
-                            </div><!-- End .details-filter-row -->
-
-                            <div class="details-filter-row details-row-size">
-                                <label for="size">Size:</label>
-                                <div class="select-custom">
-                                    <select name="size" id="size" class="form-control">
-                                        <option value="#" selected="selected">One Size</option>
-                                        <option value="s">Small</option>
-                                        <option value="m">Medium</option>
-                                        <option value="l">Large</option>
-                                        <option value="xl">Extra Large</option>
-                                    </select>
-                                </div><!-- End .select-custom -->
-
-                                <a href="#" class="size-guide"><i class="icon-th-list"></i>size guide</a>
-                            </div><!-- End .details-filter-row -->
 
                             <div class="product-details-action">
                                 <div class="details-action-col">
@@ -117,9 +72,7 @@
                             <div class="product-details-footer">
                                 <div class="product-cat">
                                     <span>Category:</span>
-                                    <a href="#">Women</a>,
-                                    <a href="#">Dresses</a>,
-                                    <a href="#">Yellow</a>
+                                    <a href="#"><%- product.category %> </a>
                                 </div><!-- End .product-cat -->
 
                                 <div class="social-icons social-icons-sm">
@@ -154,11 +107,11 @@
                     <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
                         <div class="product-desc-content">
                             <h3>Product Information</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>
+                            <p><%- product.description %> </p>
                             <ul>
-                                <li>Nunc nec porttitor turpis. In eu risus enim. In vitae mollis elit. </li>
-                                <li>Vivamus finibus vel mauris ut vehicula.</li>
-                                <li>Nullam a magna porttitor, dictum risus nec, faucibus sapien.</li>
+                                <li>description </li>
+                                <li>description</li>
+                                <li>description</li>
                             </ul>
 
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis. Phasellus ultrices nulla quis nibh. Quisque a lectus. Donec consectetuer ligula vulputate sem tristique cursus. </p>

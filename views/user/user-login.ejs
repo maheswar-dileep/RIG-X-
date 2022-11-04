@@ -6,37 +6,35 @@
                 <div class="form-tab">
                     <ul class="nav nav-pills nav-fill" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="register-tab-2" data-toggle="tab"
-                                role="tab" aria-controls="register-2" aria-selected="true">Login</a>
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" role="tab"
+                                aria-controls="register-2" aria-selected="true">Login</a>
                         </li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                             aria-labelledby="register-tab-2">
-                            <form action="#">
+                            <form action="/login" method="post">
                                 <div class="form-group">
+                                    <p id="err"></p>
                                     <label for="register-email-2">Your email address *</label>
-                                    <input type="email" class="form-control" id="register-email-2" name="register-email"
-                                        required>
+                                    <input type="email" class="form-control" id="email" email" required>
                                 </div><!-- End .form-group -->
 
                                 <div class="form-group">
+                                    <p id="err"></p>
                                     <label for="register-password-2">Password *</label>
-                                    <input type="password" class="form-control" id="register-password-2"
-                                        name="register-password" required>
+                                    <input type="password" class="form-control" id="password" name="password" required>
                                 </div><!-- End .form-group -->
 
                                 <div class="form-footer">
-                                    <button type="submit" class="btn btn-outline-primary-2">
+                                    <button type="button" onclick="validation()" class="btn btn-outline-primary-2">
                                         <span>Login</span>
                                         <i class="icon-long-arrow-right"></i>
                                     </button>
 
                                     <div class="ml-2">
-                                        <input type="checkbox" class="custom-control-input" id="register-policy-2"
-                                            required>
-                                        <label class="custom-control-label" for="register-policy-2">Not Registered Yet ? <a
-                                                href="/signup"> Create An Account Now</a></label>
+                                        <label class="custom-control-label" for="register-policy-2">Not Registered Yet ?
+                                            <a href="/signup"> Create An Account Now</a></label>
                                     </div><!-- End .custom-checkbox -->
                                 </div><!-- End .form-footer -->
                             </form>
@@ -51,9 +49,9 @@
                                         </a>
                                     </div><!-- End .col-6 -->
                                     <div class="col-sm-6">
-                                        <a href="#" class="btn btn-login  btn-f">
-                                            <i class="icon-facebook-f"></i>
-                                            Login With Facebook
+                                        <a href="/otp" class="btn btn-login  btn-f">
+                                            <i class="icon-phone-f"></i>
+                                            Login With OTP
                                         </a>
                                     </div><!-- End .col-6 -->
                                 </div><!-- End .row -->
@@ -65,3 +63,78 @@
         </div><!-- End .container -->
     </div><!-- End .login-page section-bg -->
 </main><!-- End .main -->
+
+
+
+<script>
+
+
+    function validation() {
+
+
+        const email = document.getElementById("email")
+        const password = document.getElementById("password")
+
+
+        const emailValue = email.value?.trim()
+        const passwordValue = password.value?.trim()
+
+        const err1 = email.parentElement.querySelector("p")
+        err1.innerText = ""
+
+        const err2 = password.parentElement.querySelector("p")
+        err2.innerText = ""
+
+        let flag = 1
+
+        if (emailValue == "") {
+            err1.innerText = "This field is required"
+            let   flag = 2
+        } else if (!emailValue.match(/^[A-Za-z0-9_]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z.]{2,6}$/)) {
+            err1.innerText = "Please enter a valid email address"
+            let flag =2
+        }
+
+
+        if (passwordValue == "") {
+            err2.innerText = "This field is required"
+            let flag = 2
+        }
+
+        if (flag == 1) {
+            submit(emailValue, passwordValue)
+        }
+
+      function  submit(emailValue,passwordValue){
+
+        fetch('/login',{
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body:JSON.stringify({
+                email:emailValue,
+                password:passwordValue
+            })
+
+        })
+        .then((res)=>res.json())
+        .then((res)=>{
+
+            console.log(res);
+          
+            if (res.value == "success") {
+                window.location.href = "/"
+            } else {
+                
+            }
+
+
+        })
+
+        }
+
+    }
+
+
+</script>

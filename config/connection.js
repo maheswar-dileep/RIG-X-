@@ -32,7 +32,14 @@ const usersSchema = new mongoose.Schema({
     }
 })
 
+// categories 
+
+const categoriesSchema = new mongoose.Schema({
+    name: String
+})
+
 module.exports = {
     products: db.model('product', productschema),
-    users: db.model('users', usersSchema)
+    users: db.model('users', usersSchema),
+    categories: db.model('categories', categoriesSchema)
 }

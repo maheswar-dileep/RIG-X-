@@ -19,53 +19,44 @@
                             aria-labelledby="register-tab-2">
 
 
-                            <form action="#">
+                            <form action="/signup" method="post">
+                                <p id="existError" class="text-danger"></p>
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label for="register-first-name">First Name *</label>
-                                        <input type="email" class="form-control" id="register-email-2" name="firstName"
-                                            required>
+                                        <label for="register-first-name">Name *</label>
+                                        <p id="err" class="text-danger"></p>
+                                        <input type="text" class="form-control" id="name" name="name">
                                     </div><!-- End .form-group -->
 
                                     <div class="form-group col-md-6">
-                                        <label for="register-last-name">last Name *</label>
-                                        <input type="email" class="form-control" id="register-email-2" name="lastName"
-                                            required>
+                                        <label for="register-password-2">Mobile No *</label>
+                                        <p id="err" class="text-danger"></p>
+                                        <input type="tel" class="form-control" id="mobile" name="mobile">
                                     </div><!-- End .form-group -->
-
 
                                     <div class="form-group col-md-12">
                                         <label for="register-email-2">Email Address *</label>
-                                        <input type="email" class="form-control" id="register-email-2" name="email"
-                                            required>
-                                    </div><!-- End .form-group -->
-
-                                    <div class="form-group col-md-6">
-                                        <label for="register-password-2">Password *</label>
-                                        <input type="password" class="form-control" id="register-password-2"
-                                            name="register-password" required>
-                                    </div><!-- End .form-group -->
-
-                                    <div class="form-group col-md-6">
-                                        <label for="register-password-2">Password *</label>
-                                        <input type="password" class="form-control" id="register-password-2"
-                                            name="register-password" required>
+                                        <p id="err" class="text-danger"></p>
+                                        <input type="email" class="form-control" id="email" name="email">
                                     </div><!-- End .form-group -->
 
                                     <div class="form-group col-md-12">
-                                        <label for="register-password-2">Mobile No *</label>
-                                        <input type="tel" class="form-control" id="register-password-2"
-                                            name="mobile" required>
+                                        <label for="register-password-2">Password *</label>
+                                        <p id="err" class="text-danger"></p>
+                                        <input type="password" class="form-control" id="password" name="password">
                                     </div><!-- End .form-group -->
 
+
                                     <div class="form-footer ml-3 mt-2">
-                                        <button type="submit" class="btn btn-outline-primary-2 col-md-12">
+                                        <button type="button" onclick="validation()"
+                                            class="btn btn-outline-primary-2 col-md-12">
                                             <span>SIGN UP</span>
                                             <i class="icon-long-arrow-right"></i>
                                         </button>
 
                                         <div class="ml-5">
-                                            <label class=" ml-4 text-center" for="register-policy-2">Alredy Have An Account <a href="/login">Goto To Login</a> *</label>
+                                            <label class=" ml-4 text-center" for="register-policy-2">Alredy Have An
+                                                Account <a href="/login">Goto To Login</a> *</label>
                                         </div><!-- End .custom-checkbox -->
                                     </div><!-- End .form-footer -->
                                 </div>
@@ -90,3 +81,120 @@
         </div><!-- End .container -->
     </div><!-- End .login-page section-bg -->
 </main><!-- End .main -->
+
+
+
+<script>
+
+
+    function validation() {
+
+        const name = document.getElementById('name');
+        const email = document.getElementById('email');
+        const mobile = document.getElementById('mobile');
+        const password = document.getElementById('password');
+
+        const nameValue = name.value.trim();
+        const emailValue = email.value.trim();
+        const mobileValue = mobile.value.trim();
+        const passwordValue = password.value.trim();
+
+        let flag = 1
+
+
+
+        const err1 = name.parentElement.querySelector('p')
+        err1.innerText = ""
+
+        const err2 = email.parentElement.querySelector('p')
+        err2.innerText = ''
+
+        const err3 = mobile.parentElement.querySelector('p')
+        err3.innerText = ""
+
+        const err4 = password.parentElement.querySelector('p')
+        err4.innerText = ""
+
+
+
+
+        if (nameValue == "") {
+            err1.innerText = "This Field is Required"
+            flag = 2
+        } else if (nameValue <= 3) {
+            err1.innerText = "Please enter minimum 3 characters"
+            flag = 2
+        }
+
+
+        if (emailValue == "") {
+            err2.innerText = "This Field is Required"
+            flag = 2
+        } else if (!emailValue.match(/^[A-Za-z0-9_]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z.]{2,6}$/)) {
+            err2.innerText = "Please enter a valid email address"
+            flag = 2
+        }
+
+        if (mobileValue == "") {
+            err3.innerText = "This Field is Required"
+            flag = 2
+        } else if (!mobileValue.match(/^[0-9]{10}$/)) {
+
+            err3.innerHTML = "Please enter valid number"
+            flag = 2
+
+        }
+
+
+        if (passwordValue == "") {
+            err4.innerText = "This Field is Required"
+            flag = 2
+
+        } else if (passwordValue.length <= 4) {
+            err4.innerText = "Please Enter Minimum 4 Characters"
+            flag = 2
+
+        }
+
+
+        if (flag == 1) {
+            submit(nameValue, emailValue, passwordValue, mobileValue)
+        }
+
+    }
+
+
+    function submit(nameValue, emailValue, passwordValue, mobileValue) {
+        fetch('/signup', {
+            method: "POST",
+
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify({
+                name: nameValue,
+                email: emailValue,
+                mobile: mobileValue,
+                password: passwordValue
+            })
+
+        })
+
+            .then((res) => res.json())
+            .then((res) => {
+
+                if (res.value == "success") {
+                    window.location.href = '/'
+                } else {
+                    var existError = document.getElementById('existError')
+                    existError.innerText = res.value
+                }
+
+
+            })
+    }
+
+
+
+</script>
