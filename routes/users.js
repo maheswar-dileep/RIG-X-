@@ -1,126 +1,88 @@
 const express = require('express');
-const { request } = require('../app');
 const router = express.Router();
+const controllers = require('../controllers/userController')
 const productHelpers = require('../helpers/productHelpers')
 const userHelpers = require('../helpers/userHelpers');
 const OTP = require('../config/OTP');
 const client = require('twilio')(OTP.accountSID, OTP.authToken)
-const auth = require('../controllers/auth')
+const auth = require('../controllers/auth');
+const { verifyUser } = require('../controllers/auth');
+
+
 
 let nav = false
 let footer = true;
 
 
-
-
 /* GET home page. */
-router.get('/', auth.verifyUser, function (req, res, next) {
-  let user = req.user
-  res.render('index', { user, nav, footer: true });
-});
+router.get('/', auth.verifyUser, controllers.landingPage);
 
-router.get('/login', auth.mustLogout, (req, res) => {
-  res.render('user/user-login', { nav, footer: false })
-})
+/*------------------------login------------------------*/
 
-router.post('/login', auth.mustLogoutAPI, (req, res) => {
-  userHelpers.doLogin(req.body).then((data) => {
-    if (data.status) {
-      req.session.user = data.user._id
-      res.send({ value: "success" })
-    } else {
-      res.send({ value: "failed" })
-    }
-  })
-})
-3
+router.get('/login', auth.mustLogout, controllers.userLogin)
 
-router.get('/signup', auth.mustLogout, (req, res) => {
-  res.render('user/signup', { nav: true, footer: false })
-})
+router.post('/login', auth.mustLogoutAPI, controllers.userLoginPost)
 
-router.post('/signup', (req, res) => {
-  userHelpers.doSignup(req.body).then((data) => {
-    if (data.status) {
-      req.session.user = data.user._id
-      res.send({ value: "success" })
-    } else {
-      res.send({ value: "account already exists" })
-    }
-  })
-})
+/*------------------------signup------------------------*/
 
-router.get('/otp', auth.mustLogout, (req, res) => {
-  res.render('user/otp-login', { nav: true, footer: false })
-})
+router.get('/signup', auth.mustLogout, controllers.userSignup)
 
-router.get('/otp-login/:id', (req, res) => {
-  mobile = req.params.id?.trim();
+router.post('/signup', auth.mustLogout)
 
-  client
-    .verify
-    .services(OTP.serviceId)
-    .verifications
-    .create({
-      to: `+91${mobile}`,
-      channel: 'sms'
-    }).then((data) => {
-      res.status(200).res.send(data)
-    })
+/*------------------------OTP------------------------*/
 
-});
+router.get('/otp', auth.mustLogout, controllers.otpPage)
 
-router.get('/otp-verify', (req, res) => {
+router.get('/otp-login/:id', auth.mustLogout, controllers.otpLoginPost);
 
-  client
-    .verify
-    .services(OTP.serviceId)
-    .verificationChecks
-    .create({
-      to: `+${req.query.mobileNumber}`,
-      code: req.query.code
-    }).then((data) => {
-      if (data.valid) {
+router.get('/otp-verify', auth.mustLogout, controllers.otpVerify)
 
-        mobile = req.query.mobileNumber.slice(2);
-        console.log('mobile',mobile);
+router.get('/shop', auth.verifyUser, controllers.shopPage);
 
-        userHelpers.getUserDetailsNo(mobile).then(user => {
+router.get('/product/:id', auth.verifyUser, controllers.productPage)
 
-          console.log('id',user[0]._id);
-          console.log('3',user[0]);
-          console.log('4',user);
-          
-          req.session.user = user[0]._id;
-          res.send({ value: 'success' })
+router.get('/about-us', auth.verifyUser, controllers.aboutUsPage)
 
-        });
+router.get('/wishlist', auth.verifyUser, controllers.wishlistPage)
 
-        // res.status(200).send(data)
-      } else {
-        res.send({ value: 'failed' })
-      }
-    })
-})
+//account
+router.get('/account',auth.verifyUser,controllers.accountPage)
 
-router.get('/shop', auth.verifyUser, (req, res) => {
-  productHelpers.getAllProducts().then((products) => {
-    res.render('user/shop', { products, nav: true, footer: true })
-  })
-});
+//cart
 
-router.get('/product/:id', auth.verifyUser, (req, res) => {
-  let prodId = req.params.id
-  productHelpers.getProductDetails(prodId).then((product) => {
-    res.render('user/single-product', { product, nav: true, footer: true })
-  })
-})
+router.get('/cart', auth.verifyUser, controllers.cart)
 
-router.get('/about-us', auth.verifyUser, (req, res) => {
-  res.render('user/about-us', { nav: true, footer: true })
-})
+//add to cart 
 
-router.get('/wishlist', auth.verifyUser, (req, res) => {
-  res.render('user/wishlist', { nav: true, foooter: true })
-})
+router.get('/add-to-cart/:id', auth.verifyUser, controllers.addToCart)
+
+router.post('/change-product-quantity', auth.verifyUser, controllers.changeProductQuantity)
+
+router.post('/delete-cart-item',auth.verifyUser,controllers.deleteCartItem)
+
+//checkout
+
+router.get('/checkout',auth.verifyUser,controllers.checkout)
+
+//placeOrder
+
+router.post('/place-order',auth.verifyUser,controllers.placeOrder)
+
+//orders
+router.get('/orders',verifyUser,controllers.ordersPage)
+
+//cancelOrder
+
+router.post('/user-order-cancel',auth.verifyUser,controllers.cancelOrder)
+
+//success
+
+router.get('/success',auth.verifyUser,controllers.success)
+
+//getAddress
+
+router.get('/autofill-address/:id',auth.verifyUser,controllers.getAddress)
+
+router.get('/logout', controllers.userLogout)
+
 module.exports = router;

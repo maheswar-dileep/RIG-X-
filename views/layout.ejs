@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -30,6 +31,59 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/skin-demo-4.css">
     <link rel="stylesheet" href="/stylesheets/demo-4.css">
+
+    <style>
+
+
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+  visibility: hidden; /* Hidden by default. Visible on click */
+  min-width: 100px; /* Set a default minimum width */
+  margin-left: -50px; /* Divide value of min-width by 2 */
+  background-color: rgb(205, 201, 201); /* Black background color */
+  color: rgb(253, 253, 253); /* White text color */
+  text-align: center; /* Centered text */
+  border-color: black;
+  border-width: 10px;
+  border-radius: 10px; /* Rounded borders */
+  padding: 10px; /* Padding */
+  position: fixed; /* Sit on top of the screen */
+  z-index: 1; /* Add a z-index if needed */
+  left: 47%; /* Center the snackbar */
+  bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+  visibility: visible; /* Show the snackbar */
+  /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+  However, delay the fade out process for 2.5 seconds */
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadein {
+  from {bottom: 0; opacity: 0;}
+  to {bottom: 30px; opacity: 1;}
+}
+
+@-webkit-keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+@keyframes fadeout {
+  from {bottom: 30px; opacity: 1;}
+  to {bottom: 0; opacity: 0;}
+}
+
+    </style>
 </head>
 
 
@@ -37,35 +91,49 @@
 <body>
 
 
-    
+
     <%- include('partials/header-main') %>
 
-    <%- body %> 
+        <%- body %>
 
 
-    <%- include('partials/footer') %>
+            <%- include('partials/footer') %>
 
 
 
 
-     <!-- Plugins JS File -->
-     <script src="/javascripts/jquery.min.js"></script>
-     <script src="/javascripts/bootstrap.bundle.min.js"></script>
-     <script src="/javascripts/jquery.hoverIntent.min.js"></script>
-     <script src="/javascripts/jquery.waypoints.min.js"></script>
-     <script src="/javascripts/superfish.min.js"></script>
-     <script src="/javascripts/owl.carousel.min.js"></script>
-     <script src="/javascripts/bootstrap-input-spinner.js"></script>
-     <script src="/javascripts/jquery.plugin.min.js"></script>
-     <script src="/javascripts/jquery.magnific-popup.min.js"></script>
-     <script src="/javascripts/jquery.countdown.min.js"></script>
-     <!-- Main JS File -->
-     <script src="/javascripts/main.js"></script>
-     <script src="/javascripts/demo-4.js"></script>
-     
-     <script src="/javascripts/jquery.elevateZoom.min.js"></script>
-     <!-- Main JS File -->
 
+            <script>
+                function myFunction() {
+                        // Get the snackbar DIV
+                        var x = document.getElementById("snackbar");
+
+                        // Add the "show" class to DIV
+                        x.className = "show";
+
+                        // After 3 seconds, remove the show class from DIV
+                        setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
+                    }
+            </script>
+
+                <!-- Plugins JS File -->
+                <script src="/javascripts/jquery.min.js"></script>
+                <script src="/javascripts/bootstrap.bundle.min.js"></script>
+                <script src="/javascripts/jquery.hoverIntent.min.js"></script>
+                <script src="/javascripts/jquery.waypoints.min.js"></script>
+                <script src="/javascripts/superfish.min.js"></script>
+                <script src="/javascripts/owl.carousel.min.js"></script>
+                <script src="/javascripts/bootstrap-input-spinner.js"></script>
+                <script src="/javascripts/jquery.plugin.min.js"></script>
+                <script src="/javascripts/jquery.magnific-popup.min.js"></script>
+                <script src="/javascripts/jquery.countdown.min.js"></script>
+                <!-- Main JS File -->
+                <script src="/javascripts/main.js"></script>
+                <script src="/javascripts/demo-4.js"></script>
+
+                <script src="/javascripts/jquery.elevateZoom.min.js"></script>
+                <!-- Main JS File -->
 
 </body>
+
 </html>

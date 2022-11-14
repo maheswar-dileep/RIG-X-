@@ -16,8 +16,8 @@
                             <form action="#">
 
                                 <div class="form-group">
-                                    <p id="err"></p>
                                     <label for="register-password-2">Mobile</label>
+                                    <p id="err" class="text-danger"></p>
                                     <input type="tel" class="form-control" id="mobile" name="mobile" required>
                                 </div><!-- End .form-group -->
                                 <button type="button" onclick="validation()" class="btn btn-outline-primary-2">
@@ -37,10 +37,8 @@
                                     </button>
 
                                     <div class="ml-2">
-                                        <input type="checkbox" class="custom-control-input" id="register-policy-2"
-                                            required>
-                                        <label class="custom-control-label" for="register-policy-2">Already have an
-                                            account ? <a href="/signup"> login now</a></label>
+                                        <label class="custom-control-label" for="register-policy-2">Don't have an
+                                            account ? <a href="/signup"> create account Now</a></label>
                                     </div><!-- End .custom-checkbox -->
                                 </div><!-- End .form-footer -->
                             </form>
@@ -57,50 +55,18 @@
 
 <script>
 
-
-    function verify() {
-
-
-        const otp = document.getElementById('otp').value
-
-
-        const otpValue = otp?.trim();
-
-        submit(otpValue);
-
-
-        function submit(otpValue) {
-            const number = document.getElementById('mobile').value;
-            fetch('/otp-verify?mobileNumber=91' + number + '&code=' + otpValue, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-                .then((res) => res.json())
-                .then((res) => {
-                    if (res.value == "success") {
-                        
-                        window.location.href = '/'
-                    } else {
-                        window.location.href = '/'
-                    }
-
-                })
-        }
-    }
-
-
-
-
-
-
     function validation() {
+
+
 
 
         const mobile = document.getElementById('mobile').value;
 
         const mobileValue = mobile?.trim();
+
+        const err1 = document.getElementById('err')
+        err1.innerText = ""
+
         let flag = 1
 
         if (mobileValue == '') {
@@ -125,6 +91,39 @@
             })
         }
 
+
+
+        function verify() {
+
+
+            const otp = document.getElementById('otp').value
+
+
+            const otpValue = otp?.trim();
+
+            submit(otpValue);
+
+
+            function submit(otpValue) {
+                const number = document.getElementById('mobile').value;
+                fetch('/otp-verify?mobileNumber=91' + number + '&code=' + otpValue, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then((res) => res.json())
+                    .then((res) => {
+                        if (res.value == "success") {
+
+                            window.location.href = '/'
+                        } else {
+                            window.location.href = '/'
+                        }
+
+                    })
+            }
+        }
 
 
 

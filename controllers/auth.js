@@ -1,4 +1,5 @@
-const db = require('../config/connection');
+const db = require('../model/connection');
+const adminDataDB = require('../config/admin_pass');
 
 module.exports = {
     authInit: async (req, res, next) => {
@@ -14,7 +15,7 @@ module.exports = {
         };
 
         if (req.session?.admin) {
-            let adminData = await db.admin.findOne({ _id: req.session.admin });
+            let adminData = adminDataDB.userid;
             if (adminData.blocked) {
                 req.admin = null;
             } else {
@@ -23,6 +24,7 @@ module.exports = {
         } else {
             req.admin = null;
         };
+
         next();
     },
     verifyUser: function (req, res, next) {
@@ -48,6 +50,34 @@ module.exports = {
     },
     mustLogoutAPI: function (req, res, next) {
         if (req.user) {
+            res.send('Forbidden');
+        } else {
+            next();
+        }
+    },
+    verifyAdmin: function (req, res, next) {
+        if (req.admin) {
+            next();
+        } else {
+            res.redirect('/admin/login');
+        }
+    },
+    adminMustLogout: function (req, res, next) {
+        if (req.admin) {
+            res.redirect('/admin');
+        } else {
+            next();
+        }
+    },
+    verifyAdminAPI: function (req, res, next) {
+        if (req.admin) {
+            next();
+        } else {
+            res.send('unauthorized');
+        }
+    },
+    mustLogoutAdminAPI: function (req, res, next) {
+        if (req.admin) {
             res.send('Forbidden');
         } else {
             next();

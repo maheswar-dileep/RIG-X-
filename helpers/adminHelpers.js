@@ -1,11 +1,14 @@
 const { response } = require('../app')
-const { users } = require('../config/connection')
-const db = require('../config/connection')
+const { users } = require('../model/connection')
+const db = require('../model/connection')
 const bcrypt = require('bcrypt')
 const adminData = require('../config/admin_pass')
 
-const data = adminData.userid
+const data = adminData.userid;
+
 module.exports = {
+
+    //adminLogin
 
     doLogin: (userData) => {
         return new Promise(async (resolve, reject) => {
@@ -31,6 +34,8 @@ module.exports = {
         })
     },
 
+    //addUser
+
     addUser: (userData) => {
 
         return new Promise(async (resolve, reject) => {
@@ -55,6 +60,7 @@ module.exports = {
         })
     },
 
+    //getAllUsers
 
     getAllUsers: () => {
         return new Promise(async (resolve, reject) => {
@@ -63,6 +69,7 @@ module.exports = {
         })
     },
 
+    //blockUsers
 
     blockUser: (userId) => {
         return new Promise(async (resolve, reject) => {
@@ -80,6 +87,7 @@ module.exports = {
         })
     },
 
+    //unblockUsers
 
     unblockUser: (userId) => {
         return new Promise(async (resolve, reject) => {
@@ -92,6 +100,44 @@ module.exports = {
                 resolve(update)
             } catch (error) {
                 console.log(error)
+            }
+        })
+    },
+
+    //ordersPage
+
+    ordersPage: () => {
+        return new Promise((resolve, reject) => {
+            db.order.find({}).then((orders) => {
+                resolve(orders)
+            })
+        })
+    },
+
+    //cancelOrder
+
+    cancelOrder: (data) => {
+        console.log(data);
+        return new Promise(async (resolve, reject) => {
+            let orderDetails = await db.order.find({ _id: data.orderId })
+            // console.log(orderDetails)
+            if (orderDetails) {
+                let indexOfProduct = orderDetails[0].productsDetails.findIndex(product => product._id == data.prodId)
+                console.log(indexOfProduct);
+
+                db.order.updateOne(
+                    {
+                        _id: data.orderId
+                    },
+                    {
+                        $set: {
+                            ['productsDetails.' + indexOfProduct + '.status']: false
+                        }
+                    }
+
+                ).then((data) => {
+                    resolve({ status: true })
+                })
             }
         })
     }

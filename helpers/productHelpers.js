@@ -1,5 +1,5 @@
 const { response } = require('../app')
-const db = require('../config/connection')
+const db = require('../model/connection')
 
 module.exports = {
 
@@ -144,6 +144,11 @@ module.exports = {
                 }
             })
         })
+    },
+
+
+    ordersPage:()=>{
+        db.orders.find({})
     }
 
 

@@ -9,7 +9,11 @@
         Add Users
       </a>
       <div class="table-responsive">
-        <table class="table table-striped">
+
+
+        <input type="text" class="col-md-10 mt-3 mb-3 " style="height:40px;" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+        <table class="table table-striped" id="myTable">
           <thead>
             <tr>
               <th>
@@ -21,7 +25,7 @@
               <th>
                 Mobile
               </th>
-              <th>  
+              <th>
                 Email
               </th>
               <th>
@@ -39,7 +43,7 @@
                   <%- users.name %> <br>
                 </td>
                 <td>
-                  <%- users.mobile %> 
+                  <%- users.mobile %>
                 </td>
                 <td>
                   <%- users.email %>
@@ -49,14 +53,16 @@
                   <% if (users.blocked){%>
 
                     <a type="button" href="/admin/user-unblock/<%- users._id %> "
-                      class="btn btn-danger btn-sm btn-icon-text  btn-icon-prepend"  onclick="return confirm('are you sure want to unblock <%- users.name  %> ?')">
+                      class="btn btn-danger btn-sm btn-icon-text  btn-icon-prepend"
+                      onclick="return confirm('are you sure want to unblock <%- users.name  %> ?')">
                       Unblock
                     </a>
 
                     <% }else{ %>
 
                       <a type="button" href="/admin/user-block/<%- users._id %>"
-                        class="btn btn-success btn-sm btn-icon-text btn-icon-prepend" onclick="return confirm('are you sure want to block <%- users.name %>')">
+                        class="btn btn-success btn-sm btn-icon-text btn-icon-prepend"
+                        onclick="return confirm('are you sure want to block <%- users.name %>')">
                         block
                       </a>
 
@@ -71,3 +77,25 @@
     </div>
   </div>
 </div>
+
+
+<script>
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>

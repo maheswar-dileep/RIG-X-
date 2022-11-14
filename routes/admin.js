@@ -1,237 +1,88 @@
 var express = require('express');
-const { products } = require('../config/connection');
+const controllers = require('../controllers/adminController')
 const adminHelpers = require('../helpers/adminHelpers');
 const productHelpers = require('../helpers/productHelpers');
 
+const auth = require('../controllers/auth')
 const router = express.Router();
 const layout = 'admin-layout'
 
 
 
+
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-  res.render('admin/admin_page', {
-    layout
-  })
-});
 
-router.get('/add-products', (req, res) => {
-  productHelpers.getAllCategories().then((category) => {
-    res.render('admin/add_products', {
-      layout, category
-    })
-  })
-})
+router.get('/', auth.verifyAdmin, controllers.landingPage);
 
+router.get('/login', auth.adminMustLogout, controllers.adminLogin)
 
-
-
-router.get('/login', (req, res) => {
-  res.render('admin/admin-login', {
-    layout
-  })
-})
-
-
-
-router.post('/login', (req, res) => {
-  adminHelpers.doLogin(req.body).then((response) => {
-    if (response.status) {
-      res.send({ value: "success" })
-    } else {
-      res.send({ value: "failed" })
-    }
-  })
-})
+router.post('/login', auth.mustLogoutAdminAPI, controllers.adminLoginPost)
 
 /*------------------------add-product------------------------------*/
+router.get('/add-products', auth.verifyAdmin, controllers.addProducts)
 
-
-router.post('/add-products', (req, res) => {
-
-  productHelpers.addProducts(req.body).then((insertedId) => {
-    let image = req.files.image
-    const imgName = insertedId;
-    console.log(imgName);
-
-    image.mv('./public/product-images/' + imgName + '.jpg', (err, done) => {
-      if (!err) {
-        res.redirect('/admin/products')
-      } else {
-        console.log(err)
-      }
-    })
-
-  })
-
-})
+router.post('/add-products', auth.verifyAdmin, controllers.addProductsPost)
 
 /*------------------------products------------------------------*/
 
-
-router.get('/products', (req, res) => {
-  productHelpers.getAllProducts().then((products) => {
-    res.render('admin/products', {
-      products: products,
-      layout: layout
-    })
-    // console.log(products)
-  })
-})
-
+router.get('/products', auth.verifyAdmin, controllers.products)
 
 /*------------------------delete-product------------------------------*/
 
-
-router.get('/delete-products/:id', (req, res) => {
-  let prodId = req.params.id
-  productHelpers.deleteProduct(prodId).then(() => {
-    res.redirect('/admin/products')
-  })
-})
-
+router.get('/delete-products/:id', auth.verifyAdmin, controllers.deleteProducts)
 
 /*------------------------edit-product------------------------------*/
 
+router.get('/edit-products/:id', auth.verifyAdmin, controllers.editProducts)
 
-router.get('/edit-products/:id', async (req, res) => {
-  let products = await productHelpers.getProductDetails(req.params.id)
-  productHelpers.getAllCategories().then((category) => {
-    res.render('admin/edit-products', {category, products, layout })
-  })
-})
+router.post('/edit-products/:id', auth.verifyAdmin, controllers.editProductsPost)
 
-router.post('/edit-products/:id', (req, res) => {
-  prodId = req.params.id
-  productHelpers.editProduct(prodId, req.body).then(() => {
-    
-    let image = req.files.image
-    const imgName = prodId;
-    console.log(imgName);
+/*---------------------users----------------------*/
 
-    image.mv('./public/product-images/' + imgName + '.jpg', (err, done) => {
-      if (!err) {
-        res.redirect('/admin/products')
-      } else {
-        console.log(err)
-      }
-    })
-  })
-})
-
+router.get('/users', auth.verifyAdmin, controllers.users)
 
 /* ---------------add-users-----------------*/
 
-router.get('/add-users', (req, res) => {
-  res.render('admin/add-user', {
-    layout
-  })
-})
+router.get('/add-users', auth.verifyAdmin, controllers.addUser)
 
-router.post('/add-user', (req, res) => {
-  adminHelpers.addUser(req.body).then((data) => {
-    if (data.status) {
-      res.send({ value: "success" })
-    } else {
-      res.send({ value: "error" })
-    }
-  })
-})
-
-
-router.get('/users', (req, res) => {
-  adminHelpers.getAllUsers().then((users) => {
-    console.log(users)
-    res.render('admin/users', {
-      users,
-      layout
-    })
-  })
-})
-
+router.post('/add-user', auth.verifyAdmin, controllers.addUserPost)
 
 /*---------------block/unblock-users-------------*/
 
-router.get('/user-block/:id', (req, res) => {
-  userId = req.params.id
-  adminHelpers.blockUser(userId).then(() => {
-    res.redirect('/admin/users')
-  })
-})
+router.get('/user-block/:id', auth.verifyAdmin, controllers.userBlock)
 
-router.get('/user-unblock/:id', (req, res) => {
-  userId = req.params.id
-  console.log(userId)
-  adminHelpers.unblockUser(userId).then(() => {
-    res.redirect('/admin/users')
-  })
-})
-
+router.get('/user-unblock/:id', auth.verifyAdmin, controllers.userUnblock)
 
 /*--------------category-----------------*/
 
-router.get('/category', (req, res) => {
-  productHelpers.getAllCategories().then((category) => {
-    res.render('admin/category', {
-      layout,
-      category
-    })
-  })
-})
-
+router.get('/category', auth.verifyAdmin, controllers.category)
 
 /*--------------add-category-------------*/
 
+router.get('/add-category', auth.verifyAdmin, controllers.addCategory)
 
-router.get('/add-category', (req, res) => {
-  res.render('admin/add-category', {
-    layout
-  })
-})
-
-router.post('/add-category', (req, res) => {
-
-  productHelpers.addCategories(req.body).then((data) => {
-    if (data.status) {
-      res.send({ value: "success" })
-    } else {
-      res.send({ value: "failed" })
-    }
-  })
-})
-
+router.post('/add-category', auth.verifyAdmin, controllers.addCategoryPost)
 
 /*-------------Delete-Category------------------*/
 
-router.get('/category-delete/:id', (req, res) => {
-  id = req.params.id
-  productHelpers.deleteCategory(id).then(() => {
-    res.redirect('/admin/category')
-  })
-})
+router.get('/category-delete/:id', auth.verifyAdmin, controllers.deleteCategory)
 
 /*-------------Edit-Category----------------*/
 
-router.get('/category-edit/:id', async (req, res) => {
-  let category = await productHelpers.getCategoryDetails(req.params.id).then((category) => {
-    console.log(category)
-    res.render('admin/edit-category', {
-      layout,
-      category: category
-    })
-  })
-})
+router.get('/category-edit/:id', auth.verifyAdmin, controllers.editCategory)
 
-router.post('/edit-category/:id', (req, res) => {
-  productHelpers.editCategory(req.params.id, req.body).then((data) => {
-    if (data.status) {
-      res.send({ value: 'success' })
-    } else {
-      res.send({ value: 'failed' })
-    }
-  })
-})
+router.post('/edit-category/:id', auth.verifyAdmin, controllers.editCategoryPost)
 
+/*---------------orders----------------*/
 
+router.get('/orders',auth.verifyAdmin,controllers.ordersPage)
+
+/*---------------cancelOrder----------------*/
+
+router.post('/admin-cancel-order',auth.verifyAdmin,controllers.cancelOrder)
+
+/*---------------logout----------------*/
+
+router.get('/logout', controllers.adminLogout)
 
 module.exports = router;

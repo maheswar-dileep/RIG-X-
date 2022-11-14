@@ -1,0 +1,105 @@
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Orders<span class="text-danger">RIG-X-</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+
+    <div class="page-content mt-5">
+        <div class="container">
+            <table class="table table-wishlist table-mobile">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Ordered At</th>
+                        <th>Price</th>
+                        <th>Delivery Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% for(i=0;i<orders.length;i++){%>
+                        <% orders[i].productsDetails.forEach(element => { %>
+                            <tr>
+                                <td class="product-col">
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <a href="#">
+                                                <img src="/product-images/<%- element._id %>0.jpg"
+                                                    alt="Product image">
+                                            </a>
+                                        </figure>
+
+                                        <h3 class="product-title">
+                                            <a href="#"><%- element.productsName %></a>
+                                        </h3><!-- End .product-title -->
+                                    </div><!-- End .product -->
+                                </td>
+
+
+                                <% const getDate=(date)=>{
+                                    let orderDate = new Date(date)
+                                
+                                    let day = orderDate.getDate();
+                                    let month = orderDate.getMonth();
+                                    let year = orderDate.getFullYear();
+                                
+                                    return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
+                                
+                                    } %>
+
+
+                                <td><%- getDate(orders[i].createdAt) %></td>
+                                <td class="price-col">₹ <%- element.productsPrice%></td>
+                                <%if(element.status){%>
+                                <td class="stock-col"><span class="in-stock">Will Delivier Today </span></td>
+                                <td class="action-col">
+                                    <button onclick="cancelOrder('<%-element._id%>','<%-orders[i]._id%>')" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Cancel Order</button>
+                                </td>
+                                    <%}else{%>
+                                        <td class="stock-col"><span class="text-danger">Order Cancelled</span></td>
+                                        <%}%>
+                            </tr>
+                        <% }) %>
+                    <% } %>
+                </tbody>
+            </table><!-- End .table table-wishlist -->
+            <div class="wishlist-share">
+                <div class="social-icons social-icons-sm mb-2">
+                    <label class="social-label">Share on:</label>
+                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
+                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                </div><!-- End .soial-icons -->
+            </div><!-- End .wishlist-share -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+<script>
+
+
+    function cancelOrder(prodId,orderId){
+        console.log(prodId,orderId);
+        $.ajax({
+            url:'/user-order-cancel',
+            data:{
+                orderId:orderId,
+                prodId:prodId
+            },
+            beforeSend:()=>{
+                return confirm('Are you sure want to cancel this order?')
+            },
+            method:'POST',
+            success:(data)=>{
+                if(data.status){
+                    window.location.reload()
+                }
+            }
+        })
+    }
+    
+</script>

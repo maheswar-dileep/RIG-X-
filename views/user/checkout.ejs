@@ -1,0 +1,364 @@
+<main class="main">
+  <div class="page-header text-center" style="background-image: url('images/page-header-bg.jpg')">
+    <div class="container">
+      <h1 class="page-title">Checkout<span>Shop</span></h1>
+    </div><!-- End .container -->
+  </div><!-- End .page-header -->
+
+  <div class="page-content mt-4">
+    <div class="checkout">
+      <div class="container">
+        <div class="h-6 my-5">
+
+          <% address[0]?.address?.forEach((element,index)=>{ %>
+          <div class="card">
+            <div class="card-header" id="heading-3">
+              <h2 class="card-title">
+                <input type="radio" name="address" onclick="autoFill('<%- element._id %>')" data-toggle="collapse" href="#collapse-<%-index+1%>" aria-expanded="false" aria-controls="collapse-<%-index+1%>">
+                <label for="Cash on Delivery">
+                  <%- element.fname %>
+                  <%- element.lname %>
+                </label>
+              </h2>
+            </div><!-- End .card-header -->
+            <div id="collapse-<%-index+1%>" class="collapse" aria-labelledby="heading-<%-index+1%>" data-parent="#accordion-payment">
+              <div class="card-body">
+                <%- element.fname %>
+                <%- element.lname %> <br>
+                <%- element.email %> <br>
+                <%= element.mobile %> <br>
+                <%- element.street %>
+                <%- element.appartment %>
+                <%-element.city%>
+                <%-element.state%> <br>
+                <%-element.pincode%>
+              </div><!-- End .card-body -->
+            </div><!-- End .collapse -->
+          </div><!-- End .card -->
+          <% }) %>
+        </div><!-- End .custom-checkbox -->
+        <div class="checkout-discount mb-4">
+          <form action="#">
+            <input type="text" class="form-control" required id="checkout-discount-input">
+            <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to
+                enter your code</span></label>
+          </form>
+        </div><!-- End .checkout-discount -->
+        <form action="#">
+          <div class="row">
+            <div class="col-lg-9">
+              <h2 class="checkout-title">Shipping Address</h2><!-- End .checkout-title -->
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">First Name *</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <input type="text" class="form-control" id="fname" name="first name">
+                </div><!-- End .col-sm-6 -->
+
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">Last Name *</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <input type="text" class="form-control" id="lname" name="last name">
+                </div><!-- End .col-sm-6 -->
+              </div><!-- End .row -->
+
+              <label>Company Name (Optional)</label>
+              <input type="text" class="form-control" id="companyName">
+
+              <div>
+                <div class="d-flex">
+                  <label class=" w-25">Street Address *</label>
+                  <p class="text-danger d-flex justify-content-end w-75"></p>
+                </div>
+                <input type="text" class="form-control" placeholder="House number and Street name" id="street" name="house number">
+              </div>
+              <div>
+                <p id="err2" class="text-danger"></p>
+                <input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." id="apartment" name="appartment">
+              </div>
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">Town / City *</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <input type="text" class="form-control" id="city" name="city">
+                </div><!-- End .col-sm-6 -->
+
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">State *</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <select class="form-control " name="category" id="state">
+                 
+                    <% locals?.states?.forEach((element)=>{ %>
+                    <option class="text-dark">
+                      <%-element.name%>
+                    </option>
+                    <% }) %>
+                  </select>
+                </div><!-- End .col-sm-6 -->
+              </div><!-- End .row -->
+
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">Pincode/ZIP*</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <input type="text" class="form-control" id="pincode" name="pincode">
+                </div><!-- End .col-sm-6 -->
+
+                <div class="col-sm-6">
+                  <div class="d-flex">
+                    <label class=" w-25">Phone *</label>
+                    <p class="text-danger d-flex justify-content-end w-75"></p>
+                  </div>
+                  <input type="tel" class="form-control" id="mobile" name="phone">
+                </div><!-- End .col-sm-6 -->
+              </div><!-- End .row -->
+
+              <div>
+                <div class="d-flex">
+                  <label class=" w-25">Email address *</label>
+                  <p class="text-danger d-flex justify-content-end w-75"></p>
+                </div>
+                <input type="email" class="form-control" id="email" name="email">
+              </div>
+              <label>Order notes (optional)</label>
+              <textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+            </div><!-- End .col-lg-9 -->
+            <aside class="col-lg-3">
+              <div class="summary">
+                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                <table class="table table-summary">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr>
+                      <td><a href="#">Beige knitted elastic runner shoes</a></td>
+                      <td>$84.00</td>
+                    </tr>
+
+                    <tr>
+                      <td><a href="#">Blue utility pinafore denimdress</a></td>
+                      <td>$76,00</td>
+                    </tr>
+                    <tr class="summary-subtotal">
+                      <td>Subtotal:</td>
+                      <td>$160.00</td>
+                    </tr><!-- End .summary-subtotal -->
+                    <tr>
+                      <td>Shipping:</td>
+                      <td>Free shipping</td>
+                    </tr>
+                    <tr class="summary-total">
+                      <td>Total:</td>
+                      <td>₹ <%-total %>
+                      </td>
+                    </tr><!-- End .summary-total -->
+                  </tbody>
+                </table><!-- End .table table-summary -->
+
+                <div class="accordion-summary" id="accordion-payment">
+                  <div class="card">
+                    <div class="card-header" id="heading-3">
+                      <h2 class="card-title">
+                        <input type="radio" data-toggle="collapse" href="#collapse-3" id="COD" aria-expanded="false" aria-controls="collapse-3" value="COD" checked>
+                        <label for="Cash on Delivery">Cash On Delivery</label>
+                      </h2>
+                    </div><!-- End .card-header -->
+                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                      <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit
+                        amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis
+                        eros.
+                      </div><!-- End .card-body -->
+                    </div><!-- End .collapse -->
+                  </div><!-- End .card -->
+                </div><!-- End .accordion -->
+
+                <button type="button" onclick="validation()" class="btn btn-outline-primary-2 btn-order btn-block">
+                  <span class="btn-text">Place Order</span>
+                  <span class="btn-hover-text">Proceed to Checkout</span>
+                </button>
+              </div><!-- End .summary -->
+            </aside><!-- End .col-lg-3 -->
+          </div><!-- End .row -->
+        </form>
+      </div><!-- End .container -->
+    </div><!-- End .checkout -->
+  </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+
+<script>
+
+
+  function validation() {
+
+    const firstName = document.getElementById('fname')
+    const firstNameValue = firstName?.value.trim()
+    const firstNameErr = firstName.parentElement.querySelector('p')
+    firstNameErr.innerText = ""
+
+    const lastName = document.getElementById('lname')
+    const lastNameValue = lastName?.value.trim()
+    const lastNameErr = lastName.parentElement.querySelector('p')
+    lastNameErr.innerText = ""
+
+    const companyName = document.getElementById('companyName')
+    const companyNameValue = companyName?.value.trim()
+
+    const address = document.getElementById('street')
+    const addressValue = address?.value.trim()
+    const addressErr = address.parentElement.querySelector('p')
+    addressErr.innerText = ''
+
+    const appartment = document.getElementById('apartment')
+    const appartmentValue = appartment?.value.trim()
+    const appartmentErr = appartment.parentElement.querySelector('p')
+    appartmentErr.innerText = ''
+
+    const city = document.getElementById('city')
+    const cityValue = city?.value.trim()
+    const cityErr = city.parentElement.querySelector('p')
+    cityErr.innerText = ""
+
+    const stateValue = document.getElementById('state').value
+
+    const pincode = document.getElementById('pincode')
+    const pincodeValue = pincode?.value.trim()
+    const pincodeErr = pincode.parentElement.querySelector('p')
+    pincodeErr.innerText = ""
+
+    const phone = document.getElementById('mobile')
+    const phoneValue = phone?.value.trim()
+    const phoneErr = phone.parentElement.querySelector('p')
+    phoneErr.innerText = ""
+
+    const email = document.getElementById('email')
+    const emailValue = email?.value.trim()
+    const emailErr = email.parentElement.querySelector('p')
+    emailErr.innerText = ""
+
+    const cod = document.getElementById('COD')
+    const codValue = cod?.value
+
+
+
+    let flag = 1
+
+    if (firstNameValue == "") {
+      firstNameErr.innerText = "This field is required"
+      let flag = 2
+    }
+
+
+    if (lastNameValue == "") {
+      lastNameErr.innerText = "This field is required"
+      let flag = 2
+    }
+
+    if (addressValue == "") {
+      addressErr.innerText = "This field is required"
+      flag = 2
+    } else if (addressValue.length <= 4) {
+      addressErr.innerText = "Minimum 5 character is required "
+      flag = 2
+    }
+
+    if (appartmentValue == '') {
+      appartmentErr.innerText = "This field is required"
+      flag = 2
+    } else if (appartmentValue.length <= 4) {
+      appartmentErr.innerText = "Minimum 5 character is required "
+      flag = 2
+    }
+
+    if (cityValue == "") {
+      cityErr.innerText = "This field is required"
+      flag = 2
+    }
+
+    if (pincodeValue == '') {
+      pincodeErr.innerText = "This field is required"
+      flag = 2
+    } else if (!pincodeValue.match(/^[0-9]{6}$/)) {
+      pincodeErr.innerText = "Please Enter a valid pincode"
+      flag = 2
+    }
+
+    if (phoneValue == "") {
+      phoneErr.innerText = "This field is required"
+      flag = 2
+    } else if (!phoneValue.match(/^[0-9]{10}$/)) {
+      phoneErr.innerText = "Please enter a valid phone number"
+      flag = 2
+    }
+
+    if (emailValue == "") {
+      emailErr.innerText = "This field is required"
+      flag = 2
+    } else if (!emailValue.match(/^[A-Za-z0-9_]{3,}@[A-Za-z]{3,}[.]{1}[A-Za-z.]{2,6}$/)) {
+      emailErr.innerText = "Please enter a valid Email address"
+    }
+
+
+    if (flag == 1) {
+      $.ajax({
+        url: '/place-order',
+        method: 'POST',
+        data: {
+          firstname: firstNameValue,
+          lastName: lastNameValue,
+          street: addressValue,
+          apartment: appartmentValue,
+          city: cityValue,
+          state: stateValue,
+          pincode: pincodeValue,
+          mobile: phoneValue,
+          email: emailValue,
+          paymentMethod: codValue
+        },
+        success: (response) => {
+          window.location.replace("/success");
+        }
+      })
+    }
+  }
+
+
+
+  function autoFill(addressId) {
+    const inputId = ['fname', 'lname', 'street', 'apartment', 'city', 'state', 'pincode', 'mobile', 'email']
+    $.ajax({
+      url: '/autofill-address/'+addressId,
+      method: 'GET',
+      success:(response)=>{
+        console.log(response[0].address);
+        let data = response[0].address
+
+        inputId.forEach(e=>{
+          console.log(data[e]);
+          document.getElementById(e).value = data[e]
+        })
+
+      }
+    })
+
+   
+
+  }
+</script>

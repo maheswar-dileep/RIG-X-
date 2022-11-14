@@ -13,15 +13,15 @@
                     <div class="tab-content">
                         <div class="tab-pane fade show active" id="register-2" role="tabpanel"
                             aria-labelledby="register-tab-2">
-                            <form action="/login" method="post">
+                            <form>
                                 <div class="form-group">
-                                    <p id="err"></p>
+                                    <p id="err" class="text-danger"></p>
                                     <label for="register-email-2">Your email address *</label>
                                     <input type="email" class="form-control" id="email" email" required>
                                 </div><!-- End .form-group -->
 
                                 <div class="form-group">
-                                    <p id="err"></p>
+                                    <p id="err"class="text-danger"></p>
                                     <label for="register-password-2">Password *</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div><!-- End .form-group -->
@@ -50,7 +50,7 @@
                                     </div><!-- End .col-6 -->
                                     <div class="col-sm-6">
                                         <a href="/otp" class="btn btn-login  btn-f">
-                                            <i class="icon-phone-f"></i>
+                                            <i class="icon-phone"></i>
                                             Login With OTP
                                         </a>
                                     </div><!-- End .col-6 -->
@@ -118,11 +118,10 @@
             })
 
         })
+
         .then((res)=>res.json())
         .then((res)=>{
 
-            console.log(res);
-          
             if (res.value == "success") {
                 window.location.href = "/"
             } else {

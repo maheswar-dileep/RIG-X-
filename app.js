@@ -6,7 +6,7 @@ const logger = require('morgan');
 const fileUpload = require('express-fileupload');
 
 const expressLayouts = require('express-ejs-layouts')
-const db = require('./config/connection')
+const db = require('./model/connection')
 const session = require('express-session')
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
@@ -39,7 +39,7 @@ app.use(function (req, res, next) {
 
 app.use(session({
   saveUninitialized: false,
-  secret: 'secrek',
+  secret: 'secretKeyIsSecret',
   resave: false,
   store: new mongoDbSesson({
     uri:'mongodb://localhost:27017/ecommerce',
