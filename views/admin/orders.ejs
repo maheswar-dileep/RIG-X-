@@ -1,29 +1,21 @@
-
-
-
-
-
-
-
 <div class="col-lg-10 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Bordered table</h4>
-            <div class="table-responsive pt-3">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Image</th>
-                            <th>Order Id</th>
-                            <th>Order Placed On</th>
-                            <th>Order Status</th>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Order Management</h4>
+      <div class="table-responsive pt-3">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Product Name</th>
+              <th>Image</th>
+              <th>Order Id</th>
+              <th>Order Placed On</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
+            </tr>
+          </thead>
+          <tbody>
 
-                        <% const getDate=(date)=>{
+            <% const getDate=(date)=>{
                             let orderDate = new Date(date)
 
                             let day = orderDate.getDate();
@@ -36,64 +28,55 @@
 
 
 
-                            <% for(i=0;i<orders.length;i++){%>
-                                <% orders[i].productsDetails.forEach(element=> { %>
-                                    <tr>
-                                        <td>
-                                            <%- element.productsName %>
-                                        </td>
-                                        <td> <img src="/product-images/<%- element._id %>0.jpg" alt=""> </td>
-                                        <td>Id : <%-orders[i]._id %>
-                                        </td>
-                                        <td>
-                                            <%- getDate(orders[i].createdAt) %>
-                                        </td>
-                                        
-                                        <td><select class="form-control" id="status">
-                                            <option class="text-secondary" value="processing"> Processing</option>
-                                            <option class="text-secondary" value="confirmed">confirmed</option>
-                                            <option class="text-secondary" value="packing">Packing</option>
-                                            <option class="text-secondary" value="shipped">Shipped</option>
-                                            <option class="text-secondary" value="delivered">Delivered</option>
-                                            </select>
-                                            </td>
+            <% for(i=orders.length-1;i>=0;i--){%>
+            <% orders[i].productsDetails.forEach(element=> { %>
+            <tr>
+              <td>
+                <%- element.productsName %>
+              </td>
+              <td> <img src="/product-images/<%- element._id %>0.jpg" alt=""> </td>
+              <td>Id : <%-orders[i]._id %>
+              </td>
+              <td>
+                <%- getDate(orders[i].createdAt) %>
+              </td>
 
-                                            <%if(element.status){%>
-                                                <td>
-                                                    <button class="btn btn-outline-danger btn-sm mt-2"
-                                                        onclick="cancelOrder('<%- orders[i]._id %>','<%- element._id %>')">Cancel
-                                                        Order</button>
-                                                </td>
-                                                <%}%>
+             
+
+              <%if(element.status){%>
+              <td>
+                <button class="btn btn-outline-danger btn-sm mt-2" onclick="cancelOrder('<%- orders[i]._id %>','<%- element._id %>')">Cancel
+                  Order</button>
+              </td>
+              <%}%>
                                     </tr>
                                     <% })%>
-                                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+              <% } %>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
 
 
 <script>
-
-    function cancelOrder(orderId, prodId) {
-        $.ajax({
-            url: '/admin/admin-cancel-order',
-            method: 'POST',
-            data: {
-                orderId: orderId,
-                prodId: prodId
-            },
-            beforeSend: () => {
-                return confirm('Are you sure want to cancel this order?')
-            },
-            success: (data) => {
-                if (data.status) {
-                    window.location.reload()
-                }
-            }
-        })
-    }
+  function cancelOrder(orderId, prodId) {
+    $.ajax({
+      url: '/admin/admin-cancel-order',
+      method: 'POST',
+      data: {
+        orderId: orderId,
+        prodId: prodId
+      },
+      beforeSend: () => {
+        return confirm('Are you sure want to cancel this order?')
+      },
+      success: (data) => {
+        if (data.status) {
+          window.location.reload()
+        }
+      }
+    })
+  }
 </script>

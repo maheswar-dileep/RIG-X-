@@ -279,6 +279,8 @@ module.exports = {
 
             // console.log(products);
 
+            //address
+
             let Address = {
                 fname: order.firstname,
                 lname: order.lastName,
@@ -293,13 +295,14 @@ module.exports = {
 
             let addresObj = {
                 userId: order.userId,
-                address: [Address]
+                address: Address
             }
 
 
-            let addr = db.address.findOne({userId:order.userId})
+            let addr =await db.address.findOne({userId:order.userId})
 
             if (addr){
+
                 db.address.find({ 'address.street': order.street, 'address.pincode': order.pincode }).then((res) => {
                     if (res.length == 0) {
                         db.address.updateOne({ userId: order.userId }, {
@@ -311,14 +314,16 @@ module.exports = {
                         })
                     }
                 })
+
             }else{
-                db.address(Address).save().then(()=>{
+
+                console.log('hello');
+                db.address(addresObj).save().then(()=>{
                     resolve()
                 })
+
             }
             
-
-
             //orders
 
             let orderAddress = {

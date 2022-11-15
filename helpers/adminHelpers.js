@@ -12,7 +12,7 @@ module.exports = {
 
     doLogin: (userData) => {
         return new Promise(async (resolve, reject) => {
-            console.log(userData);
+            // console.log(userData);
             if (data.email == userData.email) {
                 bcrypt.compare(userData.password, data.password).then((loginTrue) => {
                     let response = {}

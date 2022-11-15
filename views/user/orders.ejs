@@ -19,7 +19,7 @@
                 </thead>
 
                 <tbody>
-                    <% for(i=0;i<orders.length;i++){%>
+                    <% for(i=orders.length-1;i>=0;i--){%>
                         <% orders[i].productsDetails.forEach(element => { %>
                             <tr>
                                 <td class="product-col">
@@ -55,7 +55,7 @@
                                 <%if(element.status){%>
                                 <td class="stock-col"><span class="in-stock">Will Delivier Today </span></td>
                                 <td class="action-col">
-                                    <button onclick="cancelOrder('<%-element._id%>','<%-orders[i]._id%>')" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Cancel Order</button>
+                                    <button onclick="cancelOrder('<%-element._id%>','<%-orders[i]._id%>')" class="btn btn-sm btn-block btn-outline-danger"></i>Cancel Order</button>
                                 </td>
                                     <%}else{%>
                                         <td class="stock-col"><span class="text-danger">Order Cancelled</span></td>

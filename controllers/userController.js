@@ -195,8 +195,9 @@ module.exports = {
     //orders
 
     ordersPage: async (req, res) => {
+        let cartCount = await userHelpers.getCartCount(req.session.user)
         userHelpers.ordersDetails(req.session.user).then((orders) => {
-            res.render('user/orders', { nav: true, foooter: true, orders })
+            res.render('user/orders', { cartCount, nav: true, foooter: true, orders })
         })
     },
 

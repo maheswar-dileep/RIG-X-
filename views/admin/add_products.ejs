@@ -18,15 +18,6 @@
           </div>
 
           <div class="form-group col-md-5">
-            <div class="d-flex">
-              <label for="exampleInputPassword4" class="w-25">Price</label>
-              <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
-            </div>
-            <input type="text" class="form-control" id="price" placeholder="Price" name="price" required>
-          </div>
-
-
-          <div class="form-group col-md-5">
             <label>Category</label>
             <select class="form-control " name="category">
               <% category.forEach((categoryn)=>{ %>
@@ -37,6 +28,21 @@
             </select>
           </div>
 
+          <div class="form-group col-md-5">
+            <div class="d-flex">
+              <label for="exampleInputPassword4" class="w-25">Price</label>
+              <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
+            </div>
+            <input type="text" class="form-control" id="price" placeholder="Price" name="price" required>
+          </div>
+
+          <div class="form-group col-md-5">
+            <div class="d-flex">
+              <label for="exampleInputPassword4" class="w-25">Market Price</label>
+              <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
+            </div>
+            <input type="text" class="form-control" id="price" placeholder="MarketPrice" name="marketPrice" required>
+          </div>
 
           <div class="form-group col-md-5">
             <div class="d-flex">
@@ -59,10 +65,10 @@
             <img src="" alt="" style="width: 75px; height: 75px;" id="imgView">
           </div>
 
-          
+
           <div class="form-group col-md-10">
             <label for="">Image</label>
-            <input type="file" name="image" id="image" class="form-control" onchange="viewImage1(event)" required >
+            <input type="file" name="image" id="image" class="form-control" onchange="viewImage1(event)" required>
           </div>
 
           <div class="form-group col-md-10">
@@ -93,7 +99,6 @@
 
 
 <script>
-
   function viewImage1(event) {
     document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
     console.log(event)
@@ -110,9 +115,4 @@
   function viewImage4(event) {
     document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
   }
-
-
-
-
-
 </script>

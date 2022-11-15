@@ -218,7 +218,7 @@ module.exports = {
 
     //cancelOrder
 
-    cancelOrder: (req, res) => {
+        cancelOrder: (req, res) => {
         adminHelpers.cancelOrder(req.body).then((data) => {
             res.json(data)
         })

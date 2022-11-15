@@ -15,6 +15,7 @@ db.once('open', () => {
 const productschema = new mongoose.Schema({
     name: String,
     price: Number,
+    marketPrice:Number,
     category: String,
     quantity: Number,
     description: String
@@ -69,6 +70,7 @@ const addressSchema = new mongoose.Schema({
 //order
 
 const orderSchema = new mongoose.Schema({
+   
     userId: mongoose.Types.ObjectId,
     fname: String,
     lname: String,
@@ -77,13 +79,17 @@ const orderSchema = new mongoose.Schema({
     totalPrice: Number,
     productsDetails:Array,
     shippingAddress: Array,
-    createdAt:{
-        type:Date,
-        default:new Date()
+    orderStatus:{
+        type:String,
+        default:'processing'
     },
     status:{
         type:Boolean,
         default:true
+    },
+    createdAt:{
+        type:Date,
+        default:new Date()
     }
 })
 
