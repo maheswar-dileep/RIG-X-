@@ -1,6 +1,5 @@
-const { ObjectId } = require('mongoose');
 const mongoose = require('mongoose');
-const db = mongoose.createConnection('mongodb://localhost:27017/ecommerce')
+const db = mongoose.createConnection('mongodb://127.0.0.1:27017/ecommerce')
 
 db.on('error', (err) => {
     console.log(err)
@@ -15,10 +14,11 @@ db.once('open', () => {
 const productschema = new mongoose.Schema({
     name: String,
     price: Number,
-    marketPrice:Number,
+    marketPrice: Number,
     category: String,
     quantity: Number,
-    description: String
+    description: String,
+    img: Array
 })
 
 // for users 
@@ -43,7 +43,7 @@ const categoriesSchema = new mongoose.Schema({
 // cart
 
 const cartSchema = new mongoose.Schema({
-    user: ObjectId,
+    user: mongoose.Types.ObjectId,
     cartItems: [{
         products: mongoose.Types.ObjectId,
         quantity: Number
@@ -53,7 +53,7 @@ const cartSchema = new mongoose.Schema({
 //address
 const addressSchema = new mongoose.Schema({
     userId: mongoose.Types.ObjectId,
-    address:[{
+    address: [{
         fname: String,
         lname: String,
         street: String,
@@ -64,39 +64,45 @@ const addressSchema = new mongoose.Schema({
         mobile: String,
         email: String
     }]
-   
+
 })
 
 //order
 
 const orderSchema = new mongoose.Schema({
-   
+
     userId: mongoose.Types.ObjectId,
-    fname: String,
-    lname: String,
-    mobile: Number,
-    paymentMethod: String,
-    totalPrice: Number,
-    productsDetails:Array,
-    shippingAddress: Array,
-    orderStatus:{
-        type:String,
-        default:'processing'
-    },
-    status:{
-        type:Boolean,
-        default:true
-    },
-    createdAt:{
-        type:Date,
-        default:new Date()
-    }
+    orders: [
+        {
+            fname: String,
+            lname: String,
+            mobile: Number,
+            paymentMethod: String,
+            paymentStatus: String,
+            totalPrice: Number,
+            totalQuantity: Number,
+            productsDetails: Array,
+            shippingAddress: Object,
+            orderStatus: {
+                type: String,
+                default: 'processing'
+            },
+            status: {
+                type: Boolean,
+                default: true
+            },
+            createdAt: {
+                type: Date,
+                default: new Date()
+            }
+        }
+    ]
 })
 
 //state
 
 const stateSchema = new mongoose.Schema({
-    name:String
+    name: String
 })
 
 
@@ -106,6 +112,6 @@ module.exports = {
     categories: db.model('categories', categoriesSchema),
     cart: db.model('cart', cartSchema),
     address: db.model('address', addressSchema),
-    order:db.model('order',orderSchema),
-    state:db.model('state',stateSchema)
+    order: db.model('order', orderSchema),
+    state: db.model('state', stateSchema)
 }

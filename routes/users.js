@@ -9,11 +9,6 @@ const auth = require('../controllers/auth');
 const { verifyUser } = require('../controllers/auth');
 
 
-
-let nav = false
-let footer = true;
-
-
 /* GET home page. */
 router.get('/', auth.verifyUser, controllers.landingPage);
 
@@ -27,7 +22,7 @@ router.post('/login', auth.mustLogoutAPI, controllers.userLoginPost)
 
 router.get('/signup', auth.mustLogout, controllers.userSignup)
 
-router.post('/signup', auth.mustLogout)
+router.post('/signup', auth.mustLogout, controllers.userSignupPost)
 
 /*------------------------OTP------------------------*/
 
@@ -37,6 +32,8 @@ router.get('/otp-login/:id', auth.mustLogout, controllers.otpLoginPost);
 
 router.get('/otp-verify', auth.mustLogout, controllers.otpVerify)
 
+/*------------------------pages------------------------*/
+
 router.get('/shop', auth.verifyUser, controllers.shopPage);
 
 router.get('/product/:id', auth.verifyUser, controllers.productPage)
@@ -45,43 +42,79 @@ router.get('/about-us', auth.verifyUser, controllers.aboutUsPage)
 
 router.get('/wishlist', auth.verifyUser, controllers.wishlistPage)
 
-//account
-router.get('/account',auth.verifyUser,controllers.accountPage)
+/*------------------------account------------------------*/
 
-//cart
+router.get('/account', auth.verifyUser, controllers.accountPage)
+
+/*------------------------cart------------------------*/
 
 router.get('/cart', auth.verifyUser, controllers.cart)
 
-//add to cart 
+/*------------------------checkstock------------------------*/
+
+router.get('/check-stock/:id', auth.verifyUser, controllers.checkStock)
+
+/*------------------------Cart functions------------------------*/
 
 router.get('/add-to-cart/:id', auth.verifyUser, controllers.addToCart)
 
-router.post('/change-product-quantity', auth.verifyUser, controllers.changeProductQuantity)
+router.put('/change-product-quantity', auth.verifyUser, controllers.changeProductQuantity)
 
-router.post('/delete-cart-item',auth.verifyUser,controllers.deleteCartItem)
+router.delete('/delete-cart-item', auth.verifyUser, controllers.deleteCartItem)
 
-//checkout
+/*------------------------Checkout------------------------*/
 
-router.get('/checkout',auth.verifyUser,controllers.checkout)
+router.get('/checkout', auth.verifyUser, controllers.checkout)
 
-//placeOrder
+/*------------------------PlaceOrder------------------------*/
 
-router.post('/place-order',auth.verifyUser,controllers.placeOrder)
+router.post('/place-order', auth.verifyUser, controllers.placeOrder)
 
-//orders
-router.get('/orders',verifyUser,controllers.ordersPage)
+/*------------------------Orders------------------------*/
 
-//cancelOrder
+router.get('/orders', verifyUser, controllers.ordersPage)
 
-router.post('/user-order-cancel',auth.verifyUser,controllers.cancelOrder)
+/*------------------------cancelOrder------------------------*/
 
-//success
+router.put('/user-order-cancel', auth.verifyUser, controllers.cancelOrder)
 
-router.get('/success',auth.verifyUser,controllers.success)
+/*------------------------PaypalOrder------------------------*/
+
+router.post('/create-order', auth.verifyUser, controllers.paypalOrder)
+
+/*------------------------PaypalSuccess------------------------*/
+
+router.get('/paypal-success',auth.verifyUser,controllers.paypalSuccess)
+
+/*------------------------OrderSuccess------------------------*/
+
+router.get('/success', auth.verifyUser, controllers.success)
 
 //getAddress
 
-router.get('/autofill-address/:id',auth.verifyUser,controllers.getAddress)
+router.get('/autofill-address/:id', auth.verifyUser, controllers.getAddress)
+
+/*------------------------NewAddress------------------------*/
+
+router.post('/add-new-address', auth.verifyUser, controllers.addNewAddress)
+
+//editAddress
+
+router.put('/edit-address', auth.verifyUser, controllers.editAddress)
+
+//delete-address
+
+router.get('/delete-address/:id', auth.verifyUser, controllers.deleteAddress)
+
+//verifyPayment
+
+router.post('/verify-payment', auth.verifyUser, controllers.verifyPayment)
+
+//orders list
+
+router.get('/orders-list', auth.verifyUser, controllers.ordersList)
+
+//logout
 
 router.get('/logout', controllers.userLogout)
 

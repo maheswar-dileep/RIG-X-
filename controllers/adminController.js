@@ -1,124 +1,185 @@
 const layout = 'admin-layout'
 const adminHelpers = require('../helpers/adminHelpers')
 const productHelpers = require('../helpers/productHelpers')
+const chartHelpers = require('../helpers/chartHelpers')
+const multer = require('multer')
+const path = require('path')
+const { response } = require('../app')
 
 module.exports = {
 
     //landingPage
 
     landingPage: (req, res, next) => {
-        res.render('admin/admin_page', {
-            layout
-        })
+        try {
+            res.render('admin/admin_page', {
+                layout
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    chartGraph: (req, res) => {
+        try {
+            console.log("hi");
+            chartHelpers.priceGraph().then((priceStat) => {
+                console.log(priceStat);
+                res.send({ priceStat })
+            })
+        } catch (err) {
+            console.log(err)
+        }
     },
 
     //adminLogin
 
     adminLogin: (req, res) => {
-        res.render('admin/admin-login', {
-            layout
-        })
+        try {
+            res.render('admin/admin-login', {
+                layout
+            })
+        } catch (err) {
+            console.log(err)
+        }
     },
 
     adminLoginPost: (req, res) => {
-        adminHelpers.doLogin(req.body).then((response) => {
-            if (response.status) {
-                req.session.admin = response.admin._id;
-                res.send({ value: "success" })
-            } else {
-                res.send({ value: "failed" })
-            }
-        })
+        try {
+            adminHelpers.doLogin(req.body).then((response) => {
+                if (response.status) {
+                    req.session.admin = response.admin._id;
+                    res.send({ value: "success" })
+                } else {
+                    res.send({ value: "failed" })
+                }
+            })
+        } catch (err) {
+            console.log(err)
+        }
     },
 
     //products
 
     products: (req, res) => {
-        productHelpers.getAllProducts().then((products) => {
-            res.render('admin/products', {
-                products: products,
-                layout: layout
+        try {
+            productHelpers.getAllProducts().then((products) => {
+                res.render('admin/products', {
+                    products: products,
+                    layout: layout
+                })
             })
-        })
+        } catch (err) {
+            console.log(err);
+        }
     },
 
     //addProducts
 
     addProducts: (req, res) => {
-        productHelpers.getAllCategories().then((category) => {
-            res.render('admin/add_products', {
-                layout, category
+        try {
+            productHelpers.getAllCategories().then((category) => {
+                res.render('admin/add_products', {
+                    layout, category
+                })
             })
-        })
+        } catch (err) {
+            console.log(err);
+        }
     },
 
     addProductsPost: (req, res) => {
-        productHelpers.addProducts(req.body).then((insertedId) => {
-            const imgName = insertedId;
-            req.files?.image?.forEach((element,index) => {
-                element.mv('./public/product-images/' + imgName +index+'.jpg', (err, done) => {
-                    if (!err) {
-                       console.log('product uploaded');
-                    } else {
-                        console.log(err)
-                    }
-                })
-            });
-            res.redirect('/admin/products')
-           
-        })
+        try {
+            const files = req.files
+            const fileName = files.map((file) => {
+                return file.filename
+            })
+
+            const product = req.body
+            product.img = fileName
+
+            productHelpers.addProducts(product).then((insertedId) => {
+                res.redirect('/admin/products')
+            })
+        } catch (err) {
+            console.log(err);
+        }
 
     },
 
     //deleteProducts
 
     deleteProducts: (req, res) => {
-        let prodId = req.params.id
-        productHelpers.deleteProduct(prodId).then(() => {
-            res.redirect('/admin/products')
-        })
+        try {
+            let prodId = req.params.id
+            productHelpers.deleteProduct(prodId).then((response) => {
+                res.json(response)
+            })
+        } catch (err) {
+            console.log(err);
+        }
     },
 
     //editProducts
 
     editProducts: async (req, res) => {
-        let products = await productHelpers.getProductDetails(req.params.id)
-        productHelpers.getAllCategories().then((category) => {
-            res.render('admin/edit-products', { category, products, layout })
-        })
+        try {
+            let products = await productHelpers.getProductDetails(req.params.id)
+            productHelpers.getAllCategories().then((category) => {
+                res.render('admin/edit-products', { category, products, layout })
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
     },
 
     editProductsPost: (req, res) => {
-        prodId = req.params.id
-        productHelpers.editProduct(prodId, req.body).then(() => {
-           
-            const imgName = prodId;
-            req.files?.image0?.mv('./public/product-images/' + imgName + '0.jpg')
-            req.files?.image1?.mv('./public/product-images/' + imgName + '1.jpg')
-            req.files?.image2?.mv('./public/product-images/' + imgName + '2.jpg')
-            req.files?.image3?.mv('./public/product-images/' + imgName + '3.jpg')
-           res.redirect('/admin/products')
-        })
+        try {
+            prodId = req.params.id
+            productHelpers.editProduct(prodId, req.body).then(() => {
+
+                const imgName = prodId;
+                req.files?.image0?.mv('./public/product-images/' + imgName + '0.jpg')
+                req.files?.image1?.mv('./public/product-images/' + imgName + '1.jpg')
+                req.files?.image2?.mv('./public/product-images/' + imgName + '2.jpg')
+                req.files?.image3?.mv('./public/product-images/' + imgName + '3.jpg')
+                res.redirect('/admin/products')
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
     },
 
     //users 
 
     users: (req, res) => {
-        adminHelpers.getAllUsers().then((users) => {
-            console.log(users)
-            res.render('admin/users', {
-                users,
-                layout
+        try {
+            adminHelpers.getAllUsers().then((users) => {
+                // console.log(users)
+                res.render('admin/users', {
+                    users,
+                    layout
+                })
             })
-        })
+        }
+        catch (err) {
+            console.log(err);
+        }
     },
 
     //addUsers
 
     addUser: (req, res) => {
-        res.render('admin/add-user', {
-            layout
-        })
+        try {
+            res.render('admin/add-user', {
+                layout
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
     },
 
     addUserPost: (req, res) => {
@@ -135,16 +196,15 @@ module.exports = {
 
     userBlock: (req, res) => {
         userId = req.params.id
-        adminHelpers.blockUser(userId).then(() => {
-            res.redirect('/admin/users')
+        adminHelpers.blockUser(userId).then((response) => {
+            res.json(response)
         })
     },
 
     userUnblock: (req, res) => {
         userId = req.params.id
-        console.log(userId)
-        adminHelpers.unblockUser(userId).then(() => {
-            res.redirect('/admin/users')
+        adminHelpers.unblockUser(userId).then((response) => {
+            res.json(response)
         })
     },
 
@@ -169,6 +229,7 @@ module.exports = {
 
     addCategoryPost: (req, res) => {
         productHelpers.addCategories(req.body).then((data) => {
+
             if (data.status) {
                 res.send({ value: "success" })
             } else {
@@ -181,8 +242,8 @@ module.exports = {
 
     deleteCategory: (req, res) => {
         id = req.params.id
-        productHelpers.deleteCategory(id).then(() => {
-            res.redirect('/admin/category')
+        productHelpers.deleteCategory(id).then((response) => {
+            res.json(response)
         })
     },
 
@@ -190,7 +251,7 @@ module.exports = {
 
     editCategory: async (req, res) => {
         let category = await productHelpers.getCategoryDetails(req.params.id).then((category) => {
-            console.log(category)
+            // console.log(category)
             res.render('admin/edit-category', {
                 layout,
                 category: category
@@ -218,13 +279,19 @@ module.exports = {
 
     //cancelOrder
 
-        cancelOrder: (req, res) => {
+    cancelOrder: (req, res) => {
         adminHelpers.cancelOrder(req.body).then((data) => {
             res.json(data)
         })
     },
 
+    //orderViewMore
 
+    orderViewMore: (req, res) => {
+        adminHelpers.orderViewMore(req.params.id).then((orders) => {
+            res.render('admin/orderViewMore', { layout, orders })
+        })
+    },
 
     //adminLogout
 

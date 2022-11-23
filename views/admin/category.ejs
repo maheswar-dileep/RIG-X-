@@ -1,57 +1,88 @@
 <div class="col-lg-12 grid-margin stretch-card">
-    <div class="card">
-        <div class="card-body">
-            <h4 class="card-title">Category Management</h4>
-            <!-- <p class="card-description">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Category Management</h4>
+      <!-- <p class="card-description">
             Add class <code>.table-striped</code>
           </p> -->
-            <a type="button" href="/admin/add-category" class="btn btn-success btn-sm btn-icon-text btn-icon-prepend">
-                Add Category
-            </a>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                #
-                            </th>
-                            <th>
-                                category name
-                            </th>
-                            <th>
-                                Detele Category
-                            </th>
-                            <th>
-                                Edit Category
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% category.forEach((category,index)=>{%> 
-                            <tr>
-                                <td class="py-1">
-                                    <%= index+1%>
-                                </td>
-                                <td>
-                                    <%=category.name %> 
-                                </td>
-                                <td>
-                                    <a type="button" href="/admin/category-delete/<%-category._id%>"
-                                        class="btn btn-danger btn-sm btn-icon-text  btn-icon-prepend" onclick="return confirm('are you sure you want to delete <%-category.name%> ?')">
-                                       delete category
-                                    </a>
-                                </td>
-                                <td>
-                                    <a type="button" href="/admin/category-edit/<%-category._id%>"
-                                        class="btn btn-info btn-sm btn-icon-text  btn-icon-prepend">
-                                       edit category
-                                    </a>
-                                </td>
-                            </tr>
-                            <% }) %> 
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <a type="button" href="/admin/add-category" class="btn btn-success btn-sm btn-icon-text btn-icon-prepend">
+        Add Category
+      </a>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>
+                #
+              </th>
+              <th>
+                category name
+              </th>
+              <th>
+                Detele Category
+              </th>
+              <th>
+                Edit Category
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <% category.forEach((category,index)=>{%>
+            <tr>
+              <td class="py-1">
+                <%= index+1%>
+              </td>
+              <td>
+                <%=category.name %>
+              </td>
+              <td>
+                <a type="button" onclick="toast('<%-category._id%>')" class="btn btn-danger btn-sm btn-icon-text  btn-icon-prepend" onclick="return confirm('are you sure you want to delete <%-category.name%> ?')">
+                  delete category
+                </a>
+              </td>
+              <td>
+                <a type="button" href="/admin/category-edit/<%-category._id%>" class="btn btn-info btn-sm btn-icon-text  btn-icon-prepend">
+                  edit category
+                </a>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>
+
+
+
+<script>
+  function toast(id) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/admin/category-delete/' + id,
+          method: 'delete',
+          success: (response) => {
+            if (response.status) {
+              Swal.fire(
+                'Deleted!',
+                'Category has been deleted.',
+                'success'
+              )
+              location.reload()
+            }
+          }
+        })
+      }
+    })
+  }
+</script>

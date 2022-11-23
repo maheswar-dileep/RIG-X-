@@ -5,10 +5,13 @@ module.exports = {
 
     addProducts: (product) => {
         return new Promise(async (resolve, reject) => {
-            let data = await db.products(product)
-            data.save()
-            resolve(data._id)
-
+            try {
+                let data = await db.products(product)
+                data.save()
+                resolve(data._id)
+            } catch (err) {
+                console.log(err)
+            }
         })
     },
 
@@ -16,8 +19,12 @@ module.exports = {
     getAllProducts: () => {
 
         return new Promise(async (resolve, reject) => {
-            let products = await db.products.find({})
-            resolve(products)
+            try {
+                let products = await db.products.find({})
+                resolve(products)
+            } catch (err) {
+                console.log(err)
+            }
         })
 
     },
@@ -25,9 +32,13 @@ module.exports = {
 
     deleteProduct: (prodId) => {
         return new Promise((resolve, reject) => {
-            db.products.deleteOne({ _id: prodId }).then(() => {
-                resolve()
-            })
+            try {
+                db.products.deleteOne({ _id: prodId }).then(() => {
+                    resolve({status:true})
+                })
+            } catch (err) {
+                console.log(err)
+            }
         })
     },
 
@@ -72,8 +83,12 @@ module.exports = {
 
     getAllCategories: () => {
         return new Promise(async (resolve, reject) => {
-            let categories = await db.categories.find({})
-            resolve(categories)
+            try {
+                let categories = await db.categories.find({})
+                resolve(categories)
+            } catch (err) {
+                console.log(err)
+            }
         })
     },
 
@@ -93,29 +108,37 @@ module.exports = {
 
 
     deleteCategory: (id) => {
-        return new Promise((resolve, reject) => {
-            db.categories.deleteOne({ _id: id }).then(() => {
-                resolve()
+        try {
+            return new Promise((resolve, reject) => {
+                db.categories.deleteOne({ _id: id }).then(() => {
+                    resolve({status:true})
+                })
             })
-        })
+        } catch (err) {
+            console.log(err);
+        }
     },
 
 
 
     addCategories: (data) => {
         return new Promise(async (resolve, reject) => {
-            db.categories.find({ name: data.name }).then(async (category) => {
-                let response = {}
-                if (category.length == 0) {
-                    let categories = await db.categories(data)
-                    categories.save()
-                    response.data = categories
-                    response.status = true
-                    resolve(response)
-                } else {
-                    resolve({ status: false })
-                }
-            })
+            try {
+                db.categories.find({ name: data.name }).then(async (category) => {
+                    let response = {}
+                    if (category.length == 0) {
+                        let categories = await db.categories(data)
+                        categories.save()
+                        response.data = categories
+                        response.status = true
+                        resolve(response)
+                    } else {
+                        resolve({ status: false })
+                    }
+                })
+            } catch (err) {
+                console.log(err);
+            }
         })
     },
 
@@ -123,31 +146,34 @@ module.exports = {
 
     editCategory: (catId, data) => {
         return new Promise(async (resolve, reject) => {
-
-            db.categories.find({ name: data.name }).then(async (category) => {
-                let response = {}
-                if (category.length == 0) {
-                    try {
-                        let categories = await db.categories.updateOne({ _id: catId }, {
-                            $set: {
-                                name: data.name
-                            }
-                        })
-                        response.data = categories
-                        response.status = true
-                        resolve(response)
-                    } catch (err) {
-                        console.log(err)
+            try {
+                db.categories.find({ name: data.name }).then(async (category) => {
+                    let response = {}
+                    if (category.length == 0) {
+                        try {
+                            let categories = await db.categories.updateOne({ _id: catId }, {
+                                $set: {
+                                    name: data.name
+                                }
+                            })
+                            response.data = categories
+                            response.status = true
+                            resolve(response)
+                        } catch (err) {
+                            console.log(err)
+                        }
+                    } else {
+                        resolve({ status: false })
                     }
-                }else{
-                    resolve({status:false})
-                }
-            })
+                })
+            } catch (err) {
+                console.log(err);
+            }
         })
     },
 
 
-    ordersPage:()=>{
+    ordersPage: () => {
         db.orders.find({})
     }
 

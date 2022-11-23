@@ -1,44 +1,86 @@
-<main class="main">
-    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        <div class="container">
-            <h1 class="page-title">Orders<span class="text-danger">RIG-X-</span></h1>
-        </div><!-- End .container -->
-    </div><!-- End .page-header -->
-
-    <div class="page-content mt-5">
-        <div class="container">
-            <table class="table table-wishlist table-mobile">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Ordered At</th>
-                        <th>Price</th>
-                        <th>Delivery Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <% for(i=orders.length-1;i>=0;i--){%>
-                        <% orders[i].productsDetails.forEach(element => { %>
-                            <tr>
-                                <td class="product-col">
-                                    <div class="product">
-                                        <figure class="product-media">
-                                            <a href="#">
-                                                <img src="/product-images/<%- element._id %>0.jpg"
-                                                    alt="Product image">
-                                            </a>
-                                        </figure>
-
-                                        <h3 class="product-title">
-                                            <a href="#"><%- element.productsName %></a>
-                                        </h3><!-- End .product-title -->
-                                    </div><!-- End .product -->
-                                </td>
+<style>
+  body {
+    background-image: url('/images/page-header-bg.jpg');
+  }
 
 
-                                <% const getDate=(date)=>{
+  .btn {
+    min-width: 60px;
+    color: white;
+  }
+
+  h6 {
+    padding-right: 50px;
+
+  }
+
+  .line {
+    width: 100.5%;
+    height: 1px;
+    background-color: #FCB941;
+  }
+
+  .nav {
+    background-image: url('/images/page-header-bg.jpg');
+  }
+
+  .fas.fa-angle-up {
+    display: none;
+  }
+
+  /* Main */
+
+  .mainDiv {
+    height: auto;
+    border: 1px solid #a1a1a1;
+    border-radius: 5px;
+  }
+
+  .addrDiv {
+    height: auto;
+    border: 1px solid #a1a1a1;
+    border-radius: 5px;
+
+  }
+</style>
+<section>
+
+
+  </div>
+  <div class="container-fluid ">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="mainbar ">
+          <section id="page-top">
+            <!-- Page Wrapper -->
+            <div id="wrapper">
+              <!-- Content Wrapper -->
+              <div id="content-wrapper" class="d-flex flex-column">
+                <!-- Main Content -->
+                <div id="content">
+                  <!-- Begin Page Content -->
+                  <div class="container-fluid">
+                    <!-- DataTales Example -->
+                    <div class="card shadow mt-5 mb-4" style="border: 5px solid #ebebeb; background-color: #f5f6f6;">
+                      <div class="card-body mt-4">
+                        <div class="container">
+                          <div class="row">
+                            <div class="col-12">
+                              <% if(orders.length){ %>
+                              <h3>Orders</h3>
+                              <%}else{%>
+                              <h3>No Orders</h3>
+
+                              <a href="/shop" class="btn btn-outline-dark-2 btn-block bg-transparent text-dark mb-3 w-50"><span>GRAB
+                                  NEW OFFERS</span><i class="icon-refresh"></i></a>
+                              <%}%>
+                            </div>
+                          </div>
+                          <% orders?.forEach((element,index)=>{ %>
+                              <div class="row mt-5">
+                                <div class="mx-3">
+
+                                  <% const getDate=(date)=>{
                                     let orderDate = new Date(date)
                                 
                                     let day = orderDate.getDate();
@@ -48,58 +90,172 @@
                                     return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
                                 
                                     } %>
+                                  <h6 style="font-weight: 400; font-size: small; color: #585858;">Ordered :<%- getDate(element.orders.createdAt) %>
+                                  </h6>
+                                </div>
+
+                                <div class="col-12 mainDiv">
+                                  <% for(let i=0;i<element.orders.productsDetails.length;i++){ %>
+                                  <div class="row mt-2 p-3 mb-2">
+                                    <div class="col-6 mx-3" style="float: left;">
+                                      <div class="d-flex"><span style="margin-top: 6px;" class="mx-3">
+                                          <h5>
+                                            <% if(i==0){ %>
+                                            <%= index+1 %>.<%}%>  <%= element.orders.productsDetails[i].productsName%>
+                                          </h5>
+                                        </span></div><%console.log(element.orders.productsDetails[i].img[0])%>
+                                      <div class="d-flex">
+                                        <img class="mx-5 mt-2" style="width: 100px; height:100px; object-fit:contain" src="/product-images/<%=element.orders.productsDetails[i].img[0]%>" alt="">
+                                        <div class="d-flex-column">
+                                          <div class="mt-2" style="font-size: large;"><span class="px-2" style="color: #fb7e00; font-weight: 500;">Rs: <%=element.orders.productsDetails[i].productsPrice %></span>x<span class="mx-2" style="font-weight: 500;">
+                                              <%=element.orders.productsDetails[i].quantity %>
+                                            </span></div>
+                                          <% if(element.orders.productsDetails[i].status==true){%>
+                                          <div class="text-center text-white mt-1 " style="width: 100px;height:23px; border-radius: 10px; background-color: rgb(109, 176, 85); font-size: small; font-weight: 600;">
+                                            Order Placed
+                                          </div>
+                                          <%}else{ %>
+                                          <div class="text-center text-white mt-1" style="width: 100px;height:23px; border-radius: 10px; background-color: rgb(205, 66, 66); font-size: small; font-weight: 600;">
+                                            Cancelled
+                                          </div>
+                                          <%}%>
+                                                </div>
+
+                                              </div>
+                                            </div>
+                                            <div class="col-5 " style="float: left;margin-top: 85px !important">
+                                              <div class="d-flex">
+
+                                                <div class="mt-1" style="margin-left: 50px !important;;">
+                                                  <h6>Delivery :<span style="font-weight: 300;">
+                                                      <%= element.orders.productsDetails[i].delivery %>
+                                          </span> </h6>
+                                        </div>
+                                        <div class="mx-5 ">
+                                          <% if(element.orders.productsDetails[i].status==true){%>
+                                          <button class="cancel btn text-white " style="border-radius: 10px; width: 130px; background-color: rgb(234, 34, 4);" onclick="cancelOrder('<%=element?.orders.productsDetails[i]?._id%>','<%=element?.orders._id%>')">Cancel Order</button>
+                                          <%}else{%>
+                                          <button class="cancel btn text-white bg-danger" style="border-radius: 10px; width: 130px; " disabled>Cancel Order</button>
+                                          <%}%>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <% } %>
+                                        </div>
+                                      </div>
+                                      <div class="row mt-3">
+                                        <div class="col-12">
+                                          <div class="row addrDiv pb-2">
+                                            <div class="col-4  " style="float: left;">
+                                              <h6 class="mt-2 mx-4">Shipping address</h6>
+                                              <p class="mx-4 mt-1">
+                                                <span style="font-weight: 500;">
+                                                  <%= element.orders.fname %>
+                                                </span> <br>
+                                                <%- element.orders.shippingAddress.mobile %><br>
+                                                <%- element.orders.shippingAddress.email %><br>
+                                                <%- element.orders.shippingAddress.street %>, <%- element.orders.shippingAddress.city %>
+                                                <%- element.orders.shippingAddress.state %> <br>
+                                                <%- element.orders.shippingAddress.pincode %><br>
+                                              </p>
+                                            </div>
+
+                                            <div class="col-4 ">
+                                              <h6 class="mt-2 mx-4 ">Payment Method</h6>
+                                              <p class="mx-4 mt-1">
+                                                <%= element.orders.paymentMethod  %>
+                                              </p>
+                                              <div class="mt-5">
+                                                <h6 class="mt-2 mx-4 ">Payment Status</h6>
+                                                <p class="mx-4 mt-1">
+                                                  <%= element.orders.paymentStatus  %>
+                                                </p>
+                                              </div>
+                                            </div>
+                                            <div class="col-4">
+
+                                              <h6 class="mt-2 mx-4 ">Total Price</h6>
+                                              <span class="mx-4 mt-2 " style="color: #fb6400; font-size: x-large !important; font-weight: 500; ">Rs:
+                                                <%= element.orders.totalPrice %></span>
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <% }) %>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="scroll-to-top rounded" href="#page-top">
+                      <i class="fas fa-angle-up"></i>
+                    </a>
 
 
-                                <td><%- getDate(orders[i].createdAt) %></td>
-                                <td class="price-col">₹ <%- element.productsPrice%></td>
-                                <%if(element.status){%>
-                                <td class="stock-col"><span class="in-stock">Will Delivier Today </span></td>
-                                <td class="action-col">
-                                    <button onclick="cancelOrder('<%-element._id%>','<%-orders[i]._id%>')" class="btn btn-sm btn-block btn-outline-danger"></i>Cancel Order</button>
-                                </td>
-                                    <%}else{%>
-                                        <td class="stock-col"><span class="text-danger">Order Cancelled</span></td>
-                                        <%}%>
-                            </tr>
-                        <% }) %>
-                    <% } %>
-                </tbody>
-            </table><!-- End .table table-wishlist -->
-            <div class="wishlist-share">
-                <div class="social-icons social-icons-sm mb-2">
-                    <label class="social-label">Share on:</label>
-                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
-                    <a href="#" class="social-icon" title="Youtube" target="_blank"><i class="icon-youtube"></i></a>
-                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
-                </div><!-- End .soial-icons -->
-            </div><!-- End .wishlist-share -->
-        </div><!-- End .container -->
-    </div><!-- End .page-content -->
-</main><!-- End .main -->
+                    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">Select "Logout" below if you are ready to end your current
+                            session.</div>
+                          <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <script>
+  function cancelOrder(proId, orderId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3cc75c',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Cancel The Order!'
+    }).then((result) => {
+      if (result.isConfirmed) {
 
-
-    function cancelOrder(prodId,orderId){
-        console.log(prodId,orderId);
         $.ajax({
-            url:'/user-order-cancel',
-            data:{
-                orderId:orderId,
-                prodId:prodId
-            },
-            beforeSend:()=>{
-                return confirm('Are you sure want to cancel this order?')
-            },
-            method:'POST',
-            success:(data)=>{
-                if(data.status){
-                    window.location.reload()
-                }
+          url: '/user-order-cancel',
+          data: {
+            proId: proId,
+            orderId: orderId
+          },
+          method: 'PUT',
+          success: (response) => {
+            if (response.status) {
+              location.reload()
             }
+          }
         })
-    }
-    
+
+        Swal.fire(
+          'Caneled!',
+          'Order is Cancelled',
+          'success'
+        )
+      }
+    })
+  }
 </script>

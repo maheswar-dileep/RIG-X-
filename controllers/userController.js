@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const productHelpers = require('../helpers/productHelpers');
 const userHelpers = require('../helpers/userHelpers');
 const OTP = require('../config/OTP')
@@ -6,10 +8,22 @@ const db = require("../model/connection")
 const auth = require('../controllers/auth');
 const { response } = require('../app');
 const { state } = require('../model/connection');
+const razorPayKey = require('../config/razorpayKey')
 
 let nav = false;
 let footer = true;
 
+const paypal = require('@paypal/checkout-server-sdk')
+const Environment =
+    process.env.NODE_ENV === "production"
+        ? paypal.core.LiveEnvironment
+        : paypal.core.SandboxEnvironment
+const paypalClient = new paypal.core.PayPalHttpClient(
+    new Environment(
+        process.env.PAYPAL_CLIENT_ID,
+        process.env.PAYPAL_CLIENT_SECRET
+    )
+)
 
 
 module.exports = {
@@ -17,10 +31,9 @@ module.exports = {
     //landingPage
 
     landingPage: (req, res, next) => {
-        let user = req.user.name
-        console.log(user);
+        let userName = req.user.name
         userHelpers.getCartCount(req.session.user).then((cartCount) => {
-            res.render('index', { user, nav: true, footer: true, cartCount });
+            res.render('index', { userName, nav: true, footer: true, cartCount });
         })
     },
 
@@ -61,13 +74,16 @@ module.exports = {
     //OTP
 
     otpPage: (req, res) => {
-        res.render('user/otp-login', { nav: false, footer: true })
+        res.render('user/otp-login', { nav: false, footer: false })
     },
 
-    otpLoginPost: (req, res) => {
+    otpLoginPost: async (req, res) => {
         mobile = req.params.id?.trim();
-
-        client
+        let userExists = await db.users.find({mobile:mobile})
+        if(userExists==0){
+            res.json({status:false})
+        }else{
+            client
             .verify
             .services(OTP.serviceId)
             .verifications
@@ -77,7 +93,7 @@ module.exports = {
             }).then((data) => {
                 res.status(200).res.send(data)
             })
-
+        }
     },
 
     otpVerify: (req, res) => {
@@ -94,10 +110,10 @@ module.exports = {
                     mobile = req.query.mobileNumber.slice(2);
                     userHelpers.getUserDetailsNo(mobile).then(user => {
                         req.session.user = user[0]._id;
-                        res.send({ value: 'success' })
+                        res.send({ value: true })
                     });
                 } else {
-                    res.send({ value: 'failed' })
+                    res.send({ value: false })
                 }
             })
     },
@@ -106,9 +122,10 @@ module.exports = {
     //shopPage
 
     shopPage: (req, res) => {
+        let userName = req.user.name
         userHelpers.getCartCount(req.session.user).then((cartCount) => {
             productHelpers.getAllProducts().then((products) => {
-                res.render('user/shop', { cartCount, products, nav: true, footer: true })
+                res.render('user/shop', { userName, cartCount, products, nav: true, footer: true })
             })
         })
     },
@@ -117,10 +134,11 @@ module.exports = {
     //productPage
 
     productPage: (req, res) => {
+        let userName = req.user.name
         let prodId = req.params.id
         userHelpers.getCartCount(req.session.user).then((cartCount) => {
             productHelpers.getProductDetails(prodId).then((product) => {
-                res.render('user/single-product', { cartCount, product, nav: true, footer: true })
+                res.render('user/single-product', { userName, cartCount, product, nav: true, footer: true })
             })
         })
     },
@@ -128,20 +146,25 @@ module.exports = {
     //aboutUs
 
     aboutUsPage: (req, res) => {
-        res.render('user/about-us', { nav: true, footer: true })
+        let userName = req.user.name
+        res.render('user/about-us', { userName, nav: true, footer: true })
     },
 
     //wishlistPage
 
     wishlistPage: (req, res) => {
-        res.render('user/wishlist', { nav: true, foooter: true })
+        let userName = req.user.name
+        res.render('user/wishlist', { userName, nav: true, foooter: true })
     },
 
     //account
 
     accountPage: async (req, res) => {
+        let userName = req.user.name
+        let states = await userHelpers.getAllStates(req.session.user)
+        let address = await userHelpers.getaddress(req.session.user)
         let cartCount = await userHelpers.getCartCount(req.session.user)
-        res.render('user/account', { nav: true, footer: true, cartCount })
+        res.render('user/account', { nav: true, footer: true, userName, cartCount, address, states })
     },
 
     addToCart: (req, res) => {
@@ -150,14 +173,13 @@ module.exports = {
         })
     },
 
-    cart: (req, res) => {
-        userHelpers.getTotalAmount(req.session.user).then((total) => {
-            userHelpers.getCartCount(req.session.user).then((cartCount) => {
-                userHelpers.getCartProducts(req.session.user).then((cartItems) => {
-                    res.render('user/cart', { cartCount, cartItems, total, nav: true, foooter: true })
-                })
-            })
-        })
+    cart: async (req, res) => {
+        let userName = req.user.name
+        let cartItems = await userHelpers.getCartProducts(req.session.user)
+        let cartCount = await userHelpers.getCartCount(req.session.user)
+        let total = await userHelpers.getTotalAmount(req.session.user)
+        res.render('user/cart', { userName, cartCount, cartItems, total, nav: true, foooter: true })
+
     },
 
     changeProductQuantity: (req, res) => {
@@ -176,37 +198,97 @@ module.exports = {
     //checkout
 
     checkout: async (req, res) => {
+        let userName = req.user.name
         let address = await userHelpers.getaddress(req.session.user)
         let states = await userHelpers.getAllStates()
         let total = await userHelpers.getTotalAmount(req.session.user)
-        res.render('user/checkout', { total, address, nav: true, foooter: true, states })
+
+        res.render('user/checkout', { paypalClientId: process.env.PAYPAL_CLIENT_ID, total, address, nav: true, foooter: true, userName, states })
     },
 
     //placeorder
 
     placeOrder: async (req, res) => {
         req.body.userId = req.session.user
+        req.body.paymentStatus = 'pending'
         let total = await userHelpers.getTotalAmount(req.session.user)
-        userHelpers.placeOrder(req.body, total).then((response) => {
-            res.json(response)
+        userHelpers.placeOrder(req.body, total).then(async (response) => {
+
+            if (req.body.paymentMethod == 'COD') {
+                res.json({ codstatus: true })
+            } else if (req.body.paymentMethod == 'razorpay') {
+                userHelpers.generateRazorPay(req.session.user, total).then((order) => {
+                    res.json(order)
+                })
+            } else {
+                res.json({ paypal: true })
+            }
         })
     },
 
     //orders
 
     ordersPage: async (req, res) => {
+        let userName = req.user.name
         let cartCount = await userHelpers.getCartCount(req.session.user)
         userHelpers.ordersDetails(req.session.user).then((orders) => {
-            res.render('user/orders', { cartCount, nav: true, foooter: true, orders })
+            res.render('user/orders', { cartCount, nav: true, foooter: true, userName, orders })
         })
     },
 
     //cancelOrder
 
     cancelOrder: (req, res) => {
-        userHelpers.cancelOrder(req.body).then((data) => {
-            res.json(data)
+        userHelpers.cancelOrder(req.body, req.session.user).then(() => {
+            res.json({ status: true })
         })
+    },
+
+    //paypal success
+
+    paypalSuccess: async (req, res) => {
+        console.log('api');
+        const ordersDetails = await db.order.find({ userId: req.session.user })
+        let orders = ordersDetails[0].orders.slice().reverse()
+        let orderId1 = orders[0]._id
+        let orderId = "" + orderId1
+
+        userHelpers.changePaymentStatus(req.session.user, orderId).then(() => {
+            res.json({ status: true })
+        })
+    },
+
+    //paypal order
+
+    paypalOrder: async (req, res) => {
+        const request = new paypal.orders.OrdersCreateRequest()
+        const total = 1000
+
+        request.prefer("return=representation")
+        request.requestBody({
+            intent: "CAPTURE",
+            purchase_units: [
+                {
+                    amount: {
+                        currency_code: "USD",
+                        value: total,
+                        breakdown: {
+                            item_total: {
+                                currency_code: "USD",
+                                value: total,
+                            },
+                        },
+                    }
+                },
+            ],
+        })
+
+        try {
+            const order = await paypalClient.execute(request)
+            res.json({ id: order.result.id })
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
     },
 
     //success
@@ -219,15 +301,68 @@ module.exports = {
 
     getAddress: (req, res) => {
         let addrId = req.params.id
-        userHelpers.getSingleAddress(addrId, req.session.user).then((data)=>{
+        userHelpers.getSingleAddress(addrId, req.session.user).then((data) => {
             res.json(data)
         })
     },
 
+    //CheckStock
 
+    checkStock: async (req, res) => {
+        let prodId = req.params.id
+        let products = await db.products.findOne({ _id: prodId })
+        let quantity = products.quantity
+        res.json({ stock: quantity })
 
+    },
 
+    //editAddress
 
+    editAddress: async (req, res) => {
+        userHelpers.editAddress(req.body, req.session.user).then((response) => {
+            res.json(response)
+        })
+    },
+
+    //verifyPayment
+
+    verifyPayment: (req, res) => {
+        userHelpers.verifyPayment(req.body).then(() => {
+            // console.log(req.body);
+            userHelpers.changePaymentStatus(req.session.user, req.body['order[receipt]']).then(() => {
+                res.json({ status: true })
+            })
+        }).catch((err) => {
+            res.json({ status: false })
+        })
+    },
+
+    //ordersList
+
+    ordersList: async (req, res) => {
+        let userName = req.user.name
+        let cartCount = await userHelpers.getCartCount(req.session.user)
+        userHelpers.ordersList(req.session.user).then((orders) => {
+            res.render('user/orders-list', { cartCount, nav: true, foooter: true, userName, orders })
+        })
+    },
+
+    //addNewAddress
+
+    addNewAddress: (req, res) => {
+        userHelpers.addNewAddress(req.session.user, req.body).then((response) => {
+            res.json(response)
+        })
+
+    },
+
+    //deleteAddress
+
+    deleteAddress: (req, res) => {
+        userHelpers.deleteAddress(req.session.user, req.params.id).then((response) => {
+            res.json(response)
+        })
+    },
 
     //logout
 
@@ -235,6 +370,7 @@ module.exports = {
         req.session.user = null;
         res.redirect('/login');
     }
+
 
 
 

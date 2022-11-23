@@ -1,10 +1,9 @@
-var createError = require('http-errors');
+const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const fileUpload = require('express-fileupload');
-
+const multer = require('multer')
 const expressLayouts = require('express-ejs-layouts')
 const db = require('./model/connection')
 const session = require('express-session')
@@ -12,11 +11,12 @@ const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const auth = require('./controllers/auth');
 
-const ConnectMongoDBSession = require('connect-mongodb-session');
+const ConnectMongoDBSession = require('connect-mongodb-session')(session);
 
-const mongoDbSesson = new ConnectMongoDBSession(session);
+
 
 const app = express();
+const admin = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,7 +29,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public/admin')));
-app.use(fileUpload())
 
 app.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -41,8 +40,8 @@ app.use(session({
   saveUninitialized: false,
   secret: 'secretKeyIsSecret',
   resave: false,
-  store: new mongoDbSesson({
-    uri:'mongodb://localhost:27017/ecommerce',
+  store: new ConnectMongoDBSession({
+    uri:'mongodb://127.0.0.1:27017/ecommerce',
     collection: "session"
   }),
   cookie: {
@@ -71,3 +70,61 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+
+/*===============================admin-PORT===============================*/
+
+// view engine setup
+admin.set('views', path.join(__dirname, 'views'));
+admin.set('view engine', 'ejs');
+admin.use(expressLayouts);
+
+// admin.use(logger('dev'));
+admin.use(express.json());
+admin.use(express.urlencoded({ extended: false }));
+admin.use(cookieParser());
+admin.use(express.static(path.join(__dirname, 'public')));
+admin.use(express.static(path.join(__dirname, 'public/admin')));
+
+admin.use(function (req, res, next) {
+  res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+  next();
+});
+
+
+admin.use(session({
+  saveUninitialized: false,
+  secret: 'secretKeyIsSecret',
+  resave: false,
+  store: new ConnectMongoDBSession({
+    uri: 'mongodb://127.0.0.1:27017/ecommerce',
+    collection: "session"
+  }),
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 10 // 10 days
+  }
+}));
+admin.use(auth.authInit);
+
+
+admin.use('/admin', adminRouter);
+
+// catch 404 and forward to error handler
+admin.use(function (req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+admin.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.admin.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+admin.listen(8080)
+
+module.exports = admin;

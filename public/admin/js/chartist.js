@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
   //simple line
   'use strict';
   if ($('#ct-chart-line').length) {
@@ -18,11 +18,11 @@
   }
 
   //Line scatterer
-  var times = function(n) {
+  var times = function (n) {
     return Array.apply(null, new Array(n));
   };
 
-  var data = times(52).map(Math.random).reduce(function(data, rnd, index) {
+  var data = times(52).map(Math.random).reduce(function (data, rnd, index) {
     data.labels.push(index + 1);
     for (var i = 0; i < data.series.length; i++) {
       data.series[i].push(Math.random() * 100)
@@ -30,7 +30,7 @@
     return data;
   }, {
     labels: [],
-    series: times(4).map(function() {
+    series: times(4).map(function () {
       return new Array()
     })
   });
@@ -38,7 +38,7 @@
   var options = {
     showLine: false,
     axisX: {
-      labelInterpolationFnc: function(value, index) {
+      labelInterpolationFnc: function (value, index) {
         return index % 13 === 0 ? 'W' + value : null;
       }
     }
@@ -47,7 +47,7 @@
   var responsiveOptions = [
     ['screen and (min-width: 640px)', {
       axisX: {
-        labelInterpolationFnc: function(value, index) {
+        labelInterpolationFnc: function (value, index) {
           return index % 4 === 0 ? 'W' + value : null;
         }
       }
@@ -71,11 +71,11 @@
     }, {
       stackBars: true,
       axisY: {
-        labelInterpolationFnc: function(value) {
+        labelInterpolationFnc: function (value) {
           return (value / 1000) + 'k';
         }
       }
-    }).on('draw', function(data) {
+    }).on('draw', function (data) {
       if (data.type === 'bar') {
         data.element.attr({
           style: 'stroke-width: 30px'
@@ -121,12 +121,12 @@
       series: [5, 3, 4]
     };
 
-    var sum = function(a, b) {
+    var sum = function (a, b) {
       return a + b
     };
 
     new Chartist.Pie('#ct-chart-pie', data, {
-      labelInterpolationFnc: function(value) {
+      labelInterpolationFnc: function (value) {
         return Math.round(value / data.series.reduce(sum) * 100) + '%';
       }
     });
@@ -145,7 +145,7 @@
       donutSolid: true,
       startAngle: 270,
       showLabel: true,
-      labelInterpolationFnc: function(value, index) {
+      labelInterpolationFnc: function (value, index) {
         var percentage = Math.round(value / data.series.reduce(sum) * 100) + '%';
         return labels[index] + ' ' + percentage;
       }
@@ -166,11 +166,11 @@
     }, {
       stackBars: true,
       axisY: {
-        labelInterpolationFnc: function(value) {
+        labelInterpolationFnc: function (value) {
           return (value / 100) + 'k';
         }
       }
-    }).on('draw', function(data) {
+    }).on('draw', function (data) {
       if (data.type === 'bar') {
         data.element.attr({
           style: 'stroke-width: 50px'
@@ -184,17 +184,17 @@
     new Chartist.Bar('#ct-chart-vartical-stacked-bar', {
       labels: ['J', 'F', 'M', 'A', 'M', 'J', 'A'],
       series: [{
-          "name": "Income",
-          "data": [8, 4, 6, 3, 7, 3, 8]
-        },
-        {
-          "name": "Outcome",
-          "data": [2, 7, 4, 8, 4, 6, 1]
-        },
-        {
-          "name": "Revenue",
-          "data": [4, 3, 3, 6, 7, 2, 4]
-        }
+        "name": "Income",
+        "data": [8, 4, 6, 3, 7, 3, 8]
+      },
+      {
+        "name": "Outcome",
+        "data": [2, 7, 4, 8, 4, 6, 1]
+      },
+      {
+        "name": "Revenue",
+        "data": [4, 3, 3, 6, 7, 2, 4]
+      }
       ]
     }, {
       seriesBarDistance: 10,

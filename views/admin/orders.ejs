@@ -6,10 +6,11 @@
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>Product Name</th>
-              <th>Image</th>
+              <th>User Name</th>
               <th>Order Id</th>
+              <th>Total Quantity</th>
               <th>Order Placed On</th>
+              <th>View More</th>
 
             </tr>
           </thead>
@@ -27,31 +28,22 @@
                             } %>
 
 
-
-            <% for(i=orders.length-1;i>=0;i--){%>
-            <% orders[i].productsDetails.forEach(element=> { %>
+            <% orders?.forEach((element,index)=> { %>
             <tr>
               <td>
-                <%- element.productsName %>
+                <span class="h-4 mb-2"><%- element?.orders?.fname %></span>
+                <br>
+                ID:<%- element?.userId %>
               </td>
-              <td> <img src="/product-images/<%- element._id %>0.jpg" alt=""> </td>
-              <td>Id : <%-orders[i]._id %>
-              </td>
+              <td>ID : <%-element.orders._id %></td>
+              <td><%=element?.orders?.totalQuantity %></td>
               <td>
-                <%- getDate(orders[i].createdAt) %>
+                <%- getDate(element.orders?.createdAt) %>
               </td>
+              <td><a href="/admin/order-view-more/<%-element.orders._id %>" style="text-decoration:none;">View More</a></td>
 
-             
-
-              <%if(element.status){%>
-              <td>
-                <button class="btn btn-outline-danger btn-sm mt-2" onclick="cancelOrder('<%- orders[i]._id %>','<%- element._id %>')">Cancel
-                  Order</button>
-              </td>
-              <%}%>
-                                    </tr>
-                                    <% })%>
-              <% } %>
+            </tr>
+            <% })%>
           </tbody>
         </table>
       </div>
