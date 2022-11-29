@@ -9,6 +9,7 @@ const auth = require('../controllers/auth');
 const { response } = require('../app');
 const { state } = require('../model/connection');
 const razorPayKey = require('../config/razorpayKey')
+const { Convert } = require("easy-currencies");
 
 let nav = false;
 let footer = true;
@@ -79,20 +80,20 @@ module.exports = {
 
     otpLoginPost: async (req, res) => {
         mobile = req.params.id?.trim();
-        let userExists = await db.users.find({mobile:mobile})
-        if(userExists==0){
-            res.json({status:false})
-        }else{
+        let userExists = await db.users.find({ mobile: mobile })
+        if (userExists == 0) {
+            res.json({ status: false })
+        } else {
             client
-            .verify
-            .services(OTP.serviceId)
-            .verifications
-            .create({
-                to: `+91${mobile}`,
-                channel: 'sms'
-            }).then((data) => {
-                res.status(200).res.send(data)
-            })
+                .verify
+                .services(OTP.serviceId)
+                .verifications
+                .create({
+                    to: `+91${mobile}`,
+                    channel: 'sms'
+                }).then((data) => {
+                    res.status(200).res.send(data)
+                })
         }
     },
 
@@ -195,6 +196,15 @@ module.exports = {
         })
     },
 
+    //checkCartQuantity
+
+    checkCartQuantity: (req, res) => {
+        // console.log('uId',req.session.user);
+        userHelpers.checkCartQuantity(req.session.user, req.params.id).then((response) => {
+            res.send(response)
+        })
+    },
+
     //checkout
 
     checkout: async (req, res) => {
@@ -221,7 +231,7 @@ module.exports = {
                     res.json(order)
                 })
             } else {
-                res.json({ paypal: true })
+                res.json({ paypal: true, total: total })
             }
         })
     },
@@ -244,10 +254,20 @@ module.exports = {
         })
     },
 
+    // returnProduct
+
+    returnProduct: async (req, res) => {
+
+        userHelpers.returnProduct(req.body, req.session.user).then(() => {
+
+        })
+
+    },
+
     //paypal success
 
     paypalSuccess: async (req, res) => {
-        console.log('api');
+        // console.log('api');
         const ordersDetails = await db.order.find({ userId: req.session.user })
         let orders = ordersDetails[0].orders.slice().reverse()
         let orderId1 = orders[0]._id
@@ -258,11 +278,15 @@ module.exports = {
         })
     },
 
+
     //paypal order
 
     paypalOrder: async (req, res) => {
+        let total = req.body.total
+        total = parseInt(total)
         const request = new paypal.orders.OrdersCreateRequest()
-        const total = 1000
+        const value = await Convert(total).from("INR").to("USD");
+        let price = Math.round(value)
 
         request.prefer("return=representation")
         request.requestBody({
@@ -271,11 +295,11 @@ module.exports = {
                 {
                     amount: {
                         currency_code: "USD",
-                        value: total,
+                        value: price,
                         breakdown: {
                             item_total: {
                                 currency_code: "USD",
-                                value: total,
+                                value: price,
                             },
                         },
                     }
@@ -360,6 +384,20 @@ module.exports = {
 
     deleteAddress: (req, res) => {
         userHelpers.deleteAddress(req.session.user, req.params.id).then((response) => {
+            res.json(response)
+        })
+    },
+
+    //orderInvoice
+
+    orderInvoice: async (req, res) => {
+        const ordersDetails = await db.order.find({ userId: req.session.user })
+        let orders = ordersDetails[0].orders.slice().reverse()
+        let orderId1 = orders[0]._id
+        let orderId = "" + orderId1
+
+        userHelpers.orderInvoice(req.session.user,orderId).then((response) => {
+            // console.log(response);
             res.json(response)
         })
     },

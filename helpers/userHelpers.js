@@ -2,7 +2,7 @@ const db = require("../model/connection")
 const bcrypt = require('bcrypt')
 const { response } = require("../app")
 const { userid } = require("../config/admin_pass")
-const { address } = require("../model/connection")
+const { address, products } = require("../model/connection")
 const { cancelOrder } = require("../controllers/userController")
 const ObjectId = require('mongodb').ObjectId
 const Razorpay = require('razorpay');
@@ -29,8 +29,7 @@ module.exports = {
 
                     if (user.length == 0) {
 
-                        userData.password = await bcrypt.
-                            hash(userData.password, 10)
+                        userData.password = await bcrypt.hash(userData.password, 10)
                         let data = await db.users(userData)
                         data.save()
                         response.user = data
@@ -50,7 +49,6 @@ module.exports = {
     },
 
     doLogin: (userData) => {
-
 
         return new Promise(async (resolve, reject) => {
             try {
@@ -74,6 +72,7 @@ module.exports = {
             }
         })
     },
+
     getUserDetailsNo: (mobileNumber) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -221,6 +220,26 @@ module.exports = {
         })
     },
 
+    checkCartQuantity: async (userId, proId) => {
+        return new Promise(async (resolve, reject) => {
+            let cart = await db.cart.findOne({ user: userId })
+            if (cart) {
+                let cartIndex = cart?.cartItems?.findIndex(cart => cart.products == proId)
+                if (cartIndex == -1) {
+                    let quantity = 0
+                    resolve({ status: true, quantity: quantity })
+                } else {
+                    let quantity = cart?.cartItems[cartIndex]?.quantity
+                    resolve({ status: true, quantity: quantity })
+                }
+            } else {
+                resolve({ status: false })
+            }
+
+        })
+
+    },
+
     getTotalAmount: (userId) => {
         return new Promise((resolve, reject) => {
             try {
@@ -322,10 +341,12 @@ module.exports = {
                             productsName: '$cartItemsRs.name',
                             productsPrice: '$cartItemsRs.price',
                             status: '$cartItemsRs.status',
+                            orderStatus: 'Processing',
                             img: "$cartItemsRs.img"
                         }
                     }
                 ])
+
 
                 //totalQuatity
 
@@ -413,7 +434,7 @@ module.exports = {
                     mobile: order.mobile,
                     paymentMethod: order.paymentMethod,
                     paymentStatus: order.paymentStatus,
-                    productsDetails: products,
+                    productsDetails: products,//projected data
                     totalPrice: total,
                     totalQuantity: totalQuantity,
                     shippingAddress: orderAddress,
@@ -484,6 +505,7 @@ module.exports = {
     cancelOrder: (data, userId) => {
         // console.log(data);
         return new Promise(async (resolve, reject) => {
+            console.log(data.orderId);
             try {
                 let order = await db.order.find({ 'orders._id': data.orderId })
                 // console.log('order->', order);
@@ -520,6 +542,82 @@ module.exports = {
                         })
 
 
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        })
+    },
+
+    //returnProduct
+
+    returnProduct: (data, userId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let order = await db.order.find({ 'orders._id': data.orderId })
+                // console.log(order);
+                let flag = 1
+                if (order) {
+                    let orderIndex = order[0].orders.findIndex(order => order._id == data.orderId)
+                    // console.log(orderIndex);
+                    let productIndex = order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.prodId)
+                    // console.log(productIndex);
+
+                    await db.order.updateOne(
+                        {
+                            userId: userId
+                        },
+                        {
+                            $set: {
+                                ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.orderStatus']: 'Returned',
+                                ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.status']: false
+                            }
+                        }
+                    );
+
+                    db.data.aggregate([
+                        {
+                            $match: ({ userId: ObjectId(data.orderId) })
+                        },
+                        {
+                            $unwind: '$orders'
+                        },
+                        {
+                            $unwind: '$orders.productsDetails'
+                        },
+                        {
+                            $match: { $and: [{ 'orders._id': ObjectId(data.orderId), 'orders.productsDetails._id': ObjectId(data.prodId) }] }
+                        }
+                    ]).then((aggrData) => {
+                        let priceToWallet = {
+                            price: 0
+                        }
+                        let totalPrice = aggrData[0].orders.productsDetails.productsPrice * aggrData[0].orders.productsDetails.quantity
+                        if (aggrData[0].orders.totalPrice - totalPrice < 0){
+                            priceToWallet.price = aggrData[0].orders.totalPrice
+                        }else{
+                            priceToWallet.price = totalPrice
+                        }
+
+                        db.products.updateOne({_id:prodId},{
+                            $inc:{quantity:aggrData[0].orders.productsDetails.quantity}
+                        }).then((e)=>{
+                            console.log(e);
+                        })
+
+                        db.user.updateOne({_id:user},{
+                            $push:{
+                                walet:priceToWallet
+                            }
+                        }).then((e)=>{
+                            console.log(e);
+                            resolve({status:true})
+                        })
+                    })
+
+
+                } else {
+                    resolve({ status: false })
                 }
             } catch (err) {
                 console.log(err);
@@ -698,8 +796,8 @@ module.exports = {
                         ).then(() => {
                             resolve({ status: true })
                         })
-                    }else{
-                        resolve({status:false})
+                    } else {
+                        resolve({ status: false })
                     }
                 } else {
                     db.address(addressData).save()
@@ -732,5 +830,29 @@ module.exports = {
                 console.log(err)
             }
         })
+    },
+
+    orderInvoice: (userId, orderId) => {
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                let orders = await db.order.findOne({ userId: userId })
+                // console.log(orders);
+                if (orders) {
+
+                    let orderIndex = orders.orders.findIndex(order => order._id == orderId)
+                    let lastOrder = orders.orders[orderIndex]
+
+                    resolve({ status: true, data: lastOrder })
+
+                } else {
+                    resolve({ status: false })
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        })
+
     }
 }

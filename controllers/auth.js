@@ -27,6 +27,7 @@ module.exports = {
 
         next();
     },
+
     verifyUser: function (req, res, next) {
         if (req.user) {
             next();
@@ -34,6 +35,7 @@ module.exports = {
             res.redirect('/login');
         }
     },
+
     mustLogout: function (req, res, next) {
         if (req.user) {
             res.redirect('/');
@@ -41,6 +43,7 @@ module.exports = {
             next();
         }
     },
+
     verifyUserAPI: function (req, res, next) {
         if (req.user) {
             next();
@@ -48,6 +51,7 @@ module.exports = {
             res.send('unauthorized');
         }
     },
+
     mustLogoutAPI: function (req, res, next) {
         if (req.user) {
             res.send('Forbidden');
@@ -55,6 +59,7 @@ module.exports = {
             next();
         }
     },
+
     verifyAdmin: function (req, res, next) {
         if (req.admin) {
             next();
@@ -62,6 +67,7 @@ module.exports = {
             res.redirect('/admin/login');
         }
     },
+
     adminMustLogout: function (req, res, next) {
         if (req.admin) {
             res.redirect('/admin');
@@ -69,6 +75,7 @@ module.exports = {
             next();
         }
     },
+
     verifyAdminAPI: function (req, res, next) {
         if (req.admin) {
             next();
@@ -76,6 +83,7 @@ module.exports = {
             res.send('unauthorized');
         }
     },
+
     mustLogoutAdminAPI: function (req, res, next) {
         if (req.admin) {
             res.send('Forbidden');
@@ -83,4 +91,5 @@ module.exports = {
             next();
         }
     },
+    
 };

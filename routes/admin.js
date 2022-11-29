@@ -5,6 +5,7 @@ const productHelpers = require('../helpers/productHelpers');
 const multer = require('multer')
 
 const auth = require('../controllers/auth');
+const { response } = require('../app');
 const router = express.Router();
 const layout = 'admin-layout'
 
@@ -40,7 +41,7 @@ router.get('/add-products', auth.verifyAdmin, controllers.addProducts)
 
 //chartGraph
 
-router.get('/chartGraph', controllers.chartGraph)
+router.get('/chartGraph', controllers.revenueGraphMonth)
 
 /*------------------------add-products------------------------------*/
 
@@ -109,6 +110,18 @@ router.get('/order-view-more/:id', auth.verifyAdmin, controllers.orderViewMore)
 /*---------------cancelOrder----------------*/
 
 router.put('/admin-cancel-order', auth.verifyAdmin, controllers.cancelOrder)
+
+/*----------------change-order-status-------------*/
+
+router.post('/change-order-status',auth.verifyAdmin,controllers.changeOrderStatus)
+
+/*-----------------------Sales-Report-------------------*/
+
+router.get('/sales-report',auth.verifyAdmin,controllers.generateSalesReport)
+
+/*-----------------------------generate-pdf-------------------*/
+
+router.get('/generate-PDF-monthly', auth.verifyAdmin, controllers.generateReportPDF)
 
 /*---------------logout----------------*/
 

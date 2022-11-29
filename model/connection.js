@@ -83,10 +83,6 @@ const orderSchema = new mongoose.Schema({
             totalQuantity: Number,
             productsDetails: Array,
             shippingAddress: Object,
-            orderStatus: {
-                type: String,
-                default: 'processing'
-            },
             status: {
                 type: Boolean,
                 default: true

@@ -65,8 +65,7 @@
               </td>
 
               <td>
-                <a type="button" href=./edit-products/<%=products._id%> class="btn btn-outline-info
-                                        btn-sm btn-icon-text ti-file btn-icon-append">
+                <a type="button" href=./edit-products/<%=products._id%> class="btn btn-outline-info btn-sm btn-icon-text ti-file btn-icon-append">
                   Edit
                 </a>
 
@@ -103,12 +102,12 @@
           success: (response) => {
             if (response.status) {
               location.reload()
-            }else{
-               Swal.fire(
-               'ERR!',
-               'oops Something went wrong.',
-               'error'
-               )
+            } else {
+              Swal.fire(
+                'ERR!',
+                'oops Something went wrong.',
+                'error'
+              )
             }
           }
         })

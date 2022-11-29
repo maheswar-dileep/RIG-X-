@@ -62,10 +62,13 @@
           </div>
 
           <div class="form-group col-md-10">
-            <img src="" alt="" style="width: 75px; height: 75px;" id="imgView">
+            <img src="" alt="" style="width: 75px; height: 75px;" id="imgView1">
+            <img src="" alt="" style="width: 75px; height: 75px;" id="imgView2">
+            <img src="" alt="" style="width: 75px; height: 75px;" id="imgView3">
+            <img src="" alt="" style="width: 75px; height: 75px;" id="imgView4">
           </div>
 
-
+          
           <div class="form-group col-md-10">
             <label for="">Image</label>
             <input type="file" name="image" id="image" class="form-control" onchange="viewImage1(event)" required>
@@ -88,8 +91,8 @@
 
 
           <button type="submit" class="btn btn-primary ml-3 mr-2 col-md-2">Submit</button>
-          <button class="btn btn-light">Cancel</button>
-        </div>
+          <button class="btn btn-light" onclick="history.back()">Cancel</button>
+        </div> 
       </form>
     </div>
   </div>
@@ -100,19 +103,19 @@
 
 <script>
   function viewImage1(event) {
-    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
     console.log(event)
   }
 
   function viewImage2(event) {
-    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('imgView23').src = URL.createObjectURL(event.target.files[0])
   }
 
   function viewImage3(event) {
-    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
   }
 
   function viewImage4(event) {
-    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('imgView4').src = URL.createObjectURL(event.target.files[0])
   }
 </script>

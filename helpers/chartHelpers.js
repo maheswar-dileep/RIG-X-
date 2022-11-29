@@ -1,9 +1,10 @@
+const { order } = require('../model/connection')
 const db = require('../model/connection')
 
 let arr = []
 module.exports = {
 
-    priceGraph: () => {
+    revenueGraphMonth: () => {
         return new Promise(async (resolve, reject) => {
             for (let i = 0; i < 12; i++) {
                 let price = await db.order.aggregate([
@@ -13,9 +14,9 @@ module.exports = {
                     {
                         '$unwind': '$orders.productsDetails'
                     },
-                    // {
-                    //     '$match': { 'orders.paymentStatus': 'PAID' }
-                    // },
+                    {
+                        '$match': { 'orders.productsDetails.orderStatus': 'Delivered' }
+                    },
                     {
                         "$match": {
                             '$expr': {
@@ -53,16 +54,85 @@ module.exports = {
         })
     },
 
+    revenueGraphDay: () => {
+        return new Promise((resolve, reject) => {
+            try {
+                db.order.aggregate([
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        $unwind: '$orders.productsDetails'
+                    },
+                    {
+                        '$match': { 'orders.productsDetails.orderStatus': 'Delivered' }
+                    },
+                    {
+                        '$match': {
+                            '$expr': {
+                                '$eq': [
+                                    {
+                                        '$Day': '$orders.createdAt'
+                                    },
+                                    i + 1
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            total: { $sum: '$orders.totalPrice' }
+                        }
+                    }
+                ])
+            } catch (error) {
+                console.log(err);
+            }
+        })
+    },
+
+
+    totalOrdersGraph: () => {
+        return new Promise((resolve, reject) => {
+            try {
+                db.order.aggregate([
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        $unwind: '$orders.productsDetails'
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            count: { $sum: 1 }
+                        }
+                    }
+
+                ]).then((data) => {
+                    resolve(data[0]?.count);
+                })
+            } catch (err) {
+                console.log(err);
+            }
+        })
+    },
+
     paymentMethodGraph: () => {
 
         return new Promise((resolve, reject) => {
-            db.orders.aggregate({
-                $unwind: orders
-            },
+            db.orders.aggregate([
                 {
-                    _id: "orders.paymentMethod", count: { $sum: 1 }
+                    $unwind: orders
+                },
+                {
+                    _id: "orders.paymentMethod",
+                     count: { $sum: 1 }
                 }
-            )
+            ])
+        }).then((data) => {
+            console.log(data);
         })
 
     }

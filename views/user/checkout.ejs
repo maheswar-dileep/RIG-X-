@@ -185,11 +185,7 @@
                   <label for="paypal">Paypal</label>
                   <div id="paypal"></div>
                 </h2>
-
-
-
-
-
+                
                 <button type="button" onclick="validation()" class="btn btn-outline-primary-2 btn-order btn-block">
                   <span class="btn-text">Place Order</span>
                   <span class="btn-hover-text">Proceed to Checkout</span>
@@ -339,7 +335,8 @@
           if (response.codstatus) {
             location.replace("/success");
           } else if (response.paypal == true) {
-            paypalPayment()
+            paypalPayment(response.total)
+
           } else {
             razorPay(response)
           }
@@ -348,8 +345,7 @@
     }
   }
 
-  function paypalPayment() {
-    // console.log("heyyy/API");
+  function paypalPayment(total) {
     paypal
       .Buttons({
         createOrder: function() {
@@ -359,9 +355,10 @@
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
+                 total : total,
                 items: [{
                   id: 1,
-                }],
+                }]
               }),
             })
             .then(res => {
@@ -401,8 +398,6 @@
       })
       .render("#paypal")
   }
-
-
 
   function razorPay(order) {
 
@@ -450,7 +445,6 @@
 
   }
 
-
   function verifyPayment(payment, order) {
     $.ajax({
       url: '/verify-payment',
@@ -475,14 +469,13 @@
     })
   }
 
-
   function autoFill(addressId) {
     const inputId = ['fname', 'lname', 'street', 'apartment', 'city', 'state', 'pincode', 'mobile', 'email']
     $.ajax({
       url: '/autofill-address/' + addressId,
       method: 'GET',
       success: (response) => {
-        // console.log(response[0].address);
+        // console.log(response);
         let data = response[0].address
 
         inputId.forEach(e => {
@@ -493,4 +486,6 @@
       }
     })
   }
+
+
 </script>

@@ -9,6 +9,9 @@
     }).then(res => res.json())
       .then((res) => {
         let price=res.priceStat
+        let yearly = res.yearly
+        let monthly = res.monthly
+        let daily = res.daily
         // console.log(price);
      
 

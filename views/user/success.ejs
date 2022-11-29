@@ -1,27 +1,130 @@
-<div class="form-box mt-5">
-    <div class="form-tab mt-5">
-        <ul class="nav nav-pills nav-fill nav-border-anim" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link  text-success" id="signin-tab" data-toggle="tab" href="#signin" role="tab"
-                    aria-controls="signin" aria-selected="true">Order Placed</a>
-            </li>
-        </ul>
-        <h4 class="my-5">Thank you for pruchasing from RIG-X- </h4>
+<script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
 
-        <h5 class="my-5">Your Item will reach to you soon :)</h5>
-        <div class="tab-content" id="tab-content-5">
-            <div class="tab-pane fade show active d-flex justify-content-center" id="signin" role="tabpanel" aria-labelledby="signin-tab">
-                <div class="btn-wrap ">
-                    <a href="/orders" class="btn btn-outline-success btn-round"><span>Goto Orders</span>
-                        <i class="icon-long-arrow-right"></i></a>
-                </div><!-- End .btn-wrap -->
-            </div><!-- .End .tab-pane -->
-        </div><!-- End .tab-content -->
-    </div><!-- End .form-tab -->
+<div class="form-box mt-5">
+  <div class="form-tab mt-5">
+    <ul class="nav nav-pills nav-fill nav-border-anim" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link  text-success" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Order Placed</a>
+      </li>
+    </ul>
+    <h4 class="my-5">Thank you for purchasing from RIG-X- </h4>
+
+    <h5 class="my-5">Your Item will reach to you soon :)</h5>
+    <div class="tab-content" id="tab-content-5">
+      <div class="tab-pane fade show active d-flex justify-content-center" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+        <div class="btn-wrap ">
+          <a href="/orders" class="btn btn-outline-success btn-round ml-4"><span>Goto Orders</span>
+            <i class="icon-long-arrow-right"></i></a>
+          <br>
+          <button class="btn btn-outline-danger btn-round icon-long-arrow-down mt-5 mr-2" onclick="downloadInvoice()">Download Invoice</button>
+        </div><!-- End .btn-wrap -->
+      </div><!-- .End .tab-pane -->
+    </div><!-- End .tab-content -->
+  </div><!-- End .form-tab -->
 </div><!-- End .form-box -->
 
 <script>
-    setTimeout(()=>{
-        window.location.href='/orders'
-    },3000)
+  function downloadInvoice() {
+
+    $.ajax({
+      url: '/order-invoice',
+      method: 'get',
+      success: (response) => {
+        if (response.status) {
+          let details = response.data
+
+          //loop
+
+          var data = {
+            "images": {
+              // The logo on top of your invoice
+              "logo": "iVBORw0KGgoAAAANSUhEUgAAAHkAAAAbCAYAAABYxiAYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAP4SURBVHgB7ZqNcdswDIVfehnAG5SdoB6BmaDdIOoEVSYIM0HSCdxM4G4gd4KkE1gb2Bu4RC3dKSAo/tiimjbfHe5iiVQoPgIkQV3gdbCwpqwtu9+ttb21Z7wRhbZ2iLQna2trVeSzDau/QjwkbG2tCbSpSWjPJBwWaKwdBra1toisu+J1MQEa8SIPjRqzDDzbIE/kr9Z2Ge2pMANWGGVtx8QyEfUqVodMYQI08kTu7Xrk2QZpIiuEPTdk95gBEjVVsM7jh+UfMAGXwjWa626E6xR+yHO5qNSwnzjOk6egcBRYCfeeB/9j35X52LWHl6+7tn5BQS72f0T+hJfRjQb1lVTelr3Fy7a3wDQiExpu2BtDwQ2lvsYZxHvyE+T5VmOcGnJoL+7RVjgteHMtlJPCe4UJ0UgTmahZnZ2nnEGcyLdwRUoZ1UvIQmsUhkIuE2/HF2HCYmuFidFIF3kBt0PfC+UMwiIr4Vk5L/0ZciQoCgkqeOn94L4qtdjqeYc89sK1D8iDh7PW2h3S+dG1YWhF52XCzs3SmqamUN79zQfena3TYmI00j1ZwfUaaTtlEPbQLf6C1fG58eydqxJ7Yk6uJ2v2u0Ve9knBXR0/4t+Aosgw4im4g/wKBbhEOuSx3Ns2yEOx36VSldT+UCLHR5QwFIKtp37DcVEp8T0xTOeuL/Y+kbVwTeG4N+VzKAmTM4f2zxzSBsrnvCgNGj5HksAaE9Ptna8hv2dqn2nk0UoiK6R1JoWlFudhH7iv8fqgAbZm1x5LLLZ6csJ1T4ujwBucD4Uy/EI5pIXkNe2nu5V4LBvk0eaI3Ie/DU6Hv2To5CYmxEnhkVOjAELqsoeu0b0bxHPSIk1jfAvVCPejjtEQ3kJJSRWN0+Dp0cnywWN4kh7cNAoQs4Xi3qNwPk8gT96waxr5KLir5g3mga+qqR837FqxnIBGOBnyANfjFMIYhJMhvAzloGMjBWeF9MTO2ZGSHl26cxlzgDEFGuGOoU7nBwANwhiERc59NkfBHYgGhenC9NZ3wuQ5wFCYGI240W+QPn/yOitPuRryIUWsRyu46dG5vPieifjE7i+EQZAzqJPQiO8cqSPHhDCIE5lYwxWanl+N1KH/fQv5mFGhMLEnTJ5zZ40J0YgXmZcNhUSDeJFJMOnDgb5N6+55ZLRgodHv+w6swgwIHroaKbuW5m1MhEZamGvgLpSUp6xBvMgEvaS0yIu1HWbKitGeWBBNjZRXY+fO50YjTWQFt3MbT1mDNJF7KrhTQ8jWmCFEEx7BgqtmKlMqbGukiUxI3qaFcgZ5IvdUOIrnC8vbri0aM3I44dtp4dy5wZm5wOuh/1qUaHFMpKTkfv9bfgON+TrdSBT25AAAAABJRU5ErkJggg==",
+            },
+            // Your own data
+            "sender": {
+              "company": "RIG-X-",
+              "address": "MULLEZHATH INCHIPARAMBIL HOUSE THIRIKKAKARA",
+              "zip": "682021",
+              "city": "Cochin",
+              "country": "INDIA"
+              //"custom1": "custom value 1",
+              //"custom2": "custom value 2",
+              //"custom3": "custom value 3"
+            },
+            // Your recipient
+            "client": {
+              "First Name": details.fname,
+              "Last Name": details.lname,
+              "Email": details.shippingAddress.email,
+              "address": details.shippingAddress.apartment,
+              "zip": details.shippingAddress.pincode,
+              "city": details.shippingAddress.city,
+              "state": details.shippingAddress.state
+              // "custom1": "custom value 1",
+              // "custom2": "custom value 2",
+              // "custom3": "custom value 3"
+            },
+            "information": {
+              // Invoice number
+              "number": details._id,
+              // Invoice data
+              "date": details.createdAt,
+            },
+            // The products you would like to see on your invoice
+            // Total values are being calculated automatically
+            "products": [{
+                "quantity": 2,
+                "description": "Product 1",
+                "tax-rate": 6,
+                "price": 33.87
+              },
+              {
+                "quantity": 4.1,
+                "description": "Product 2",
+                "tax-rate": 6,
+                "price": 12.34
+              },
+              {
+                "quantity": 4.5678,
+                "description": "Product 3",
+                "tax-rate": 21,
+                "price": 6324.453456
+              }
+            ],
+            // The message you would like to display on the bottom of your invoice
+            "bottom-notice": "Thank you for puchasing from RIG-X-",
+            // Settings to customize your invoice
+            "settings": {
+              "currency": "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+              // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')
+              // "tax-notation": "gst", // Defaults to 'vat'
+              // "margin-top": 25, // Defaults to '25'
+              // "margin-right": 25, // Defaults to '25'
+              // "margin-left": 25, // Defaults to '25'
+              // "margin-bottom": 25, // Defaults to '25'
+              "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
+              // "height": "1000px", // allowed units: mm, cm, in, px
+              // "width": "500px", // allowed units: mm, cm, in, px
+              // "orientation": "landscape", // portrait or landscape, defaults to portrait
+            },
+          };
+
+          easyinvoice.createInvoice(data, function(result) {
+            easyinvoice.download('myInvoice.pdf', result.pdf);
+            // you can download like this as well:
+            // easyinvoice.download();
+            // easyinvoice.download('myInvoice.pdf');
+          });
+
+        }
+      }
+    })
+
+
+  }
+
+
+  // setTimeout(() => {
+  // window.location.href = '/orders'
+  // }, 6500)
 </script>

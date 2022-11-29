@@ -90,7 +90,7 @@ module.exports = {
                         blocked: true
                     }
                 });
-                resolve({status:true})
+                resolve({ status: true })
             } catch (error) {
                 console.log(error);
             };
@@ -108,7 +108,7 @@ module.exports = {
                         blocked: false
                     }
                 });
-                resolve({status:true})
+                resolve({ status: true })
             } catch (error) {
                 console.log(error)
             }
@@ -139,37 +139,108 @@ module.exports = {
 
     //cancelOrder
 
-    cancelOrder: (data) => {
+
+
+    cancelOrder: (userId, data) => {
         console.log(data);
         return new Promise(async (resolve, reject) => {
             try {
-                let orderDetails = await db.order.find({ _id: data.orderId })
-                // console.log(orderDetails)
-                if (orderDetails) {
-                    let indexOfProduct = orderDetails[0].productsDetails.findIndex(product => product._id == data.prodId)
-                    console.log(indexOfProduct);
-
-                    db.order.updateOne(
+                let order = await db.order.find({ 'orders._id': data.orderId })
+                console.log('order->', order);
+                if (order) {
+                    let orderIndex = order[0].orders.findIndex(order => order._id == data.orderId)
+                    console.log('orderindex=>', orderIndex);
+                    let productIndex = order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.proId)
+                    db.order.updateOne({ 'orders._id': data.orderId },
                         {
-                            _id: data.orderId
+                            $set: {
+                                ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.status']: false
+                            }
+                        }).then(() => {
+                            //inventory
+                            let quantity = order[0].orders[orderIndex].productsDetails[productIndex].quantity
+                            console.log(quantity);
+
+                            db.products.updateOne(
+                                {
+                                    _id: data.proId
+                                },
+                                {
+                                    $inc: { quantity: quantity }
+                                }
+                            ).then((e) => {
+                                console.log(e);
+                                resolve({ status: true })
+                            })
+                        })
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        })
+    },
+
+    //changeOrderStatus
+
+    changeOrderStatus: (userId, data) => {
+        console.log(data);
+        let status = data.status
+        // console.log("fghjk",status);
+        let orderId = data.orderId
+        // console.log(orderId);rreturn zero is a 
+        return new Promise(async (resolve, reject) => {
+            try {
+                let order = await db.order.find({ 'orders._id': data.orderId })
+                console.log(order[0].orders[0].productsDetails);
+                let flag = 1
+                if (order) {
+                    let orderIndex =await order[0].orders.findIndex(order => order._id == data.orderId)
+                    console.log(orderIndex);
+                    let productIndex =await  order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.prodId)
+                    console.log(productIndex);
+
+                     let data1 = await db.order.updateOne(
+                        {
+                            'orders._id': data.orderId
                         },
                         {
                             $set: {
-                                ['productsDetails.' + indexOfProduct + '.status']: false
+                                ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.orderStatus'] : data.status
                             }
                         }
-                    ).then((data) => {
+                    )
+                   
+                    if (status == 'Delivered') {
+                        // console.log('delvered');
+                        db.order.updateOne(
+                            {
+                                userId: userId
+                            },
+                            {
+                                $set: {
+                                    ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.deliveredAt']: new Date
+                                }
+                            }
+                        ).then(() =>{
+
+                             resolve({ status: true })
+                        }
+                         )
+                    } else {
+
                         resolve({ status: true })
-                    })
+                    }
+                } else {
+                    resolve({ status: false })
                 }
             } catch (err) {
-                console.log(err)
+                console.log(err);
             }
         })
     },
 
     orderViewMore: (id) => {
-        console.log(id);
+        // console.log(id);
         return new Promise((resolve, reject) => {
             try {
                 db.order.aggregate([

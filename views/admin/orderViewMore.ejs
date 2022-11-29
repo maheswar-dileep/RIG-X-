@@ -150,8 +150,8 @@
                     <div class=" mb-4">
                       <div class="card-body ">
                         <div class="container">
-                          <% console.log('orders=>',orders); %>
                           <% orders?.forEach((element,index)=>{ %>
+                            <% console.log(element); %> 
                           <div class="row mt-5">
                             <div class="mx-3">
 
@@ -166,7 +166,7 @@
 
                                     } %>
                               <h6 style="font-weight: 400; font-size: small; color: #585858;">Ordered :<%-
-                                        getDate(element.orders.createdAt) %>
+                                        getDate(element?.orders?.createdAt) %>
                               </h6>
                             </div>
 
@@ -184,10 +184,11 @@
 
 
                                   <div class="d-flex">
-                                    <img class="mx-5 mt-2" style="width: 100px; height:100px; object-fit:contain" src="/product-images/<%= element.orders.productsDetails[i].img[0] %>" alt="">
+                                    <img class="mx-5 mt-2" style="width: 100px; height:100px; object-fit:contain" src="/product-images/<%= element?.orders?.productsDetails[i]?.img[0] %>" alt="">
                                     <div class="d-flex-column">
-                                      <div class="mt-2" style="font-size: large;"><span class="px-2" style="color: #fb7e00; font-weight: 500;">Rs:
-                                          <%=element.orders.productsDetails[i].productsPrice %></span>x<span class="mx-2" style="font-weight: 500;">
+                                      <div class="mt-2" style="font-size: large;"><span class="px-2" style="color: #fb7d00; font-weight: 500;">Rs:
+                                          <%=element.orders.productsDetails[i].productsPrice %>
+                                        </span>x<span class="mx-2" style="font-weight: 500;">
                                           <%=element.orders.productsDetails[i].quantity %>
                                         </span></div>
                                       <% if(element.orders.productsDetails[i].status==true){%>
@@ -206,18 +207,32 @@
                                       <div class="col-5 " style="float: left;margin-top: 85px !important">
                                         <div class="d-flex">
 
-                                          <div class="mt-1" style="margin-left: 50px !important;;">
+                                          <div class="mt-1 d-flex-d-flex" style="margin-left: 50px !important;;">
                                             <h6>Delivery :<span style="font-weight: 300;">
-                                                <%= element.orders.productsDetails[i].delivery %>
-                                      </span> </h6>
+                                              <%= element.orders.productsDetails[i].orderStatus %>
+                                      </span>
+                                      </h6>
+
+                                      <% if (element.orders.productsDetails[i].orderStatus=='Processing') {%>
+                                      <button class="btn btn-sm btn-primary" onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>','Placed')">NEXT STEP</button>
+                                      <%}else if (element.orders.productsDetails[i].orderStatus=='Placed') {%>
+                                      <button class="btn btn-sm btn-primary" onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>','Shipping')">NEXT STEP</button>
+                                      <%} else if(element.orders.productsDetails[i].orderStatus=='Shipping'){%>
+                                      <button class="btn btn-sm btn-primary" onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>','Shipped')">NEXT STEP</button>
+                                      <%} else if(element.orders.productsDetails[i].orderStatus=='Shipped'){%>
+                                      <button class="btn btn-sm btn-primary" onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>','Out For Delivery')">NEXT STEP</button>
+                                      <%} else if(element.orders.productsDetails[i].orderStatus=='Out For Delivery'){%>
+                                      <button class="btn btn-sm btn-success" onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>','Delivered')">NEXT STEP</button>
+                                      <%} else if(element.orders.productsDetails[i].orderStatus=='Delivered'){%>
+                                      <button class="btn btn-sm btn-success" disabled onclick="changeOrderStatus('<%=element.orders._id%>','<%=element.orders.productsDetails[i]._id%>')">Delivered</button>
+                                      <%}%>
+                                      
                                     </div>
                                     <div class="mx-5 ">
                                       <% if(element.orders.productsDetails[i].status==true){%>
-                                      <button class="cancel btn text-white " style="border-radius: 10px; width: 130px; background-color: rgb(234, 34, 4);" onclick="cancelOrder('<%=element?.orders.productsDetails[i]?._id%>','<%=element?._id%>')">Cancel
-                                        Order</button>
+                                      <button class="cancel btn text-white " style="border-radius: 10px; width: 130px; background-color: rgb(234, 34, 4);" onclick="cancelOrder('<%=element?.orders.productsDetails[i]?._id%>','<%=element?._id%>')">Cancel Order</button>
                                       <%}else{%>
-                                      <button class="cancel btn text-white bg-danger" style="border-radius: 10px; width: 130px; " disabled>Cancel
-                                        Order</button>
+                                      <button class="cancel btn text-white bg-danger" style="border-radius: 10px; width: 130px; " disabled>CancelOrder</button>
                                       <%}%>
                                           </div>
                                         </div>
@@ -311,7 +326,45 @@
 </section>
 
 <script>
+  function changeOrderStatus(orderId, prodId, status) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3cc75c',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Update Order Status'
+    }).then((result) => {
+      if (result.isConfirmed) {
+
+        $.ajax({
+          url: '/admin/change-order-status',
+          data: {
+            prodId: prodId,
+            orderId: orderId,
+            status: status
+          },
+          method: 'post',
+          success: (response) => {
+            if (response.status) {
+              Swal.fire(
+                'Updated!',
+                'Order Status is Updated',
+                'success'
+              ).then(()=>{
+                 location.reload()
+              })
+             
+            }
+          }
+        })
+      }
+    })
+  }
+
   function cancelOrder(proId, orderId) {
+
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -324,12 +377,12 @@
       if (result.isConfirmed) {
 
         $.ajax({
-          url: '/user-order-cancel',
+          url: '/admin/admin-cancel-order',
           data: {
             proId: proId,
             orderId: orderId
           },
-          method: 'put',
+          method: 'PUT',
           success: (response) => {
             if (response.status) {
               Swal.fire(

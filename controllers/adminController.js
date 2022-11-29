@@ -4,31 +4,47 @@ const productHelpers = require('../helpers/productHelpers')
 const chartHelpers = require('../helpers/chartHelpers')
 const multer = require('multer')
 const path = require('path')
-const { response } = require('../app')
+const fs = require('fs')
+const pdf = require('pdf-creator-node')
+const { response, router } = require('../app')
+const { paymentMethodGraph } = require('../helpers/chartHelpers')
+const sales = require('../helpers/reportHelpers')
 
 module.exports = {
 
     //landingPage
 
-    landingPage: (req, res, next) => {
+    landingPage: async (req, res, next) => {
         try {
-            res.render('admin/admin_page', {
-                layout
+            res.render('admin/admin_page', { layout })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    revenueGraphMonth: async (req, res) => {
+        try {
+            let yearly = await sales.yearlySales()
+            let monthly = await sales.monthlySales()
+            let daily = await sales.dailySales()
+            let totalOrders = chartHelpers.totalOrdersGraph()
+            chartHelpers.revenueGraphMonth().then((priceStat) => {
+                res.send({
+                    priceStat, totalOrders, yearly, monthly, daily
+                })
             })
         } catch (err) {
             console.log(err)
         }
     },
 
-    chartGraph: (req, res) => {
+    revenueGraph: (req, res) => {
         try {
-            console.log("hi");
-            chartHelpers.priceGraph().then((priceStat) => {
-                console.log(priceStat);
-                res.send({ priceStat })
+            chartHelpers.revenueGraphDay().then((data) => {
+
             })
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
     },
 
@@ -280,8 +296,16 @@ module.exports = {
     //cancelOrder
 
     cancelOrder: (req, res) => {
-        adminHelpers.cancelOrder(req.body).then((data) => {
+        adminHelpers.cancelOrder(req.sesion.user, req.body).then((data) => {
             res.json(data)
+        })
+    },
+
+    //changeOrderStatus
+
+    changeOrderStatus: (req, res) => {
+        adminHelpers.changeOrderStatus(req.session.user, req.body).then((response) => {
+            res.json(response)
         })
     },
 
@@ -293,12 +317,60 @@ module.exports = {
         })
     },
 
+    // generateSalesReport
+
+    generateSalesReport: async (req, res) => {
+        let yearly = await sales.yearlySales()
+        let monthly = await sales.monthlySales()
+        let daily = await sales.dailySales()
+        let monthWise = await sales.monthWiseSales()
+        let dailySalesReport = await sales.dailySalesReport()
+        res.render('admin/Sales-Report', { layout, monthly, yearly, daily, monthWise })
+    },
+
+    //generateReportPDF
+
+    generateReportPDF: (req, res) => {
+        sales.monthlySales().then((response) => {
+            res.send(response)
+        })
+    },
+
     //adminLogout
 
     adminLogout: (req, res) => {
         req.session.admin = null
         res.redirect('/admin/login')
-    }
+    },
+
+
+    /*==================================adminNew=================================*/
+
+    //landingPage
+
+    landingPageNew: async (req, res, next) => {
+        try {
+            let totalOrders = await chartHelpers.totalOrdersGraph()
+            res.render('admin/admin_page_new', { layout: "admin-2-layout", totalOrders })
+        } catch (err) {
+            console.log(err)
+        }
+    },
+
+    chartGraphNew: async (req, res) => {
+        try {
+            let users = await sales.findUsers()
+            let yearly = await sales.yearlySales()
+            let monthly = await sales.monthlySales()
+            let daily = await sales.dailySales()
+            let totalOrders = chartHelpers.totalOrdersGraph()
+            chartHelpers.priceGraph().then((priceStat) => {
+                res.send({ priceStat, yearly, monthly, daily,totalOrders })
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    },
 
 
 }

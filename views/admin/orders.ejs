@@ -35,12 +35,12 @@
                 <br>
                 ID:<%- element?.userId %>
               </td>
-              <td>ID : <%-element.orders._id %></td>
+              <td>ID : <%-element.orders?._id %></td>
               <td><%=element?.orders?.totalQuantity %></td>
               <td>
                 <%- getDate(element.orders?.createdAt) %>
               </td>
-              <td><a href="/admin/order-view-more/<%-element.orders._id %>" style="text-decoration:none;">View More</a></td>
+              <td><a href="/admin/order-view-more/<%-element?.orders?._id %>" style="text-decoration:none;">View More</a></td>
 
             </tr>
             <% })%>

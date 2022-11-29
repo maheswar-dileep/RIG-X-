@@ -62,6 +62,8 @@ router.put('/change-product-quantity', auth.verifyUser, controllers.changeProduc
 
 router.delete('/delete-cart-item', auth.verifyUser, controllers.deleteCartItem)
 
+router.get('/check-cart-quantity/:id',auth.verifyUser,controllers.checkCartQuantity )
+
 /*------------------------Checkout------------------------*/
 
 router.get('/checkout', auth.verifyUser, controllers.checkout)
@@ -77,6 +79,10 @@ router.get('/orders', verifyUser, controllers.ordersPage)
 /*------------------------cancelOrder------------------------*/
 
 router.put('/user-order-cancel', auth.verifyUser, controllers.cancelOrder)
+
+/*---------------------------returnOrder----------------------*/
+
+router.put('/return-product', auth.verifyUser,controllers.returnProduct)
 
 /*------------------------PaypalOrder------------------------*/
 
@@ -98,11 +104,11 @@ router.get('/autofill-address/:id', auth.verifyUser, controllers.getAddress)
 
 router.post('/add-new-address', auth.verifyUser, controllers.addNewAddress)
 
-//editAddress
+/*-----------------------editAddress------------------------*/
 
 router.put('/edit-address', auth.verifyUser, controllers.editAddress)
 
-//delete-address
+/*------------------------delete-address--------------------*/
 
 router.get('/delete-address/:id', auth.verifyUser, controllers.deleteAddress)
 
@@ -113,6 +119,10 @@ router.post('/verify-payment', auth.verifyUser, controllers.verifyPayment)
 //orders list
 
 router.get('/orders-list', auth.verifyUser, controllers.ordersList)
+
+/*-------------------------invoice-----------------------------*/
+
+router.get('/order-invoice',auth.verifyUser,controllers.orderInvoice)
 
 //logout
 

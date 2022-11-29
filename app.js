@@ -9,6 +9,7 @@ const db = require('./model/connection')
 const session = require('express-session')
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
+const adminNewRouter = require('./routes/adminNew');
 const auth = require('./controllers/auth');
 
 const ConnectMongoDBSession = require('connect-mongodb-session')(session);
@@ -16,7 +17,6 @@ const ConnectMongoDBSession = require('connect-mongodb-session')(session);
 
 
 const app = express();
-const admin = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,6 +48,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 10 // 10 days
   }
 }));
+
 app.use(auth.authInit);
 
 app.use('/', usersRouter);
@@ -74,6 +75,8 @@ module.exports = app;
 
 /*===============================admin-PORT===============================*/
 
+
+const admin = express()
 // view engine setup
 admin.set('views', path.join(__dirname, 'views'));
 admin.set('view engine', 'ejs');
@@ -83,8 +86,7 @@ admin.use(expressLayouts);
 admin.use(express.json());
 admin.use(express.urlencoded({ extended: false }));
 admin.use(cookieParser());
-admin.use(express.static(path.join(__dirname, 'public')));
-admin.use(express.static(path.join(__dirname, 'public/admin')));
+admin.use(express.static(path.join(__dirname, 'public-admin')));
 
 admin.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -107,7 +109,7 @@ admin.use(session({
 admin.use(auth.authInit);
 
 
-admin.use('/admin', adminRouter);
+admin.use('/',adminNewRouter);
 
 // catch 404 and forward to error handler
 admin.use(function (req, res, next) {
@@ -118,7 +120,7 @@ admin.use(function (req, res, next) {
 admin.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.admin.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
   res.status(err.status || 500);
@@ -127,4 +129,3 @@ admin.use(function (err, req, res, next) {
 
 admin.listen(8080)
 
-module.exports = admin;
