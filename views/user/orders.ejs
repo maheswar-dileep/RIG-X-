@@ -77,6 +77,7 @@
                             </div>
                           </div>
                           <% orders?.forEach((element,index)=>{ %>
+                           
                               <div class="row mt-5">
                                 <div class="mx-3">
 
@@ -105,11 +106,12 @@
                                           </h5>
                                         </span></div>
                                       <div class="d-flex">
-                                        <img class="mx-5 mt-2" style="width: 100px; height:100px; object-fit:contain" src="/product-images/<%=element?.orders?.productsDetails[i]?.img[0]%>" alt="">
+                                        <img class="mx-5 mt-2" style="width: 100px; height:100px; object-fit:contain" src="/product-images/<%= element?.orders?.productsDetails[i]._id%>0.jpg " alt="">
                                         <div class="d-flex-column">
                                           <div class="mt-2" style="font-size: large;"><span class="px-2" style="color: #fb7e00; font-weight: 500;">Rs: <%=element?.orders?.productsDetails[i]?.productsPrice %></span>x<span class="mx-2" style="font-weight: 500;">
                                               <%=element?.orders?.productsDetails[i]?.quantity %>
                                             </span></div>
+                                          <%if (element.orders.productsDetails[i].orderStatus!='Returned') {%>
                                           <% if(element.orders.productsDetails[i].status==true){%>
                                           <div class="text-center text-white mt-1 " style="width: 100px;height:23px; border-radius: 10px; background-color: rgb(109, 176, 85); font-size: small; font-weight: 600;">
                                             Order Placed
@@ -119,6 +121,12 @@
                                             Cancelled
                                           </div>
                                           <%}%>
+                                          <%}else{%>
+                                          <div class="text-center text-white mt-1" style="width: 100px;height:23px; border-radius: 10px; background-color: rgb(205, 66, 66); font-size: small; font-weight: 600;">
+                                            Returned
+                                          </div>
+                                          <%}%>
+
                                                 </div>
 
                                               </div>
@@ -132,104 +140,115 @@
                                           </span> </h6>
                                         </div>
                                         <div class="mx-5 ">
+                                          <%if (element.orders.productsDetails[i].orderStatus!='Returned') {%>
+
                                           <% let deliveredAt = element.orders.productsDetails[i].deliveredAt%>
 
                                           <% let returnValidity = new Date(new Date(deliveredAt).setDate(new Date(deliveredAt).getDate()+10))%>
                                           <%if(new Date(returnValidity)-new Date() > 0 ){%>
-                                          <button class="btn btn-success" style="border-radius: 10px; width: 130px" onclick="prodReturn('<%-element?._id%>','<%-element?.productsDetails?._id%>')">Return</button>
+                                          <button class="btn ml-2 btn-success" style="border-radius: 10px; width: 130px" onclick="prodReturn('<%-element?.orders._id%>','<%-element?.orders?.productsDetails[i]?._id%>')">Return</button>
+                                          <p class="text-success" style="cursor:pointer ;" onclick="downloadInvoice('<%-element?.orders._id%>','<%-element?.orders?.productsDetails[i]?._id%>')">Dowload Invoice</p>
                                           <%}else{%>
                                           <% if(element.orders.productsDetails[i].orderStatus=='Delivered'){%>
                                           <button class="cancel btn text-white bg-success" style="border-radius: 10px; width: 130px; " disabled>Delivered</button>
+                                          <p class="text-success" style="cursor: pointer;" onclick="downloadInvoice('<%-element?.orders._id%>','<%-element?.orders?.productsDetails[i]?._id%>')">Dowload Invoice</p>
                                           <%}else{%>
                                           <button class="cancel btn text-white " style="border-radius: 10px; width: 130px; background-color: rgb(234, 34, 4);" onclick="cancelOrder('<%=element?.orders.productsDetails[i]?._id%>','<%=element?.orders._id%>')">Cancel Order</button>
                                           <%}%>
+                                          <%}%>
+                                          <%}else{%>
+                                          <button class="btn btn-success" disabled style="border-radius: 10px; width: 130px">Returned</button>
                                           <%}%>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                   <% } %>
-                                </div>
-                              </div>
-                              <div class="row mt-3">
-                                <div class="col-12">
-                                  <div class="row addrDiv pb-2">
-                                    <div class="col-4  " style="float: left;">
-                                      <h6 class="mt-2 mx-4">Shipping address</h6>
-                                      <p class="mx-4 mt-1">
-                                        <span style="font-weight: 500;">
-                                          <%= element?.orders?.fname %>
-                                        </span> <br>
-                                        <%- element?.orders?.shippingAddress?.mobile %><br>
-                                        <%- element?.orders?.shippingAddress?.email %><br>
-                                        <%- element?.orders?.shippingAddress?.street %>, <%- element?.orders?.shippingAddress?.city %>
-                                        <%- element?.orders?.shippingAddress?.state %> <br>
-                                        <%- element?.orders?.shippingAddress?.pincode %><br>
-                                      </p>
-                                    </div>
-
-                                    <div class="col-4 ">
-                                      <h6 class="mt-2 mx-4 ">Payment Method</h6>
-                                      <p class="mx-4 mt-1">
-                                        <%= element?.orders?.paymentMethod  %>
-                                      </p>
-                                      <div class="mt-5">
-                                        <h6 class="mt-2 mx-4 ">Payment Status</h6>
-                                        <p class="mx-4 mt-1">
-                                          <%= element?.orders?.paymentStatus  %>
-                                        </p>
+                                        </div>
                                       </div>
-                                    </div>
-                                    <div class="col-4">
+                                      <div class="row mt-3">
+                                        <div class="col-12">
+                                          <div class="row addrDiv pb-2">
+                                            <div class="col-4  " style="float: left;">
+                                              <h6 class="mt-2 mx-4">Shipping address</h6>
+                                              <p class="mx-4 mt-1">
+                                                <span style="font-weight: 500;">
+                                                  <%= element?.orders?.fname %>
+                                                </span> <br>
+                                                <%- element?.orders?.shippingAddress?.mobile %><br>
+                                                <%- element?.orders?.shippingAddress?.email %><br>
+                                                <%- element?.orders?.shippingAddress?.street %>, <%- element?.orders?.shippingAddress?.city %>
+                                                <%- element?.orders?.shippingAddress?.state %> <br>
+                                                <%- element?.orders?.shippingAddress?.pincode %><br>
+                                              </p>
+                                            </div>
 
-                                      <h6 class="mt-2 mx-4 ">Total Price</h6>
-                                      <span class="mx-4 mt-2 " style="color: #fb6400; font-size: x-large !important; font-weight: 500; ">Rs:
-                                        <%= element?.orders?.totalPrice %>
-                                      </span>
+                                            <div class="col-4 ">
+                                              <h6 class="mt-2 mx-4 ">Payment Method</h6>
+                                              <p class="mx-4 mt-1">
+                                                <%= element?.orders?.paymentMethod  %>
+                                              </p>
+                                              <div class="mt-5">
+                                                <h6 class="mt-2 mx-4 ">Payment Status</h6>
+                                                <p class="mx-4 mt-1">
+                                                  <%= element?.orders?.paymentStatus  %>
+                                                </p>
+                                              </div>
+                                            </div>
+                                            <div class="col-4">
 
+                                              <h6 class="mt-2 mx-4 ">Total Price</h6>
+                                              <span class="mx-4 mt-2 " style="color: #fb6400; font-size: x-large !important; font-weight: 500; ">Rs:
+                                                <%= element?.orders?.totalPrice %>
+                                              </span>
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <% }) %>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                              <% }) %>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <a class="scroll-to-top rounded" href="#page-top">
-              <i class="fas fa-angle-up"></i>
-            </a>
+                    <a class="scroll-to-top rounded" href="#page-top">
+                      <i class="fas fa-angle-up"></i>
+                    </a>
 
 
-            <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">×</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">Select "Logout" below if you are ready to end your current
-                    session.</div>
-                  <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                  </div>
-                </div>
-              </div>
-            </div>
+                    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">Select "Logout" below if you are ready to end your current
+                            session.</div>
+                          <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <a class="btn btn-primary" href="login.html">Logout</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
           </section>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/easyinvoice/dist/easyinvoice.min.js"></script>
+
 
 <script>
   function cancelOrder(proId, orderId) {
@@ -259,7 +278,7 @@
         })
 
         Swal.fire(
-          'Caneled!',
+          'Canceled!',
           'Order is Cancelled',
           'success'
         )
@@ -275,8 +294,114 @@
       data: {
         orderId: orderId,
         prodId: prodId
+      },
+      success:(response)=>{
+        console.log(response);
+        if(response.status){
+          Swal.fire(
+          'Returned!',
+          'Order is Returned',
+          'success'
+          )
+            location.reload()
+        }
       }
     })
+  }
+
+  function downloadInvoice(orderId, prodId) {
+    $.ajax({
+      url: '/order-invoice-products?product=' + prodId + '&orderId=' + orderId,
+      method: 'get',
+      success: (response) => {
+        if (response.status) {
+          let details = response.data
+
+          const getDate = (date) => {
+            let orderDate = new Date(date)
+
+            let day = orderDate.getDate();
+            let month = orderDate.getMonth();
+            month+=1
+            let year = orderDate.getFullYear();
+
+            return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
+
+          }
+
+
+          var data = {
+            "images": {
+              // The logo on top of your invoice
+              "logo": "iVBORw0KGgoAAAANSUhEUgAAAHkAAAAbCAYAAABYxiAYAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAP4SURBVHgB7ZqNcdswDIVfehnAG5SdoB6BmaDdIOoEVSYIM0HSCdxM4G4gd4KkE1gb2Bu4RC3dKSAo/tiimjbfHe5iiVQoPgIkQV3gdbCwpqwtu9+ttb21Z7wRhbZ2iLQna2trVeSzDau/QjwkbG2tCbSpSWjPJBwWaKwdBra1toisu+J1MQEa8SIPjRqzDDzbIE/kr9Z2Ge2pMANWGGVtx8QyEfUqVodMYQI08kTu7Xrk2QZpIiuEPTdk95gBEjVVsM7jh+UfMAGXwjWa626E6xR+yHO5qNSwnzjOk6egcBRYCfeeB/9j35X52LWHl6+7tn5BQS72f0T+hJfRjQb1lVTelr3Fy7a3wDQiExpu2BtDwQ2lvsYZxHvyE+T5VmOcGnJoL+7RVjgteHMtlJPCe4UJ0UgTmahZnZ2nnEGcyLdwRUoZ1UvIQmsUhkIuE2/HF2HCYmuFidFIF3kBt0PfC+UMwiIr4Vk5L/0ZciQoCgkqeOn94L4qtdjqeYc89sK1D8iDh7PW2h3S+dG1YWhF52XCzs3SmqamUN79zQfena3TYmI00j1ZwfUaaTtlEPbQLf6C1fG58eydqxJ7Yk6uJ2v2u0Ve9knBXR0/4t+Aosgw4im4g/wKBbhEOuSx3Ns2yEOx36VSldT+UCLHR5QwFIKtp37DcVEp8T0xTOeuL/Y+kbVwTeG4N+VzKAmTM4f2zxzSBsrnvCgNGj5HksAaE9Ptna8hv2dqn2nk0UoiK6R1JoWlFudhH7iv8fqgAbZm1x5LLLZ6csJ1T4ujwBucD4Uy/EI5pIXkNe2nu5V4LBvk0eaI3Ie/DU6Hv2To5CYmxEnhkVOjAELqsoeu0b0bxHPSIk1jfAvVCPejjtEQ3kJJSRWN0+Dp0cnywWN4kh7cNAoQs4Xi3qNwPk8gT96waxr5KLir5g3mga+qqR837FqxnIBGOBnyANfjFMIYhJMhvAzloGMjBWeF9MTO2ZGSHl26cxlzgDEFGuGOoU7nBwANwhiERc59NkfBHYgGhenC9NZ3wuQ5wFCYGI240W+QPn/yOitPuRryIUWsRyu46dG5vPieifjE7i+EQZAzqJPQiO8cqSPHhDCIE5lYwxWanl+N1KH/fQv5mFGhMLEnTJ5zZ40J0YgXmZcNhUSDeJFJMOnDgb5N6+55ZLRgodHv+w6swgwIHroaKbuW5m1MhEZamGvgLpSUp6xBvMgEvaS0yIu1HWbKitGeWBBNjZRXY+fO50YjTWQFt3MbT1mDNJF7KrhTQ8jWmCFEEx7BgqtmKlMqbGukiUxI3qaFcgZ5IvdUOIrnC8vbri0aM3I44dtp4dy5wZm5wOuh/1qUaHFMpKTkfv9bfgON+TrdSBT25AAAAABJRU5ErkJggg==",
+            },
+            // Your own data
+            "sender": {
+              "company": "RIG-X-",
+              "address": "MULLEZHATH INCHIPARAMBIL HOUSE THIRIKKAKARA",
+              "zip": "682021",
+              "city": "Cochin",
+              "country": "INDIA"
+              //"custom1": "custom value 1",
+              //"custom2": "custom value 2",
+              //"custom3": "custom value 3"
+            },
+            // Your recipient
+            "client": {
+              "First Name": details[0].orders.fname,
+              "Last Name": details[0].orders.lname,
+              "Email": details[0].orders.shippingAddress.email,
+              "address": details[0].orders.shippingAddress.apartment,
+              "zip": details[0].orders.shippingAddress.pincode,
+              "city": details[0].orders.shippingAddress.city,
+              "state": details[0].orders.shippingAddress.state
+              // "custom1": "custom value 1",
+              // "custom2": "custom value 2",
+              // "custom3": "custom value 3"
+            },
+            "information": {
+              // Invoice number
+              "number": '#' + details[0].orders._id,
+              // Invoice data
+              "date": getDate(details[0].orders.createdAt),
+            },
+            // The products you would like to see on your invoice
+            // Total values are being calculated automatically
+            "products": [{
+              "quantity": details[0].orders.productsDetails.quantity,
+              "description": details[0].orders.productsDetails.productsName,
+              "tax-rate": 0,
+              "price": details[0].orders.productsDetails.productsPrice
+            }],
+            // The message you would like to display on the bottom of your invoice
+            "bottom-notice": "Thank you for puchasing from RIG-X-",
+            // Settings to customize your invoice
+            "settings": {
+              "currency": "INR", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+              // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')
+              "tax-notation": "gst", // Defaults to 'vat'
+              // "margin-top": 25, // Defaults to '25'
+              // "margin-right": 25, // Defaults to '25'
+              // "margin-left": 25, // Defaults to '25'
+              // "margin-bottom": 25, // Defaults to '25'
+              "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
+              // "height": "1000px", // allowed units: mm, cm, in, px
+              // "width": "500px", // allowed units: mm, cm, in, px
+              // "orientation": "landscape", // portrait or landscape, defaults to portrait
+            },
+          };
+
+          easyinvoice.createInvoice(data, function(result) {
+            easyinvoice.download('myInvoice.pdf', result.pdf);
+            // you can download like this as well:
+            // easyinvoice.download();
+            // easyinvoice.download('myInvoice.pdf');
+          });
+
+        }
+      }
+    })
+
 
   }
 </script>

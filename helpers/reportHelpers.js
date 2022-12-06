@@ -4,14 +4,14 @@ module.exports = {
 
     findUsers: () => {
 
-        let users = db.users0.find()
-        console.log(users);
+        let users = db.users.find()
+        // console.log(users);
 
     },
 
     monthlySales: () => {
-        let month = new Date()
-        let thisMonth = month.getMonth()
+        let date = new Date()
+        let thisMonth = date.getMonth()
 
         return new Promise((resolve, reject) => {
             try {
@@ -104,6 +104,7 @@ module.exports = {
     },
 
 
+
     yearlySales: () => {
         let date = new Date()
         let year = date.getFullYear()
@@ -191,8 +192,8 @@ module.exports = {
                     })
                 }
                 for (i = 0; i < 12; i++) {
-                    if (data[i+1] == undefined) {
-                        data[i+1] = {
+                    if (data[i + 1] == undefined) {
+                        data[i + 1] = {
                             total: 0,
                             orders: 0,
                             count: 0,
@@ -209,60 +210,50 @@ module.exports = {
     },
 
 
-    dailySalesReport: () => {
+
+    getRevenueByDay: () => {
+        let date = new Date()
+        let thisMonth = date.getMonth()
+        let month = thisMonth + 1
+
+        let year = date.getFullYear()
+
 
         return new Promise(async (resolve, reject) => {
             try {
-                let date = new Date()
-                let thisDay = new Date().getDate()
-                let data = []
-                for (let i = 0; i < 31; i++) {
-                    await db.order.aggregate([
-                        {
-                            $unwind: '$orders'
-                        },
-                        {
-                            $unwind: '$orders.productsDetails'
-                        },
-                        {
-                            $match: { 'orders.productsDetails.orderStatus': 'Delivered' }
-                        },
-                        {
-                            $match: {
-                                $expr: {
-                                    $eq: [
-                                        {
-                                            $dayOfMonth: '$orders.createdAt'
-                                        },
-                                        i + 1
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            $group: {
-                                _id: null,
-                                total: { $sum: '$orders.totalPrice' },
-                                orders: { $sum: '$orders.totalQuantity' },
-                                count: { $sum: 1 }
-                            }
+
+                db.order.aggregate([
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        $unwind: '$orders.productsDetails'
+                    },
+                    {
+                        $match: {
+                            'orders.createdAt': { $gt: new Date(`${year}-${month}-01`), $lt: new Date(`${year}-${month}-31`) }
                         }
-                    ]).then((dailySales) => {
-                        data[i + 1] = dailySales[0]
-                    })
-                }
-                for (i = 0; i < 31; i++) {
-                    if (data[i+1] == undefined) {
-                        data[i+1] = {
-                            total: 0,
-                            orders: 0,
-                            count: 0,
+                    },
+                    {
+                        $match: { 'orders.productsDetails.orderStatus': 'Delivered' }
+                    },
+                    {
+                        $group: {
+                            _id: { '$dayOfMonth': '$orders.createdAt' },
+                            total: { $sum: '$orders.totalPrice' },
+                            orders: { $sum: '$orders.totalQuantity' },
+                            count: { $sum: 1 }
                         }
-                    } else {
-                        data[i]
+                    },
+                    {
+                        $sort: {
+                            'orders.createdAt': 1
+                        }
                     }
-                }
-                resolve({ status: true, data: data })
+                ]).then((data) => {
+                    resolve({ data: data })
+                })
+
             } catch (err) {
                 console.log(err);
             }

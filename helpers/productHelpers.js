@@ -1,17 +1,14 @@
-const { response } = require('../app')
+const fs = require('fs')
 const db = require('../model/connection')
 
 module.exports = {
 
+
     addProducts: (product) => {
         return new Promise(async (resolve, reject) => {
-            try {
-                let data = await db.products(product)
-                data.save()
-                resolve(data._id)
-            } catch (err) {
-                console.log(err)
-            }
+            let data = await db.products(product)
+            data.save()
+            resolve(data._id)
         })
     },
 
@@ -33,8 +30,17 @@ module.exports = {
     deleteProduct: (prodId) => {
         return new Promise((resolve, reject) => {
             try {
+                for (i = 0; i < 4; i++) {
+                    let fileNameWithPath = `./public/product-images/${prodId}${i}.jpg`
+                    console.log(fileNameWithPath);
+                    if (fs.existsSync(fileNameWithPath)) {
+                        fs.unlink(fileNameWithPath, (err) => {
+                            console.log(err);
+                        });
+                    }
+                }
                 db.products.deleteOne({ _id: prodId }).then(() => {
-                    resolve({status:true})
+                    resolve({ status: true })
                 })
             } catch (err) {
                 console.log(err)
@@ -64,22 +70,20 @@ module.exports = {
                 let products = await db.products.updateOne({ _id: prodId }, {
                     $set: {
                         name: data.name,
-                        price: data.price,
                         category: data.category,
+                        marketPrice: data.marketPrice,
+                        offerPrice: data.offerPrice,
+                        percent: data.percent,
                         quantity: data.quantity,
                         description: data.description
                     }
                 })
                 resolve(products)
             })
-
         } catch (error) {
             console.log(error)
         }
     },
-
-
-
 
     getAllCategories: () => {
         return new Promise(async (resolve, reject) => {
@@ -111,7 +115,7 @@ module.exports = {
         try {
             return new Promise((resolve, reject) => {
                 db.categories.deleteOne({ _id: id }).then(() => {
-                    resolve({status:true})
+                    resolve({ status: true })
                 })
             })
         } catch (err) {
@@ -172,11 +176,21 @@ module.exports = {
         })
     },
 
-
-    ordersPage: () => {
-        db.orders.find({})
+    categoryPage: (cate) => {
+        return new Promise((resolve, reject) => {
+            try {
+                db.products.aggregate([
+                    {
+                        $match:{category:cate}
+                    }
+                ]).then((data)=>{
+                    console.log(data);
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        })
     }
-
 
 
 }

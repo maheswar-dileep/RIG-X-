@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { StreamInstance } = require('twilio/lib/rest/api/v2010/account/call/stream');
 const db = mongoose.createConnection('mongodb://127.0.0.1:27017/ecommerce')
 
 db.on('error', (err) => {
@@ -13,12 +14,12 @@ db.once('open', () => {
 
 const productschema = new mongoose.Schema({
     name: String,
-    price: Number,
     marketPrice: Number,
+    offerPrice: Number,
+    percent: Number,
     category: String,
     quantity: Number,
     description: String,
-    img: Array
 })
 
 // for users 
@@ -31,6 +32,10 @@ const usersSchema = new mongoose.Schema({
     blocked: {
         type: Boolean,
         default: false
+    },
+    wallet: {
+        type: Number,
+        default: 0
     }
 })
 
@@ -101,6 +106,36 @@ const stateSchema = new mongoose.Schema({
     name: String
 })
 
+//coupons
+const couponSchema = new mongoose.Schema({
+    coupon: String,
+    discountType: String,
+    amount: Number,
+    amountValidity: String,
+    percentage: Number,
+    description: String,
+    createdAt: {
+        type: Date,
+        default: new Date()
+    },
+    validityTill: Date,
+    usageValidity: Number
+})
+
+//banners
+const bannerSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+})
+
+//categoryBanner
+
+const categoryBanner = new mongoose.Schema({
+    category: String,
+},
+{
+    capped:{max:3}
+})
 
 module.exports = {
     products: db.model('product', productschema),
@@ -109,5 +144,8 @@ module.exports = {
     cart: db.model('cart', cartSchema),
     address: db.model('address', addressSchema),
     order: db.model('order', orderSchema),
-    state: db.model('state', stateSchema)
+    state: db.model('state', stateSchema),
+    coupon: db.model('coupon', couponSchema),
+    banner: db.model('banner', bannerSchema),
+    categoryBanner: db.model('categoryBanner', categoryBanner)
 }

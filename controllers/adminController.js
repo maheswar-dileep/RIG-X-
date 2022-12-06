@@ -2,13 +2,16 @@ const layout = 'admin-layout'
 const adminHelpers = require('../helpers/adminHelpers')
 const productHelpers = require('../helpers/productHelpers')
 const chartHelpers = require('../helpers/chartHelpers')
-const multer = require('multer')
+const couponHelpers = require('../helpers/couponHelpers')
+const bannerHelpers = require('../helpers/bannerHelpers')
+const sales = require('../helpers/reportHelpers')
+const fileUpload = require('express-fileupload');
 const path = require('path')
 const fs = require('fs')
 const pdf = require('pdf-creator-node')
 const { response, router } = require('../app')
 const { paymentMethodGraph } = require('../helpers/chartHelpers')
-const sales = require('../helpers/reportHelpers')
+const userHelpers = require('../helpers/userHelpers')
 
 module.exports = {
 
@@ -27,24 +30,18 @@ module.exports = {
             let yearly = await sales.yearlySales()
             let monthly = await sales.monthlySales()
             let daily = await sales.dailySales()
-            let totalOrders = chartHelpers.totalOrdersGraph()
+            let totalOrders = await chartHelpers.totalOrdersGraph()
+            let monthlyPaid = await chartHelpers.revenueGraphMonthPaid()
+            let RevenueByDay = await sales.getRevenueByDay()
+            console.log(RevenueByDay);
             chartHelpers.revenueGraphMonth().then((priceStat) => {
                 res.send({
-                    priceStat, totalOrders, yearly, monthly, daily
+                    monthlyPaid, priceStat, totalOrders, yearly, monthly, daily, RevenueByDay
+
                 })
             })
         } catch (err) {
             console.log(err)
-        }
-    },
-
-    revenueGraph: (req, res) => {
-        try {
-            chartHelpers.revenueGraphDay().then((data) => {
-
-            })
-        } catch (err) {
-            console.log(err);
         }
     },
 
@@ -106,15 +103,24 @@ module.exports = {
 
     addProductsPost: (req, res) => {
         try {
-            const files = req.files
-            const fileName = files.map((file) => {
-                return file.filename
-            })
-
-            const product = req.body
-            product.img = fileName
-
-            productHelpers.addProducts(product).then((insertedId) => {
+            let data = {
+                name: req.body.name,
+                category: req.body.category,
+                marketPrice: req.body.marketPrice,
+                offerPrice: req.body.offerPrice,
+                percent: req.body.percent,
+                quantity: req.body.quantity,
+                description: req.body.description
+            }
+            productHelpers.addProducts(data).then((insertedId) => {
+                const imgName = insertedId;
+                req.files?.image?.forEach((element, index) => {
+                    element.mv('./public/product-images/' + imgName + index + '.jpg', (err, done) => {
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+                });
                 res.redirect('/admin/products')
             })
         } catch (err) {
@@ -123,12 +129,12 @@ module.exports = {
 
     },
 
+
     //deleteProducts
 
     deleteProducts: (req, res) => {
         try {
-            let prodId = req.params.id
-            productHelpers.deleteProduct(prodId).then((response) => {
+            productHelpers.deleteProduct(req.params.id).then((response) => {
                 res.json(response)
             })
         } catch (err) {
@@ -140,6 +146,7 @@ module.exports = {
 
     editProducts: async (req, res) => {
         try {
+
             let products = await productHelpers.getProductDetails(req.params.id)
             productHelpers.getAllCategories().then((category) => {
                 res.render('admin/edit-products', { category, products, layout })
@@ -153,8 +160,16 @@ module.exports = {
     editProductsPost: (req, res) => {
         try {
             prodId = req.params.id
-            productHelpers.editProduct(prodId, req.body).then(() => {
-
+            data = {
+                name: req.body.name,
+                category: req.body.category,
+                marketPrice: req.body.marketPrice,
+                offerPrice: req.body.offerPrice,
+                percent: req.body.percent,
+                quantity: req.body.quantity,
+                description: req.body.description
+            }
+            productHelpers.editProduct(prodId, data).then(() => {
                 const imgName = prodId;
                 req.files?.image0?.mv('./public/product-images/' + imgName + '0.jpg')
                 req.files?.image1?.mv('./public/product-images/' + imgName + '1.jpg')
@@ -324,7 +339,6 @@ module.exports = {
         let monthly = await sales.monthlySales()
         let daily = await sales.dailySales()
         let monthWise = await sales.monthWiseSales()
-        let dailySalesReport = await sales.dailySalesReport()
         res.render('admin/Sales-Report', { layout, monthly, yearly, daily, monthWise })
     },
 
@@ -332,6 +346,156 @@ module.exports = {
 
     generateReportPDF: (req, res) => {
         sales.monthlySales().then((response) => {
+            res.send(response)
+        })
+    },
+
+    //coupons
+
+    coupons: async (req, res) => {
+        let coupon = await couponHelpers.getCoupons()
+        res.render('admin/coupons', { layout,coupon })
+    },
+
+    //add-coupons
+
+    addCoupons: (req, res) => {
+        res.render('admin/add-coupons', { layout })
+    },
+
+    //add-coupon-post
+
+    addNewCoupen: (req, res) => {
+        data = {
+            coupon: req.body.coupon,
+            discountAmount: req.body.discountAmount,
+            amount: req.body.discountAmount,
+            amountValidity: req.body.amountValidity,
+            percentage: req.body.discountPercentage,
+            discountType: req.body.discountType,
+            usageValidity: req.body.redeemTime,
+            validityTill: req.body.validity,
+            description: req.body.description
+        }
+        console.log(data);
+        couponHelpers.addNewCoupen(data).then((response) => {
+            res.send(response)
+        })
+    },
+
+    // generateCoupon
+
+    generateCoupon: (req, res) => {
+        couponHelpers.generateCoupon().then((response) => {
+            res.send(response)
+        })
+
+    },
+
+    //bannersHome
+
+    banner: (req, res) => {
+        res.render('admin/banner-management-home', { layout })
+    },
+
+    //bannerPage
+
+    bannerPage: (req, res) => {
+        bannerHelpers.banner().then((banner) => {
+            res.render('admin/bannerLists', { layout, banner })
+        })
+    },
+
+    //addBanner
+
+    addBanner: (req, res) => {
+        res.render('admin/addBanner', { layout })
+    },
+
+    addbannerPost: (req, res) => {
+        bannerHelpers.addBanner(req.body).then((insertedId) => {
+            let imgName = insertedId
+            req.files?.image?.mv('./public/banner-images/' + imgName + '.jpg', () => {
+                console.log('done');
+            })
+            res.redirect('/admin/banners')
+        })
+    },
+
+    //editBanner
+
+    editBannerPage: (req, res) => {
+        bannerHelpers.getBanner(req.params.id).then((data) => {
+            res.render('admin/editBanner', { layout, data })
+        })
+
+    },
+
+    //editBanner
+
+    editBannerPost: (req, res) => {
+        bannerHelpers.editBanner(req.params.id, req.body).then(() => {
+            let imgName = req.params.id
+            req.files?.image?.mv('./public/banner-images/' + imgName + '.jpg', () => {
+                console.log('done');
+            })
+            res.redirect('/admin/ads-management')
+        })
+    },
+
+    //deleteBanner
+
+    deleteBanner: (req, res) => {
+        bannerHelpers.deleteBanner(req.params.id).then((response) => {
+            res.send(response)
+        })
+    },
+
+    //categoryBannerManagement
+
+    categoryBannerPage: async (req, res) => {
+        let data = await bannerHelpers.categoryFind()
+        res.render('admin/category-banner-list', { layout, data })
+    },
+
+
+    addCateBanner: (req, res) => {
+        productHelpers.getAllCategories().then((category) => {
+            res.render('admin/add-category-banner', { layout, category })
+        })
+    },
+
+    // editCategoryPage
+
+    editCateBanner: async (req, res) => {
+        let data = await bannerHelpers.categoryFind(req.params.id)
+        productHelpers.getAllCategories().then((category) => {
+            res.render('admin/edit-category-banner', { layout, data, category })
+        })
+    },
+
+    //categoryBanner
+
+    addCategoryBannerPost: (req, res) => {
+        bannerHelpers.addCategoryBanner(req.body).then((insertedId) => {
+            let imgName = insertedId
+            req.files?.image?.mv('./public/banner-images/' + imgName + '.jpg')
+            res.redirect('/admin/category-banner-list')
+        })
+    },
+
+    editcategoryBannerPost: (req, res) => {
+        id = req.params.id
+        bannerHelpers.editCategoryBanner(id, req.body).then(() => {
+            let imgName = id
+            req.files?.image?.mv('./public/banner-images/' + imgName + '.jpg')
+            res.redirect('/admin/category-banner-list')
+        })
+    },
+
+    deleteCategoryBanner: (req, res) => {
+        bannerHelpers.deleteCategoryBanner(req.params.id).then((response
+        ) => {
             res.send(response)
         })
     },
@@ -362,10 +526,12 @@ module.exports = {
             let users = await sales.findUsers()
             let yearly = await sales.yearlySales()
             let monthly = await sales.monthlySales()
+            let RevenueByDay = await sales.getRevenueByDay()
             let daily = await sales.dailySales()
-            let totalOrders = chartHelpers.totalOrdersGraph()
+            let totalOrders = await chartHelpers.totalOrdersGraph()
+            console.log('hello', RevenueByDay);
             chartHelpers.priceGraph().then((priceStat) => {
-                res.send({ priceStat, yearly, monthly, daily,totalOrders })
+                res.send({ priceStat, yearly, monthly, daily, totalOrders, RevenueByDay })
             })
         } catch (err) {
             console.log(err)

@@ -2,31 +2,23 @@
   <main class="main">
     <div class="intro-slider-container mb-5">
       <div class="intro-slider owl-carousel owl-theme owl-nav-inside owl-light" data-toggle="owl" data-owl-options='{
-                      "dots": true,
-                      "nav": false, 
+        "dots": true,
+        "nav": false, 
                       "responsive": {
                           "1200": {
                               "nav": true,
                               "dots": false
                           }
-                      }
-                  }'>
-        <div class="intro-slide" style="background-image: url(images/demos/demo-4/slider/slide-1.png);">
+                        }
+                      }'>
+                      <% banners.forEach(elements=>{ %>
+        <div class="intro-slide" style="background-image: url(/banner-images/<%-elements._id%>.jpg);">
           <div class="container intro-content">
             <div class="row justify-content-end">
               <div class="col-auto col-sm-7 col-md-6 col-lg-5">
-                <h3 class="intro-subtitle text-third">Deals and Promotions</h3><!-- End .h3 intro-subtitle -->
-                <h1 class="intro-title">Beats by</h1>
-                <h1 class="intro-title">Dre Studio 3</h1><!-- End .intro-title -->
-
-                <div class="intro-price">
-                  <sup class="intro-old-price">$349,95</sup>
-                  <span class="text-third">
-                    $279<sup>.99</sup>
-                  </span>
-                </div><!-- End .intro-price -->
-
-                <a href="category.html" class="btn btn-primary btn-round">
+                <h3 class="intro-subtitle text-third text-danger"><%=elements.title %></h3><!-- End .h3 intro-subtitle -->
+                <h1 class="intro-title col-3 text-primary"><%=elements.description%></h1>
+                <a href="/shop" class="btn btn-primary btn-round">
                   <span>Shop More</span>
                   <i class="icon-long-arrow-right"></i>
                 </a>
@@ -34,29 +26,7 @@
             </div><!-- End .row -->
           </div><!-- End .intro-content -->
         </div><!-- End .intro-slide -->
-
-        <div class="intro-slide" style="background-image: url(images/demos/demo-4/slider/slide-2.png);">
-          <div class="container intro-content">
-            <div class="row justify-content-end">
-              <div class="col-auto col-sm-7 col-md-6 col-lg-5">
-                <h3 class="intro-subtitle text-primary">New Arrival</h3><!-- End .h3 intro-subtitle -->
-                <h1 class="intro-title">Apple iPad Pro <br>12.9 Inch, 64GB </h1><!-- End .intro-title -->
-
-                <div class="intro-price">
-                  <sup>Today:</sup>
-                  <span class="text-primary">
-                    $999<sup>.99</sup>
-                  </span>
-                </div><!-- End .intro-price -->
-
-                <a href="category.html" class="btn btn-primary btn-round">
-                  <span>Shop More</span>
-                  <i class="icon-long-arrow-right"></i>
-                </a>
-              </div><!-- End .col-md-6 offset-md-6 -->
-            </div><!-- End .row -->
-          </div><!-- End .intro-content -->
-        </div><!-- End .intro-slide -->
+        <% }) %>
       </div><!-- End .intro-slider owl-carousel owl-simple -->
 
       <span class="slider-loader"></span><!-- End .slider-loader -->
@@ -144,52 +114,22 @@
 
     <div class="mb-4"></div><!-- End .mb-4 -->
 
+
     <div class="container">
       <div class="row justify-content-center">
+        <% categoryBanner.forEach((elements,index)=>{ %>
         <div class="col-md-6 col-lg-4">
           <div class="banner banner-overlay banner-overlay-light">
-            <a href="#">
-              <img src="images/demos/demo-4/banners/banner-1.png" alt="Banner">
+            <a href="/category?category=<%= elements.category%>">
+              <img src="/banner-images/<%=elements._id%>.jpg" alt="Banner">
             </a>
 
-            <div class="banner-content">
-              <h4 class="banner-subtitle"><a href="#">Smart Offer</a></h4><!-- End .banner-subtitle -->
-              <h3 class="banner-title"><a href="#">Save $150 <strong>on Samsung <br>Galaxy Note9</strong></a></h3>
-              <!-- End .banner-title -->
-              <a href="#" class="banner-link">Shop Now<i class="icon-long-arrow-right"></i></a>
+            <div class="banner-content ml-4 mt-5">
+              <a href="/category?category=<%= elements.category%>" class="banner-link text-white mt-2">Shop Now<i class="icon-long-arrow-right"></i></a>
             </div><!-- End .banner-content -->
           </div><!-- End .banner -->
         </div><!-- End .col-md-4 -->
-
-        <div class="col-md-6 col-lg-4">
-          <div class="banner banner-overlay banner-overlay-light">
-            <a href="#">
-              <img src="images/demos/demo-4/banners/banner-2.jpg" alt="Banner">
-            </a>
-
-            <div class="banner-content">
-              <h4 class="banner-subtitle"><a href="#">Time Deals</a></h4><!-- End .banner-subtitle -->
-              <h3 class="banner-title"><a href="#"><strong>Bose SoundSport</strong> <br>Time Deal -30%</a></h3>
-              <!-- End .banner-title -->
-              <a href="#" class="banner-link">Shop Now<i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .banner-content -->
-          </div><!-- End .banner -->
-        </div><!-- End .col-md-4 -->
-
-        <div class="col-md-6 col-lg-4">
-          <div class="banner banner-overlay banner-overlay-light">
-            <a href="#">
-              <img src="images/demos/demo-4/banners/banner-3.png" alt="Banner">
-            </a>
-
-            <div class="banner-content">
-              <h4 class="banner-subtitle"><a href="#">Clearance</a></h4><!-- End .banner-subtitle -->
-              <h3 class="banner-title"><a href="#"><strong>GoPro - Fusion 360</strong> <br>Save $70</a></h3>
-              <!-- End .banner-title -->
-              <a href="#" class="banner-link">Shop Now<i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .banner-content -->
-          </div><!-- End .banner -->
-        </div><!-- End .col-lg-4 -->
+        <% }) %> 
       </div><!-- End .row -->
     </div><!-- End .container -->
 
@@ -204,8 +144,7 @@
 
       <div class="tab-content tab-content-carousel just-action-icons-sm">
         <div class="tab-pane p-0 fade show active" id="new-all-tab" role="tabpanel" aria-labelledby="new-all-link">
-          <div class="owl-carousel owl-full carousel-equal-height carousel-with-shadow" data-toggle="owl"
-            data-owl-options='{
+          <div class="owl-carousel owl-full carousel-equal-height carousel-with-shadow" data-toggle="owl" data-owl-options='{
                               "nav": true, 
                               "dots": true,
                               "margin": 20,
@@ -434,20 +373,21 @@
     <div class="mb-6"></div><!-- End .mb-6 -->
 
     <div class="container">
-      <div class="cta cta-border mb-5" style="background-image: url(images/demos/demo-4/bg-1.jpg);">
-        <img src="images/demos/demo-4/camera.png" alt="camera" class="cta-img">
+      <% banners.forEach(elements=>{ %>
+      <div class="cta cta-border mb-5" style="background-image: url(/banner-images/<%-elements._id%>,<%-elements._id%>bn2.jpg);">
+        <img src="/banner-images/<%-elements._id%>,<%-elements._id%>prod.jpg" alt="camera" class="cta-img " style="margin-bottom: 80rem ; width: 20rem; height: 20rem;">
         <div class="row justify-content-center">
           <div class="col-md-12">
             <div class="cta-content">
               <div class="cta-text text-right text-white">
-                <p>Shop Today’s Deals <br><strong>Awesome Made Easy. HERO7 Black</strong></p>
+                <p><%- elements.prodTitle %> <br><strong><%- elements.prodDescription %> </strong></p>
               </div><!-- End .cta-text -->
-              <a href="#" class="btn btn-primary btn-round"><span>Shop Now - $429.99</span><i
-                  class="icon-long-arrow-right"></i></a>
+              <a href="#" class="btn btn-primary btn-round"><span>Shop Now - $429.99</span><i class="icon-long-arrow-right"></i></a>
             </div><!-- End .cta-content -->
           </div><!-- End .col-md-12 -->
         </div><!-- End .row -->
       </div><!-- End .cta -->
+      <% }) %>
     </div><!-- End .container -->
 
     <div class="container">
@@ -497,8 +437,7 @@
                 <span class="new-price">$29.99</span>
               </div><!-- End .product-price -->
 
-              <a href="login.html" class="btn btn-link"><span>Sign In and Save money</span><i
-                  class="icon-long-arrow-right"></i></a>
+              <a href="login.html" class="btn btn-link"><span>Sign In and Save money</span><i class="icon-long-arrow-right"></i></a>
             </div><!-- End .deal-content -->
 
             <div class="deal-bottom">
@@ -509,8 +448,7 @@
       </div><!-- End .row -->
 
       <div class="more-container text-center mt-1 mb-5">
-        <a href="#" class="btn btn-outline-dark-2 btn-round btn-more"><span>Shop more Outlet deals</span><i
-            class="icon-long-arrow-right"></i></a>
+        <a href="#" class="btn btn-outline-dark-2 btn-round btn-more"><span>Shop more Outlet deals</span><i class="icon-long-arrow-right"></i></a>
       </div><!-- End .more-container -->
     </div><!-- End .container -->
 
@@ -584,10 +522,8 @@
 
           <div class="col-xl-4-5col">
             <div class="tab-content tab-content-carousel just-action-icons-sm">
-              <div class="tab-pane p-0 fade show active" id="trending-top-tab" role="tabpanel"
-                aria-labelledby="trending-top-link">
-                <div class="owl-carousel owl-full carousel-equal-height carousel-with-shadow" data-toggle="owl"
-                  data-owl-options='{
+              <div class="tab-pane p-0 fade show active" id="trending-top-tab" role="tabpanel" aria-labelledby="trending-top-link">
+                <div class="owl-carousel owl-full carousel-equal-height carousel-with-shadow" data-toggle="owl" data-owl-options='{
                                           "nav": true, 
                                           "dots": false,
                                           "margin": 20,
@@ -892,8 +828,7 @@
                 <span class="product-label label-circle label-new">New</span>
                 <a href="product.html">
                   <img src="images/demos/demo-4/products/product-12.jpg" alt="Product image" class="product-image">
-                  <img src="images/demos/demo-4/products/product-12-2.jpg" alt="Product image"
-                    class="product-image-hover">
+                  <img src="images/demos/demo-4/products/product-12-2.jpg" alt="Product image" class="product-image-hover">
                 </a>
 
                 <div class="product-action-vertical">
@@ -1212,19 +1147,16 @@
 
     <form action="#" method="get" class="mobile-search">
       <label for="mobile-search" class="sr-only">Search</label>
-      <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..."
-        required>
+      <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
       <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
     </form>
 
     <ul class="nav nav-pills-mobile nav-border-anim" role="tablist">
       <li class="nav-item">
-        <a class="nav-link active" id="mobile-menu-link" data-toggle="tab" href="#mobile-menu-tab" role="tab"
-          aria-controls="mobile-menu-tab" aria-selected="true">Menu</a>
+        <a class="nav-link active" id="mobile-menu-link" data-toggle="tab" href="#mobile-menu-tab" role="tab" aria-controls="mobile-menu-tab" aria-selected="true">Menu</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" id="mobile-cats-link" data-toggle="tab" href="#mobile-cats-tab" role="tab"
-          aria-controls="mobile-cats-tab" aria-selected="false">Categories</a>
+        <a class="nav-link" id="mobile-cats-link" data-toggle="tab" href="#mobile-cats-tab" role="tab" aria-controls="mobile-cats-tab" aria-selected="false">Categories</a>
       </li>
     </ul>
 
@@ -1269,12 +1201,10 @@
                 <li><a href="category-2cols.html">Shop Grid 2 Columns</a></li>
                 <li><a href="category.html">Shop Grid 3 Columns</a></li>
                 <li><a href="category-4cols.html">Shop Grid 4 Columns</a></li>
-                <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span
-                        class="tip tip-hot">Hot</span></span></a></li>
+                <li><a href="category-boxed.html"><span>Shop Boxed No Sidebar<span class="tip tip-hot">Hot</span></span></a></li>
                 <li><a href="category-fullwidth.html">Shop Fullwidth No Sidebar</a></li>
                 <li><a href="product-category-boxed.html">Product Category Boxed</a></li>
-                <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span
-                        class="tip tip-new">New</span></span></a></li>
+                <li><a href="product-category-fullwidth.html"><span>Product Category Fullwidth<span class="tip tip-new">New</span></span></a></li>
                 <li><a href="cart.html">Cart</a></li>
                 <li><a href="checkout.html">Checkout</a></li>
                 <li><a href="wishlist.html">Wishlist</a></li>

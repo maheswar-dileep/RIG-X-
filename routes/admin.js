@@ -2,28 +2,15 @@ var express = require('express');
 const controllers = require('../controllers/adminController')
 const adminHelpers = require('../helpers/adminHelpers');
 const productHelpers = require('../helpers/productHelpers');
-const multer = require('multer')
 
+const fileUpload = require('express-fileupload');
 const auth = require('../controllers/auth');
 const { response } = require('../app');
+const { verify } = require('crypto');
 const router = express.Router();
 const layout = 'admin-layout'
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/product-images')
-    },
-    filename: (req, file, cb, err) => {
-        if (err) {
-            console.log(err)
-        }
-        cb(null, Date.now() + '-' + file.originalname)
-    }
-})
 
-const upload = multer({
-    storage: storage
-})
 
 
 
@@ -45,7 +32,7 @@ router.get('/chartGraph', controllers.revenueGraphMonth)
 
 /*------------------------add-products------------------------------*/
 
-router.post('/add-products', auth.verifyAdmin, upload.array('image'), controllers.addProductsPost)
+router.post('/add-products', auth.verifyAdmin, controllers.addProductsPost)
 
 /*------------------------products------------------------------*/
 
@@ -57,7 +44,6 @@ router.delete('/delete-products/:id', auth.verifyAdmin, controllers.deleteProduc
 
 /*------------------------edit-product------------------------------*/
 
-//todo:Edit Products post to put
 
 router.get('/edit-products/:id', auth.verifyAdmin, controllers.editProducts)
 
@@ -113,15 +99,57 @@ router.put('/admin-cancel-order', auth.verifyAdmin, controllers.cancelOrder)
 
 /*----------------change-order-status-------------*/
 
-router.post('/change-order-status',auth.verifyAdmin,controllers.changeOrderStatus)
+router.post('/change-order-status', auth.verifyAdmin, controllers.changeOrderStatus)
 
 /*-----------------------Sales-Report-------------------*/
 
-router.get('/sales-report',auth.verifyAdmin,controllers.generateSalesReport)
+router.get('/sales-report', auth.verifyAdmin, controllers.generateSalesReport)
 
 /*-----------------------------generate-pdf-------------------*/
 
 router.get('/generate-PDF-monthly', auth.verifyAdmin, controllers.generateReportPDF)
+
+/*---------------Coupons----------------*/
+
+router.get('/coupons', auth.verifyAdmin, controllers.coupons)
+
+/*---------------Add-Coupons----------------*/
+
+router.get('/add-coupons', auth.verifyAdmin, controllers.addCoupons)
+
+router.post('/add_coupon', auth.verifyAdmin, controllers.addNewCoupen)
+
+router.get('/generate_coupon', auth.verifyAdmin, controllers.generateCoupon)
+
+/*---------------banners----------------*/
+
+router.get('/banners', auth.verifyAdmin, controllers.banner)
+
+router.get('/banner-management', auth.verifyAdmin, controllers.bannerPage)
+
+router.get('/add-banner', auth.verifyAdmin, controllers.addBanner)
+
+router.post('/add-banner', auth.verifyAdmin, controllers.addbannerPost)
+
+router.get('/edit-banner/:id',auth.verifyAdmin,controllers.editBannerPage)
+
+router.post('/edit-banner/:id',auth.verifyAdmin,controllers.editBannerPost)
+
+router.delete('/delete-banner/:id',auth.verifyAdmin,controllers.deleteBanner)
+
+/*---------------category-Banner-Management----------------*/
+
+router.get('/category-banner-list', auth.verifyAdmin, controllers.categoryBannerPage)
+
+router.get('/add-category-banner', auth.verifyAdmin, controllers.addCateBanner)
+
+router.post('/add-category-banner', auth.verifyAdmin, controllers.addCategoryBannerPost)
+
+router.get('/edit-category-banner/:id', auth.verifyAdmin, controllers.editCateBanner)
+
+router.post('/edit-category-banner/:id',auth.verifyAdmin,controllers.editcategoryBannerPost)
+
+router.delete('/delete-category-banner/:id', auth.verifyAdmin, controllers.deleteCategoryBanner)
 
 /*---------------logout----------------*/
 

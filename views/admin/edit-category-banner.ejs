@@ -1,0 +1,40 @@
+<div class="row mx-auto my-auto">
+  <div class="col-4">
+    <div class="card" style="width: 18rem;">
+      <% data.forEach((elements,index)=>{  %>
+
+      <img class="card-img-top" src="/banner-images/<%=elements._id %>.jpg" id="imgView" alt="">
+      <div class="card-body">
+        <div class="row">
+
+          <form action="/admin/edit-category-banner/<%= elements._id %> " enctype="multipart/form-data" method="post">
+            
+            <label>Category</label>
+            <select class="form-control " name="category">
+              <% category.forEach((categoryn)=>{ %>
+              <option value="<%=elements.category %> " class="text-dark">
+                <%-categoryn.name%>
+              </option>
+              <% }) %>
+            </select>
+
+            <label for="">Image</label>
+            <input type="file" name="image" class="form-control" onchange="viewImage(event)">
+
+            <button class="btn btn-info btn-sm mt-4">submit</button>
+
+          </form>
+        </div>
+      </div>
+      <% }) %> 
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function viewImage(event) {
+    document.getElementById('imgView').src = URL.createObjectURL(event.target.files[0])
+  }
+
+</script>

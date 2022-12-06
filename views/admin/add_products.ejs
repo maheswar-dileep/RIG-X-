@@ -14,7 +14,7 @@
               <label class="w-25">Name</label>
               <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
             </div>
-            <input type="text" class="form-control" id="name" placeholder="name" name="name" required>
+            <input type="text" class="form-control" id="name" autocomplete="off" placeholder="name" name="name" required>
           </div>
 
           <div class="form-group col-md-5">
@@ -30,18 +30,26 @@
 
           <div class="form-group col-md-5">
             <div class="d-flex">
-              <label for="exampleInputPassword4" class="w-25">Price</label>
+              <label for="exampleInputPassword4" class="w-25">Market Price</label>
               <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
             </div>
-            <input type="number" class="form-control" id="price" placeholder="Price" name="price" required>
+            <input type="number" autocomplete="off" class="form-control" id="marketPrice" placeholder="MarketPrice" name="marketPrice" required>
           </div>
 
           <div class="form-group col-md-5">
             <div class="d-flex">
-              <label for="exampleInputPassword4" class="w-25">Market Price</label>
+              <label for="exampleInputPassword4" class="w-25">Offer Percent</label>
               <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
             </div>
-            <input type="number" class="form-control" id="price" placeholder="MarketPrice" name="marketPrice" required>
+            <input type="number" autocomplete="off" class="form-control" id="percentVal" placeholder="Percent" onfocusout="calcOffer(this)" name="percent" required>
+          </div>
+
+          <div class="form-group col-md-5">
+            <div class="d-flex">
+              <label for="exampleInputPassword4" class="w-25">Offer Price</label>
+              <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
+            </div>
+            <input type="number" autocomplete="off" class="form-control" id="offerPrice" placeholder="Price" name="offerPrice" readonly="readonly"+ required>
           </div>
 
           <div class="form-group col-md-5">
@@ -49,7 +57,7 @@
               <label for="exampleInputPassword4" class="w-25">Quantity</label>
               <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
             </div>
-            <input type="number" class="form-control" id="quantity" placeholder="quantity" name="quantity" required>
+            <input type="number" autocomplete="off" class="form-control" id="quantity" placeholder="quantity" name="quantity" required>
           </div>
 
 
@@ -68,7 +76,7 @@
             <img src="" alt="" style="width: 75px; height: 75px;" id="imgView4">
           </div>
 
-          
+
           <div class="form-group col-md-10">
             <label for="">Image</label>
             <input type="file" name="image" id="image" class="form-control" onchange="viewImage1(event)" required>
@@ -92,7 +100,7 @@
 
           <button type="submit" class="btn btn-primary ml-3 mr-2 col-md-2">Submit</button>
           <button class="btn btn-light" onclick="history.back()">Cancel</button>
-        </div> 
+        </div>
       </form>
     </div>
   </div>
@@ -102,13 +110,27 @@
 
 
 <script>
+  function calcOffer(elem) {
+    let Mktprice = elem.parentElement.parentElement.querySelector('#marketPrice').value.trim()
+    let Percent = elem.value
+
+    let offerPrice = (Mktprice - (Mktprice * (Percent / 100)))
+    offerPrice = Math.round(offerPrice)
+
+    let price = document.getElementById('offerPrice')
+    console.log(offerPrice);
+
+    price.value = offerPrice
+
+  } 
+
   function viewImage1(event) {
     document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
     console.log(event)
   }
 
   function viewImage2(event) {
-    document.getElementById('imgView23').src = URL.createObjectURL(event.target.files[0])
+    document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
   }
 
   function viewImage3(event) {

@@ -1,15 +1,8 @@
 const db = require("../model/connection")
 const bcrypt = require('bcrypt')
-const { response } = require("../app")
-const { userid } = require("../config/admin_pass")
-const { address, products } = require("../model/connection")
-const { cancelOrder } = require("../controllers/userController")
 const ObjectId = require('mongodb').ObjectId
 const Razorpay = require('razorpay');
 const razorPayKey = require('../config/razorpayKey')
-const paypalKey = require('../config/paypalKey')
-const { default: mongoose } = require("mongoose")
-const { resolve } = require("path")
 
 
 var instance = new Razorpay({
@@ -189,6 +182,26 @@ module.exports = {
         })
     },
 
+    getWalletBalance: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await db.users.aggregate([
+                  
+                    {
+                        $match: { _id: userId }
+                    },
+                    {
+                        $project: { wallet: '$wallet' }
+                    }
+                ]).then((wallet)=>{
+                    resolve(wallet[0].wallet)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        })
+    },
+
     changeProductQuantity: (data) => {
         count = parseInt(data.count)
         return new Promise((resolve, reject) => {
@@ -275,7 +288,7 @@ module.exports = {
                     {
                         $group: {
                             _id: null,
-                            total: { $sum: { $multiply: ['$quantity', '$product.price'] } }
+                            total: { $sum: { $multiply: ['$quantity', '$product.offerPrice'] } }
                         }
                     }
                 ]).then((total) => {
@@ -286,7 +299,6 @@ module.exports = {
             }
         })
     },
-
 
     getAllStates: () => {
         return new Promise((resolve, reject) => {
@@ -339,10 +351,9 @@ module.exports = {
                             _id: '$cartItemsRs._id',  //productId
                             quantity: 1,             //minQuantity
                             productsName: '$cartItemsRs.name',
-                            productsPrice: '$cartItemsRs.price',
+                            productsPrice: '$cartItemsRs.offerPrice',
                             status: '$cartItemsRs.status',
                             orderStatus: 'Processing',
-                            img: "$cartItemsRs.img"
                         }
                     }
                 ])
@@ -481,16 +492,15 @@ module.exports = {
             try {
                 db.order.aggregate([
                     {
-                        $match: { userId: userId }
+                        $unwind: '$orders'
                     },
                     {
-                        $unwind: '$orders'
+                        $match: { userId: ObjectId(userId) }
                     },
                     {
                         $sort: { 'orders.createdAt': -1 }
                     }
                 ]).then((orders) => {
-                    // console.log('orders=>', orders);
                     resolve(orders)
                 })
             } catch (err) {
@@ -554,14 +564,12 @@ module.exports = {
     returnProduct: (data, userId) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let order = await db.order.find({ 'orders._id': data.orderId })
-                // console.log(order);
+                let order = await db.order.find({})
                 let flag = 1
                 if (order) {
+
                     let orderIndex = order[0].orders.findIndex(order => order._id == data.orderId)
-                    // console.log(orderIndex);
                     let productIndex = order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.prodId)
-                    // console.log(productIndex);
 
                     await db.order.updateOne(
                         {
@@ -575,9 +583,9 @@ module.exports = {
                         }
                     );
 
-                    db.data.aggregate([
+                    db.order.aggregate([
                         {
-                            $match: ({ userId: ObjectId(data.orderId) })
+                            $match: ({ 'orders._id': ObjectId(data.orderId) })
                         },
                         {
                             $unwind: '$orders'
@@ -593,25 +601,24 @@ module.exports = {
                             price: 0
                         }
                         let totalPrice = aggrData[0].orders.productsDetails.productsPrice * aggrData[0].orders.productsDetails.quantity
-                        if (aggrData[0].orders.totalPrice - totalPrice < 0){
+                        if (aggrData[0].orders.totalPrice - totalPrice < 0) {
                             priceToWallet.price = aggrData[0].orders.totalPrice
-                        }else{
+                        } else {
                             priceToWallet.price = totalPrice
                         }
 
-                        db.products.updateOne({_id:prodId},{
-                            $inc:{quantity:aggrData[0].orders.productsDetails.quantity}
-                        }).then((e)=>{
+                        db.products.updateOne({ _id: data.prodId }, {
+                            $inc: { quantity: aggrData[0].orders.productsDetails.quantity }
+                        }).then((e) => {
                             console.log(e);
                         })
 
-                        db.user.updateOne({_id:user},{
-                            $push:{
-                                walet:priceToWallet
+                        db.users.updateOne({ _id: userId }, {
+                            $inc: {
+                                wallet: parseInt(priceToWallet.price)
                             }
-                        }).then((e)=>{
-                            console.log(e);
-                            resolve({status:true})
+                        }).then((e) => {
+                            resolve({ status: true })
                         })
                     })
 
@@ -623,6 +630,7 @@ module.exports = {
                 console.log(err);
             }
         })
+
     },
 
     //getAddress
@@ -832,22 +840,25 @@ module.exports = {
         })
     },
 
-    orderInvoice: (userId, orderId) => {
+    orderInvoice: (orderId, prodId) => {
+        console.log('orderId', orderId, 'prodId', prodId);
 
         return new Promise(async (resolve, reject) => {
             try {
-                let orders = await db.order.findOne({ userId: userId })
-                // console.log(orders);
-                if (orders) {
-
-                    let orderIndex = orders.orders.findIndex(order => order._id == orderId)
-                    let lastOrder = orders.orders[orderIndex]
-
-                    resolve({ status: true, data: lastOrder })
-
-                } else {
-                    resolve({ status: false })
-                }
+                let orders = await db.order.aggregate([
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        $unwind: '$orders.productsDetails'
+                    },
+                    {
+                        $match: {
+                            $and: [{ 'orders._id': ObjectId(orderId), 'orders.productsDetails._id': ObjectId(prodId) }]
+                        }
+                    }
+                ])
+                resolve({ status: true, data: orders })
 
             } catch (error) {
                 console.log(error);

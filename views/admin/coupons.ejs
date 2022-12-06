@@ -1,0 +1,73 @@
+<div class="col-lg-12 grid-margin stretch-card">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Coupon Management</h4>
+      <!-- <p class="card-description">
+          Add class <code>.table-striped</code>
+        </p> -->
+      <a type="button" href="/admin/add-coupons" class="btn btn-success btn-sm btn-icon-text btn-icon-prepend">
+        Add Coupons
+      </a>
+      <div class="table-responsive">
+
+
+        <input type="text" class="col-md-10 mt-3 mb-3 " style="height:40px;" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+        <table class="table table-striped" id="myTable">
+          <thead>
+            <tr>
+              <th>
+                #
+              </th>
+              <th>
+                Coupon Code
+              </th>
+              <th>
+                Amount Validity
+              </th>
+              <th>
+                Amount/percent
+                
+              </th>
+              <th>
+                expiry
+              </th>
+            </tr>
+          </thead>
+          <% coupon.forEach((element,index)=>{ %>
+          <tbody>
+
+            <tr>
+              <td class="py-1">
+                <%= index+1 %>
+              </td>
+              <td>
+                <%= element.coupon %>
+              </td>
+              <td>
+                <%= element.amountValidity %>
+              </td>
+              <td>
+                <%= element.amount %>
+                <%= element.percentage%> 
+              </td>
+              <% const getDate=(date)=>{
+                let orderDate = new Date(date)
+                let day = orderDate.getDate();
+                let month = orderDate.getMonth();
+                let year = orderDate.getFullYear();
+
+                return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
+
+              } %>
+              <td>
+                <%= getDate(element.validityTill)  %>
+              </td>
+            </tr>
+
+          </tbody>
+          <% }) %>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

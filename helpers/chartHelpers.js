@@ -49,30 +49,30 @@ module.exports = {
                     arr[i]
                 }
             }
-            // console.log(arr)
             resolve(arr)
         })
     },
 
-    revenueGraphDay: () => {
-        return new Promise((resolve, reject) => {
-            try {
-                db.order.aggregate([
+    revenueGraphMonthPaid: () => {
+        return new Promise(async (resolve, reject) => {
+            for (let i = 0; i < 12; i++) {
+                let price = await db.order.aggregate([
                     {
                         $unwind: '$orders'
                     },
                     {
-                        $unwind: '$orders.productsDetails'
+                        '$unwind': '$orders.productsDetails'
                     },
                     {
-                        '$match': { 'orders.productsDetails.orderStatus': 'Delivered' }
+                        '$match': { 'orders.productsDetails.orderStatus': 'Returned' }
                     },
                     {
-                        '$match': {
+                        "$match": {
                             '$expr': {
                                 '$eq': [
                                     {
-                                        '$Day': '$orders.createdAt'
+                                        '$month': '$orders.createdAt',
+
                                     },
                                     i + 1
                                 ]
@@ -86,9 +86,66 @@ module.exports = {
                         }
                     }
                 ])
-            } catch (error) {
-                console.log(err);
+
+                arr[i + 1] = price[0]?.total
+
             }
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i] == undefined) {
+                    arr[i] = 0
+                } else {
+                    arr[i]
+                }
+            }
+            resolve(arr)
+        })
+    },
+
+    revenueGraphYear: () => {
+        return new Promise(async (resolve, reject) => {
+            for (let i = 0; i < 6; i++) {
+                let price = await db.order.aggregate([
+                    {
+                        $unwind: '$orders'
+                    },
+                    {
+                        '$unwind': '$orders.productsDetails'
+                    },
+                    {
+                        '$match': { 'orders.productsDetails.orderStatus': 'Delivered' }
+                    },
+                    {
+                        "$match": {
+                            '$expr': {
+                                '$eq': [
+                                    {
+                                        '$year': '$orders.createdAt',
+
+                                    },
+                                    i + 2016
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: null,
+                            total: { $sum: '$orders.totalPrice' }
+                        }
+                    }
+                ])
+
+                arr[i + 1] = price[0]?.total
+
+            }
+            for (i = 0; i < arr.length; i++) {
+                if (arr[i] == undefined) {
+                    arr[i] = 0
+                } else {
+                    arr[i]
+                }
+            }
+            resolve(arr)
         })
     },
 
@@ -128,7 +185,7 @@ module.exports = {
                 },
                 {
                     _id: "orders.paymentMethod",
-                     count: { $sum: 1 }
+                    count: { $sum: 1 }
                 }
             ])
         }).then((data) => {

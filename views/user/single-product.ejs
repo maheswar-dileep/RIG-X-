@@ -8,27 +8,27 @@
             <div class="product-gallery product-gallery-vertical">
               <div class="row">
                 <figure class="product-main-image">
-                  <img id="product-zoom" src="/product-images/<%= product.img[0]%>" data-zoom-image="/product-images/<%= product.img[0]%>" alt="product image">
+                  <img id="product-zoom" src="/product-images/<%= product._id%>0.jpg" data-zoom-image="/product-images/<%= product._id%>0.jpg" alt="product image">
 
                   <a href="#" id="btn-product-gallery" class="btn-product-gallery">
                     <i class="icon-arrows"></i>
                   </a>
                 </figure><!-- End .product-main-image -->
                 <div id="product-zoom-gallery" class="product-image-gallery">
-                  <a class="product-gallery-item active" href="#" data-image="/product-images/<%=product.img[0]%>" data-zoom-image="/product-images/<%= product.img[0]%>">
-                    <img src="/product-images/<%= product.img[0]%>" alt="product side">
+                  <a class="product-gallery-item active" href="#" data-image="/product-images/<%=product._id%>0.jpg" data-zoom-image="/product-images/<%= product._id%>0.jpg">
+                    <img src="/product-images/<%= product._id%>0.jpg" alt="product side">
                   </a>
 
-                  <a class="product-gallery-item" href="#" data-image="/product-images/<%= product.img[1]%>" data-zoom-image="/product-images/<%= product.img[1]%>">
-                    <img src="/product-images/<%= product.img[1]%>" alt="product cross">
+                  <a class="product-gallery-item" href="#" data-image="/product-images/<%= product._id%>1.jpg" data-zoom-image="/product-images/<%= product._id%>1.jpg">
+                    <img src="/product-images/<%= product._id%>1.jpg" alt="product cross">
                   </a>
 
-                  <a class="product-gallery-item" href="#" data-image="/product-images/<%=product.img[2]%>" data-zoom-image="/product-images/<%=product.img[2]%>">
-                    <img src="/product-images/<%=product.img[2]%>" alt="product with model">
+                  <a class="product-gallery-item" href="#" data-image="/product-images/<%=product._id%>2.jpg" data-zoom-image="/product-images/<%=product._id%>2.jpg">
+                    <img src="/product-images/<%=product._id%>2.jpg" alt="product with model">
                   </a>
 
-                  <a class="product-gallery-item" href="#" data-image="/product-images/<%= product.img[3]%>" data-zoom-image="/product-images/<%= product.img[3]%>">
-                    <img src="/product-images/<%= product.img[3]%>" alt="product back">
+                  <a class="product-gallery-item" href="#" data-image="/product-images/<%= product._id%>3.jpg" data-zoom-image="/product-images/<%= product._id%>3.jpg">
+                    <img src="/product-images/<%= product._id%>3.jpg" alt="product back">
                   </a>
                 </div><!-- End .product-image-gallery -->
               </div><!-- End .row -->
@@ -42,6 +42,7 @@
               </h1><!-- End .product-title -->
 
               <div class="ratings-container">
+                <span class="product-label label-sale"><%- product.percent%>% off</span>
                 <div class="ratings">
                   <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
                 </div><!-- End .ratings -->
@@ -49,7 +50,8 @@
               </div><!-- End .rating-container -->
 
               <div class="product-price">
-                ₹<%-product.price %>
+                <strike class="text-danger"><span class="new-price">₹<%- product.marketPrice %></span></strike>
+                ₹<%-product.offerPrice %>
               </div><!-- End .product-price -->
 
               <div class="product-content">
@@ -68,7 +70,6 @@
                 <h3 class="text-danger"> Out Of Stock</h3>
                 <% } %>
                 <div class="details-action-wrapper">
-
                   &nbsp;
                   &nbsp;
                   <a href="#" class="btn-product btn-wishlist" title="Wishlist"><span>Add
@@ -468,17 +469,13 @@
 
 
 <script>
-
-
-
-
   function addToCart(proId) {
 
     $.ajax({
-      url:'/check-cart-quantity/'+proId,
-      method:'get',
-      success:(response)=>{
-        
+      url: '/check-cart-quantity/' + proId,
+      method: 'get',
+      success: (response) => {
+console.log(response);
       }
     })
 
@@ -492,12 +489,8 @@
           count = parseInt(count) + 1
           $('#cart-count').html(count)
 
+          toast()
 
-          var snackbar = document.getElementById("snackbar");
-          snackbar.className = "show";
-          setTimeout(function() {
-            snackbar.className = snackbar.className.replace("show", "");
-          }, 3000);
         }
       }
     })

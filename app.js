@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const multer = require('multer')
+const fileUpload = require('express-fileupload'); 
 const expressLayouts = require('express-ejs-layouts')
 const db = require('./model/connection')
 const session = require('express-session')
@@ -29,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public/admin')));
+app.use(fileUpload())
 
 app.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -109,7 +110,7 @@ admin.use(session({
 admin.use(auth.authInit);
 
 
-admin.use('/',adminNewRouter);
+admin.use('/admin_panel',adminNewRouter);
 
 // catch 404 and forward to error handler
 admin.use(function (req, res, next) {
@@ -127,5 +128,5 @@ admin.use(function (err, req, res, next) {
   res.render('error');
 });
 
-admin.listen(8080)
+admin.listen(3002)
 

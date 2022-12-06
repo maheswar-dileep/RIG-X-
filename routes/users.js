@@ -96,7 +96,7 @@ router.get('/paypal-success',auth.verifyUser,controllers.paypalSuccess)
 
 router.get('/success', auth.verifyUser, controllers.success)
 
-//getAddress
+/*-------------------------getAddress-------------------------*/
 
 router.get('/autofill-address/:id', auth.verifyUser, controllers.getAddress)
 
@@ -112,17 +112,21 @@ router.put('/edit-address', auth.verifyUser, controllers.editAddress)
 
 router.get('/delete-address/:id', auth.verifyUser, controllers.deleteAddress)
 
-//verifyPayment
+/*------------------------verifyPayment---------------------*/
 
 router.post('/verify-payment', auth.verifyUser, controllers.verifyPayment)
 
-//orders list
+/*----------------------orders list-------------------------*/
 
 router.get('/orders-list', auth.verifyUser, controllers.ordersList)
 
 /*-------------------------invoice-----------------------------*/
 
-router.get('/order-invoice',auth.verifyUser,controllers.orderInvoice)
+router.get('/order-invoice-products',auth.verifyUser,controllers.orderInvoiceProducts)
+
+/*--------------------------category-page-------------------------*/
+
+router.get('/category',auth.verifyUser,controllers.categoryPage)
 
 //logout
 

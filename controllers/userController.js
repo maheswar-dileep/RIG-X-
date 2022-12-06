@@ -5,6 +5,7 @@ const userHelpers = require('../helpers/userHelpers');
 const OTP = require('../config/OTP')
 const client = require('twilio')(OTP.accountSID, OTP.authToken)
 const db = require("../model/connection")
+const bannerHelpers = require('../helpers/bannerHelpers')
 const auth = require('../controllers/auth');
 const { response } = require('../app');
 const { state } = require('../model/connection');
@@ -31,10 +32,12 @@ module.exports = {
 
     //landingPage
 
-    landingPage: (req, res, next) => {
+    landingPage: async (req, res, next) => {
+        let banners = await bannerHelpers.banner()
+        let categoryBanner = await bannerHelpers.categoryFind()
         let userName = req.user.name
         userHelpers.getCartCount(req.session.user).then((cartCount) => {
-            res.render('index', { userName, nav: true, footer: true, cartCount });
+            res.render('index', { userName, banners, nav: true, footer: true, cartCount, categoryBanner });
         })
     },
 
@@ -165,7 +168,8 @@ module.exports = {
         let states = await userHelpers.getAllStates(req.session.user)
         let address = await userHelpers.getaddress(req.session.user)
         let cartCount = await userHelpers.getCartCount(req.session.user)
-        res.render('user/account', { nav: true, footer: true, userName, cartCount, address, states })
+        let walletBalance = await userHelpers.getWalletBalance(req.session.user)
+        res.render('user/account', { nav: true, footer: true, userName, cartCount, address, states, walletBalance })
     },
 
     addToCart: (req, res) => {
@@ -257,9 +261,9 @@ module.exports = {
     // returnProduct
 
     returnProduct: async (req, res) => {
-
-        userHelpers.returnProduct(req.body, req.session.user).then(() => {
-
+        console.log(req.body.prodId);
+        userHelpers.returnProduct(req.body, req.session.user).then((response) => {
+            res.send(response)
         })
 
     },
@@ -390,16 +394,22 @@ module.exports = {
 
     //orderInvoice
 
-    orderInvoice: async (req, res) => {
-        const ordersDetails = await db.order.find({ userId: req.session.user })
-        let orders = ordersDetails[0].orders.slice().reverse()
-        let orderId1 = orders[0]._id
-        let orderId = "" + orderId1
+    orderInvoiceProducts: async (req, res) => {
+        let orderId = req.query.orderId
+        let prodId = req.query.product
 
-        userHelpers.orderInvoice(req.session.user,orderId).then((response) => {
-            // console.log(response);
+        userHelpers.orderInvoice(orderId, prodId).then((response) => {
             res.json(response)
         })
+    },
+
+    categoryPage: async (req, res) => {
+        let category = req.query.category
+
+        productHelpers.categoryPage(category).then(()=>{
+            
+        })
+
     },
 
     //logout
