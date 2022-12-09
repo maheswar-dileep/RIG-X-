@@ -88,6 +88,8 @@ admin.use(express.json());
 admin.use(express.urlencoded({ extended: false }));
 admin.use(cookieParser());
 admin.use(express.static(path.join(__dirname, 'public-admin')));
+admin.use(express.static(path.join(__dirname, 'public')));
+admin.use(fileUpload())
 
 admin.use(function (req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
@@ -110,7 +112,7 @@ admin.use(session({
 admin.use(auth.authInit);
 
 
-admin.use('/admin_panel',adminNewRouter);
+admin.use('/admin-panel',adminNewRouter);
 
 // catch 404 and forward to error handler
 admin.use(function (req, res, next) {

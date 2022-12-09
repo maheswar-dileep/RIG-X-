@@ -2,13 +2,12 @@ require('dotenv').config()
 
 const productHelpers = require('../helpers/productHelpers');
 const userHelpers = require('../helpers/userHelpers');
+const couponHelpers = require('../helpers/couponHelpers');
 const OTP = require('../config/OTP')
 const client = require('twilio')(OTP.accountSID, OTP.authToken)
 const db = require("../model/connection")
 const bannerHelpers = require('../helpers/bannerHelpers')
 const auth = require('../controllers/auth');
-const { response } = require('../app');
-const { state } = require('../model/connection');
 const razorPayKey = require('../config/razorpayKey')
 const { Convert } = require("easy-currencies");
 
@@ -27,6 +26,7 @@ const paypalClient = new paypal.core.PayPalHttpClient(
     )
 )
 
+let couponPrice = 0
 
 module.exports = {
 
@@ -35,10 +35,22 @@ module.exports = {
     landingPage: async (req, res, next) => {
         let banners = await bannerHelpers.banner()
         let categoryBanner = await bannerHelpers.categoryFind()
-        let userName = req.user.name
-        userHelpers.getCartCount(req.session.user).then((cartCount) => {
-            res.render('index', { userName, banners, nav: true, footer: true, cartCount, categoryBanner });
-        })
+        let coolers = await productHelpers.categoryPage('COOLER')
+        let keyboards = await productHelpers.categoryPage('KEYBOARD')
+        let userName = req?.user?.name
+        let products = await db.products.find({}).sort({ percent: -1 }).limit(8)
+        let cartCount = await userHelpers?.getCartCount(req?.session?.user)
+        res.render('index', {
+            userName,
+            banners,
+            nav: true,
+            footer: true,
+            cartCount,
+            keyboards,
+            products,
+            categoryBanner,
+            coolers
+        });
     },
 
     //login
@@ -134,6 +146,12 @@ module.exports = {
         })
     },
 
+    //getProductData
+
+    getProductData: async (req, res) => {
+        let data = await db.products.find({})
+        res.send(data)
+    },
 
     //productPage
 
@@ -168,8 +186,9 @@ module.exports = {
         let states = await userHelpers.getAllStates(req.session.user)
         let address = await userHelpers.getaddress(req.session.user)
         let cartCount = await userHelpers.getCartCount(req.session.user)
-        let walletBalance = await userHelpers.getWalletBalance(req.session.user)
-        res.render('user/account', { nav: true, footer: true, userName, cartCount, address, states, walletBalance })
+        let coupon = await couponHelpers.getCoupons()
+        let walletBalance = await userHelpers.getWalletBalance()
+        res.render('user/account', { nav: true, footer: true, userName, cartCount, address, states, walletBalance, coupon })
     },
 
     addToCart: (req, res) => {
@@ -179,7 +198,7 @@ module.exports = {
     },
 
     cart: async (req, res) => {
-        let userName = req.user.name
+        let userName = req?.user?.name
         let cartItems = await userHelpers.getCartProducts(req.session.user)
         let cartCount = await userHelpers.getCartCount(req.session.user)
         let total = await userHelpers.getTotalAmount(req.session.user)
@@ -225,7 +244,9 @@ module.exports = {
     placeOrder: async (req, res) => {
         req.body.userId = req.session.user
         req.body.paymentStatus = 'pending'
-        let total = await userHelpers.getTotalAmount(req.session.user)
+        let total1 = await userHelpers.getTotalAmount(req.session.user)
+        let total = total1 - couponPrice
+
         userHelpers.placeOrder(req.body, total).then(async (response) => {
 
             if (req.body.paymentMethod == 'COD') {
@@ -405,11 +426,47 @@ module.exports = {
 
     categoryPage: async (req, res) => {
         let category = req.query.category
-
-        productHelpers.categoryPage(category).then(()=>{
-            
+        let userName = req?.user?.name
+        let cartCount = await userHelpers?.getCartCount(req.session.user)
+        productHelpers.categoryPage(category).then((data) => {
+            res.render('user/category-page', {
+                cartCount,
+                nav: true,
+                foooter: true,
+                 userName,
+                data
+            })
         })
+    },
 
+    shopCategoryPage: async (req, res) => {
+        let userName = req.user.name
+        let cartCount = await userHelpers.getCartCount(req.session.user)
+        res.render('user/shop-category', { cartCount, nav: true, foooter: true, userName, })
+    },
+
+    //couponValidator
+
+    couponValidator: async (req, res) => {
+        let code = req.query.code
+        couponHelpers.couponValidator(code, req.session.user).then((response) => {
+            res.send(response)
+        })
+    },
+    couponVerify: async (req, res) => {
+        let code = req.query.code
+        couponHelpers.couponVerify(code, req.session.user).then((response) => {
+            res.send(response)
+        })
+    },
+    applyCoupon: async (req, res) => {
+        let code = req.query.code
+        let total = await userHelpers.getTotalAmount(req.session.user)
+        couponHelpers.applyCoupon(code, total).then((response) => {
+            couponPrice = response.discountAmount ? response.discountAmount : 0
+            console.log(response);
+            res.json(response)
+        })
     },
 
     //logout

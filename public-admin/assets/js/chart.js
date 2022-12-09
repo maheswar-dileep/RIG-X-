@@ -1,6 +1,6 @@
 var ctx = document.getElementById("chart-bars").getContext("2d");
 (function () {
-    fetch('/admin_panel/chartGraph', {
+    fetch('/admin/chartGraph', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'

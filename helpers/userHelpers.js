@@ -186,15 +186,15 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 await db.users.aggregate([
-                  
+
                     {
                         $match: { _id: userId }
                     },
                     {
                         $project: { wallet: '$wallet' }
                     }
-                ]).then((wallet)=>{
-                    resolve(wallet[0].wallet)
+                ]).then((wallet) => {
+                    resolve(wallet[0]?.wallet)
                 })
             } catch (error) {
                 console.log(error);
@@ -841,7 +841,6 @@ module.exports = {
     },
 
     orderInvoice: (orderId, prodId) => {
-        console.log('orderId', orderId, 'prodId', prodId);
 
         return new Promise(async (resolve, reject) => {
             try {

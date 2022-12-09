@@ -11,7 +11,7 @@
                           }
                         }
                       }'>
-                      <% banners.forEach(elements=>{ %>
+        <% banners.forEach(elements=>{ %>
         <div class="intro-slide" style="background-image: url(/banner-images/<%-elements._id%>.jpg);">
           <div class="container intro-content">
             <div class="row justify-content-end">
@@ -129,7 +129,7 @@
             </div><!-- End .banner-content -->
           </div><!-- End .banner -->
         </div><!-- End .col-md-4 -->
-        <% }) %> 
+        <% }) %>
       </div><!-- End .row -->
     </div><!-- End .container -->
 
@@ -138,7 +138,8 @@
     <div class="container new-arrivals">
       <div class="heading heading-flex mb-3">
         <div class="heading-left">
-          <h2 class="title">New Arrivals</h2><!-- End .title -->
+          <h2 class="title">Best In Coolers
+          </h2><!-- End .title -->
         </div><!-- End .heading-left -->
       </div><!-- End .heading -->
 
@@ -167,11 +168,12 @@
                                   }
                               }
                           }'>
+
+            <% coolers.forEach((element,index)=>{ %>
             <div class="product product-2">
               <figure class="product-media">
-                <span class="product-label label-circle label-top">Top</span>
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-1.jpg" alt="Product image" class="product-image">
+                <a href="/product/<%=element._id%>">
+                  <img src="/product-images/<%=element._id%>0.jpg" alt="Product image" class="product-image">
                 </a>
 
                 <div class="product-action-vertical">
@@ -185,12 +187,12 @@
 
               <div class="product-body">
                 <div class="product-cat">
-                  <a href="#">Laptops</a>
+                  <a href="/category?category=<%= element.category%>"><%=element.category%></a>
                 </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">MacBook Pro 13" Display, i5</a></h3>
+                <h3 class="product-title"><a href="/product/<%=element._id%>"><%=element.name%></a></h3>
                 <!-- End .product-title -->
                 <div class="product-price">
-                  $1,199.99
+                  ₹ <%=element.offerPrice%>
                 </div><!-- End .product-price -->
                 <div class="ratings-container">
                   <div class="ratings">
@@ -200,257 +202,15 @@
                 </div><!-- End .rating-container -->
               </div><!-- End .product-body -->
             </div><!-- End .product -->
+            <% }) %>
 
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-2.jpg" alt="Product image" class="product-image">
-                </a>
 
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $79.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-2.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $79.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-2.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $79.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-2.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $79.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-2.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Bose - SoundLink Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $79.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 6 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
           </div><!-- End .owl-carousel -->
         </div><!-- .End .tab-pane -->
       </div><!-- End .tab-content -->
     </div><!-- End .container -->
 
     <div class="mb-6"></div><!-- End .mb-6 -->
-
-    <div class="container">
-      <% banners.forEach(elements=>{ %>
-      <div class="cta cta-border mb-5" style="background-image: url(/banner-images/<%-elements._id%>,<%-elements._id%>bn2.jpg);">
-        <img src="/banner-images/<%-elements._id%>,<%-elements._id%>prod.jpg" alt="camera" class="cta-img " style="margin-bottom: 80rem ; width: 20rem; height: 20rem;">
-        <div class="row justify-content-center">
-          <div class="col-md-12">
-            <div class="cta-content">
-              <div class="cta-text text-right text-white">
-                <p><%- elements.prodTitle %> <br><strong><%- elements.prodDescription %> </strong></p>
-              </div><!-- End .cta-text -->
-              <a href="#" class="btn btn-primary btn-round"><span>Shop Now - $429.99</span><i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .cta-content -->
-          </div><!-- End .col-md-12 -->
-        </div><!-- End .row -->
-      </div><!-- End .cta -->
-      <% }) %>
-    </div><!-- End .container -->
-
-    <div class="container">
-      <div class="heading text-center mb-3">
-        <h2 class="title">Deals & Outlet</h2><!-- End .title -->
-        <p class="title-desc">Today’s deal and more</p><!-- End .title-desc -->
-      </div><!-- End .heading -->
-
-      <div class="row">
-        <div class="col-lg-6 deal-col">
-          <div class="deal" style="background-image: url('images/demos/demo-4/deal/bg-1.jpg');">
-            <div class="deal-top">
-              <h2>Deal of the Day.</h2>
-              <h4>Limited quantities. </h4>
-            </div><!-- End .deal-top -->
-
-            <div class="deal-content">
-              <h3 class="product-title"><a href="product.html">Home Smart Speaker with Google Assistant</a></h3>
-              <!-- End .product-title -->
-
-              <div class="product-price">
-                <span class="new-price">$129.00</span>
-                <span class="old-price">Was $150.99</span>
-              </div><!-- End .product-price -->
-
-              <a href="product.html" class="btn btn-link"><span>Shop Now</span><i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .deal-content -->
-
-            <div class="deal-bottom">
-              <div class="deal-countdown daily-deal-countdown" data-until="+10h"></div><!-- End .deal-countdown -->
-            </div><!-- End .deal-bottom -->
-          </div><!-- End .deal -->
-        </div><!-- End .col-lg-6 -->
-
-        <div class="col-lg-6 deal-col">
-          <div class="deal" style="background-image: url('images/demos/demo-4/deal/bg-2.jpg');">
-            <div class="deal-top">
-              <h2>Your Exclusive Offers.</h2>
-              <h4>Sign in to see amazing deals.</h4>
-            </div><!-- End .deal-top -->
-
-            <div class="deal-content">
-              <h3 class="product-title"><a href="product.html">Certified Wireless Charging Pad for iPhone / Android</a>
-              </h3><!-- End .product-title -->
-
-              <div class="product-price">
-                <span class="new-price">$29.99</span>
-              </div><!-- End .product-price -->
-
-              <a href="login.html" class="btn btn-link"><span>Sign In and Save money</span><i class="icon-long-arrow-right"></i></a>
-            </div><!-- End .deal-content -->
-
-            <div class="deal-bottom">
-              <div class="deal-countdown offer-countdown" data-until="+11d"></div><!-- End .deal-countdown -->
-            </div><!-- End .deal-bottom -->
-          </div><!-- End .deal -->
-        </div><!-- End .col-lg-6 -->
-      </div><!-- End .row -->
-
-      <div class="more-container text-center mt-1 mb-5">
-        <a href="#" class="btn btn-outline-dark-2 btn-round btn-more"><span>Shop more Outlet deals</span><i class="icon-long-arrow-right"></i></a>
-      </div><!-- End .more-container -->
-    </div><!-- End .container -->
 
     <div class="container">
       <hr class="mb-0">
@@ -543,11 +303,12 @@
                                               }
                                           }
                                       }'>
+                  <% keyboards.forEach((element,index)=>{ %>
                   <div class="product product-2">
                     <figure class="product-media">
                       <span class="product-label label-circle label-top">Top</span>
-                      <a href="product.html">
-                        <img src="images/demos/demo-4/products/product-6.jpg" alt="Product image" class="product-image">
+                      <a href="/product/<%=element._id%>">
+                        <img src="/product-images/<%=element._id%>0.jpg" alt="Product image" class="product-image">
                       </a>
 
                       <div class="product-action-vertical">
@@ -561,12 +322,12 @@
 
                     <div class="product-body">
                       <div class="product-cat">
-                        <a href="#">Headphones</a>
+                        <a href="/category?category=<%= element.category%>"><%=element.category%></a>
                       </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html">Bose - SoundSport wireless headphones</a></h3>
+                      <h3 class="product-title"><a href="/product/<%=element._id%>"><%=element.name%></a></h3>
                       <!-- End .product-title -->
                       <div class="product-price">
-                        $199.99
+                        ₹ <%=element.offerPrice%>
                       </div><!-- End .product-price -->
                       <div class="ratings-container">
                         <div class="ratings">
@@ -575,146 +336,10 @@
                         <span class="ratings-text">( 4 Reviews )</span>
                       </div><!-- End .rating-container -->
 
-                      <div class="product-nav product-nav-dots">
-                        <a href="#" style="background: #69b4ff;"><span class="sr-only">Color name</span></a>
-                        <a href="#" style="background: #ff887f;"><span class="sr-only">Color name</span></a>
-                        <a href="#" class="active" style="background: #333333;"><span class="sr-only">Color
-                            name</span></a>
-                      </div><!-- End .product-nav -->
                     </div><!-- End .product-body -->
                   </div><!-- End .product -->
+                  <%})%>
 
-                  <div class="product product-2">
-                    <figure class="product-media">
-                      <a href="product.html">
-                        <img src="images/demos/demo-4/products/product-7.jpg" alt="Product image" class="product-image">
-                      </a>
-
-                      <div class="product-action-vertical">
-                        <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                      </div><!-- End .product-action -->
-
-                      <div class="product-action">
-                        <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                      </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
-
-                    <div class="product-body">
-                      <div class="product-cat">
-                        <a href="#">Video Games</a>
-                      </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html">Microsoft - Refurbish Xbox One S 500GB</a></h3>
-                      <!-- End .product-title -->
-                      <div class="product-price">
-                        $279.99
-                      </div><!-- End .product-price -->
-                      <div class="ratings-container">
-                        <div class="ratings">
-                          <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                        </div><!-- End .ratings -->
-                        <span class="ratings-text">( 6 Reviews )</span>
-                      </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                  </div><!-- End .product -->
-
-                  <div class="product product-2">
-                    <figure class="product-media">
-                      <a href="product.html">
-                        <img src="images/demos/demo-4/products/product-7.jpg" alt="Product image" class="product-image">
-                      </a>
-
-                      <div class="product-action-vertical">
-                        <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                      </div><!-- End .product-action -->
-
-                      <div class="product-action">
-                        <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                      </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
-
-                    <div class="product-body">
-                      <div class="product-cat">
-                        <a href="#">Video Games</a>
-                      </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html">Microsoft - Refurbish Xbox One S 500GB</a></h3>
-                      <!-- End .product-title -->
-                      <div class="product-price">
-                        $279.99
-                      </div><!-- End .product-price -->
-                      <div class="ratings-container">
-                        <div class="ratings">
-                          <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                        </div><!-- End .ratings -->
-                        <span class="ratings-text">( 6 Reviews )</span>
-                      </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                  </div><!-- End .product -->
-
-                  <div class="product product-2">
-                    <figure class="product-media">
-                      <a href="product.html">
-                        <img src="images/demos/demo-4/products/product-7.jpg" alt="Product image" class="product-image">
-                      </a>
-
-                      <div class="product-action-vertical">
-                        <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                      </div><!-- End .product-action -->
-
-                      <div class="product-action">
-                        <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                      </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
-
-                    <div class="product-body">
-                      <div class="product-cat">
-                        <a href="#">Video Games</a>
-                      </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html">Microsoft - Refurbish Xbox One S 500GB</a></h3>
-                      <!-- End .product-title -->
-                      <div class="product-price">
-                        $279.99
-                      </div><!-- End .product-price -->
-                      <div class="ratings-container">
-                        <div class="ratings">
-                          <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                        </div><!-- End .ratings -->
-                        <span class="ratings-text">( 6 Reviews )</span>
-                      </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                  </div><!-- End .product -->
-
-                  <div class="product product-2">
-                    <figure class="product-media">
-                      <a href="product.html">
-                        <img src="images/demos/demo-4/products/product-7.jpg" alt="Product image" class="product-image">
-                      </a>
-
-                      <div class="product-action-vertical">
-                        <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                      </div><!-- End .product-action -->
-
-                      <div class="product-action">
-                        <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                      </div><!-- End .product-action -->
-                    </figure><!-- End .product-media -->
-
-                    <div class="product-body">
-                      <div class="product-cat">
-                        <a href="#">Video Games</a>
-                      </div><!-- End .product-cat -->
-                      <h3 class="product-title"><a href="product.html">Microsoft - Refurbish Xbox One S 500GB</a></h3>
-                      <!-- End .product-title -->
-                      <div class="product-price">
-                        $279.99
-                      </div><!-- End .product-price -->
-                      <div class="ratings-container">
-                        <div class="ratings">
-                          <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                        </div><!-- End .ratings -->
-                        <span class="ratings-text">( 6 Reviews )</span>
-                      </div><!-- End .rating-container -->
-                    </div><!-- End .product-body -->
-                  </div><!-- End .product -->
                 </div><!-- End .owl-carousel -->
               </div><!-- .End .tab-pane -->
             </div><!-- End .tab-content -->
@@ -728,22 +353,27 @@
     <div class="container for-you">
       <div class="heading heading-flex mb-3">
         <div class="heading-left">
-          <h2 class="title">Recommendation For You</h2><!-- End .title -->
+          <h2 class="title">Best For You</h2><!-- End .title -->
         </div><!-- End .heading-left -->
 
         <div class="heading-right">
-          <a href="#" class="title-link">View All Recommendadion <i class="icon-long-arrow-right"></i></a>
+          <a href="/shop" class="title-link">View All Offers <i class="icon-long-arrow-right"></i></a>
         </div><!-- End .heading-right -->
       </div><!-- End .heading -->
 
       <div class="products">
         <div class="row justify-content-center">
+
+          <%products.forEach((element,index)=>{%>
+
+
           <div class="col-6 col-md-4 col-lg-3">
             <div class="product product-2">
               <figure class="product-media">
-                <span class="product-label label-circle label-sale">Sale</span>
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-10.jpg" alt="Product image" class="product-image">
+                <span class="product-label label-circle label-new"><%=element.percent%>%</span>
+                <a href="/product/<%=element._id%>">
+                  <img src="/product-images/<%=element._id%>0.jpg" alt="Product image" class="product-image">
+                  <img src="/product-images/<%=element._id%>1.jpg" alt="Product image" class="product-image-hover">
                 </a>
 
                 <div class="product-action-vertical">
@@ -752,322 +382,31 @@
 
                 <div class="product-action">
                   <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
                 </div><!-- End .product-action -->
               </figure><!-- End .product-media -->
 
               <div class="product-body">
                 <div class="product-cat">
-                  <a href="#">Headphones</a>
+                  <a href="/category?category=<%= element.category%>"><%=element.category%></a>
                 </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Beats by Dr. Dre Wireless Headphones</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  <span class="new-price">$279.99</span>
-                  <span class="old-price">Was $349.99</span>
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 4 Reviews )</span>
-                </div><!-- End .rating-container -->
-
-                <div class="product-nav product-nav-dots">
-                  <a href="#" class="active" style="background: #666666;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #ff887f;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #6699cc;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #f3dbc1;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                </div><!-- End .product-nav -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-11.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Cameras & Camcorders</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">GoPro - HERO7 Black HD Waterproof Action</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $349.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 2 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <span class="product-label label-circle label-new">New</span>
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-12.jpg" alt="Product image" class="product-image">
-                  <img src="images/demos/demo-4/products/product-12-2.jpg" alt="Product image" class="product-image-hover">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Smartwatches</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Apple - Apple Watch Series 3 with White Sport Band</a>
+                <h3 class="product-title"><a href="/product/<%=element._id%>"><%=element.name%></a>
                 </h3><!-- End .product-title -->
                 <div class="product-price">
-                  $214.49
+                  <%=element.offerPrice%>
                 </div><!-- End .product-price -->
                 <div class="ratings-container">
                   <div class="ratings">
-                    <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                    <div class="ratings-val" style="width: 75%;"></div><!-- End .ratings-val -->
                   </div><!-- End .ratings -->
-                  <span class="ratings-text">( 0 Reviews )</span>
-                </div><!-- End .rating-container -->
-
-                <div class="product-nav product-nav-dots">
-                  <a href="#" class="active" style="background: #e2e2e2;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #f2bc9e;"><span class="sr-only">Color name</span></a>
-                </div><!-- End .product-nav -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-13.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Laptops</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Lenovo - 330-15IKBR 15.6"</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  <span class="out-price">$339.99</span>
-                  <span class="out-text">Out Of Stock</span>
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 11 Reviews )</span>
+                  <span class="ratings-text">(  Reviews )</span>
                 </div><!-- End .rating-container -->
               </div><!-- End .product-body -->
             </div><!-- End .product -->
           </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
 
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-14.jpg" alt="Product image" class="product-image">
-                </a>
+          <%})%>
 
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
 
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Digital Cameras</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Sony - Alpha a5100 Mirrorless Camera</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $499.99
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 50%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 11 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-15.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Laptops</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Home Mini - Smart Speaker with Google Assistant</a>
-                </h3><!-- End .product-title -->
-                <div class="product-price">
-                  $49.00
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 24 Reviews )</span>
-                </div><!-- End .rating-container -->
-
-                <div class="product-nav product-nav-dots">
-                  <a href="#" class="active" style="background: #ef837b;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #333333;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #e2e2e2;"><span class="sr-only">Color name</span></a>
-                </div><!-- End .product-nav -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <span class="product-label label-circle label-sale">Sale</span>
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-16.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Audio</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">WONDERBOOM Portable Bluetooth Speaker</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  <span class="new-price">$99.99</span>
-                  <span class="old-price">Was $129.99</span>
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 40%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 4 Reviews )</span>
-                </div><!-- End .rating-container -->
-
-                <div class="product-nav product-nav-dots">
-                  <a href="#" class="active" style="background: #666666;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #ff887f;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #6699cc;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #f3dbc1;"><span class="sr-only">Color name</span></a>
-                  <a href="#" style="background: #eaeaec;"><span class="sr-only">Color name</span></a>
-                </div><!-- End .product-nav -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-          <div class="col-6 col-md-4 col-lg-3">
-            <div class="product product-2">
-              <figure class="product-media">
-                <a href="product.html">
-                  <img src="images/demos/demo-4/products/product-17.jpg" alt="Product image" class="product-image">
-                </a>
-
-                <div class="product-action-vertical">
-                  <a href="#" class="btn-product-icon btn-wishlist" title="Add to wishlist"></a>
-                </div><!-- End .product-action -->
-
-                <div class="product-action">
-                  <a href="#" class="btn-product btn-cart" title="Add to cart"><span>add to cart</span></a>
-                  <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick
-                      view</span></a>
-                </div><!-- End .product-action -->
-              </figure><!-- End .product-media -->
-
-              <div class="product-body">
-                <div class="product-cat">
-                  <a href="#">Smart Home</a>
-                </div><!-- End .product-cat -->
-                <h3 class="product-title"><a href="product.html">Google - Home Hub with Google Assistant</a></h3>
-                <!-- End .product-title -->
-                <div class="product-price">
-                  $149.00
-                </div><!-- End .product-price -->
-                <div class="ratings-container">
-                  <div class="ratings">
-                    <div class="ratings-val" style="width: 60%;"></div><!-- End .ratings-val -->
-                  </div><!-- End .ratings -->
-                  <span class="ratings-text">( 2 Reviews )</span>
-                </div><!-- End .rating-container -->
-              </div><!-- End .product-body -->
-            </div><!-- End .product -->
-          </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
         </div><!-- End .row -->
       </div><!-- End .products -->
     </div><!-- End .container -->

@@ -1,0 +1,65 @@
+ <div class="col-12 ml-2">
+   <div class="card  mt-2">
+     <div class="card-header pb-0">
+       <h6>Order Management</h6>
+     </div>
+     <div class="card-body px-0 pt-0 pb-2">
+       <div class="table-responsive p-0">
+         <table class="table align-items-center mb-0">
+           <thead>
+             <tr>
+               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">User Name</th>
+               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Id</th>
+               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Placed On</th>
+             </tr>
+           </thead>
+           <tbody>
+             <% const getDate=(date)=>{
+                            let orderDate = new Date(date)
+
+                            let day = orderDate.getDate();
+                            let month = orderDate.getMonth();
+                            let year = orderDate.getFullYear();
+
+                            return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
+
+                        } %>
+
+             <% orders.forEach((element,index)=>{ %>
+             <%=console.log(element);%>
+             <tr>
+               <td class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                 <%- index+1 %>
+               </td>
+               <td>
+                 <div class="d-flex px-2 py-1">
+                   <div class="d-flex flex-column justify-content-center">
+                     <h6 class="mb-0 text-sm"><%- element?.orders?.fname %></h6>
+                     <p class="text-xs text-secondary mb-0"> ID:<%- element?.userId %></p>
+                   </div>
+                 </div>
+               </td>
+               <td>
+                 <p class="text-xs font-weight-bold mb-0">Order ID : <%-element.orders?._id %></p>
+                 <p class="text-xs text-secondary mb-0"> Quantity: <%=element?.orders?.totalQuantity %></p>
+               
+               </td>
+               <td>
+                <%- getDate(element.orders?.createdAt) %>
+               </td>
+               <td class="align-middle text-center text-sm">
+                 <div class="ms-auto text-end">
+                   <a href="/admin/order-view-more/<%-element?.orders?._id %>" style="text-decoration:none;">View More</a>
+                 </div>
+               </td>
+               <td> </td>
+             </tr>
+             <%})%>
+
+           </tbody>
+         </table>
+       </div>
+     </div>
+   </div>
+ </div>

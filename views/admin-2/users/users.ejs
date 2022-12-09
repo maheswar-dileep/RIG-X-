@@ -1,0 +1,61 @@
+<div class="col-12">
+  <div class="card mb-4">
+    <div class="card-header pb-0">
+      <h6>Users Management</h6>
+    </div>
+    <div class="card-body px-0 pt-0 pb-2">
+      <div class="table-responsive p-0">
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mobile</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Block/Unblock</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach((users,index)=>{ %>
+            <% console.log(users) %>
+            <tr>
+              <td>
+                <p class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> <%=index+1 %> </p>
+              </td>
+              <td>
+                <div class="d-flex px-2 py-1">
+                  <div class="d-flex flex-column justify-content-center">
+                    <h6 class="mb-0 text-sm"><%=users.name %> </h6>
+                    <p class="text-xs text-secondary mb-0"><%=users.email %> </p>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <p class="text-xs font-weight-bold mb-0"><%= users.mobile %> </p>
+              </td>
+              <td class="align-middle text-center text-sm">
+
+                <% if (users.blocked){%>
+
+                <span class="badge badge-sm bg-gradient-danger">Blocked</span>
+
+                <% }else{ %>
+
+                <span class="badge badge-sm bg-gradient-success">Not Blocked</span>
+                <% } %>
+
+                <span class="badge badge-sm bg-gradient-success"></span>
+              </td>
+              <td>
+                <div class="form-check form-switch ps-0">
+                  <input class="form-check-input ms-auto" type="checkbox" id="flexSwitchCheckDefault" checked>
+                </div>
+              </td>
+            </tr>
+            <%})%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

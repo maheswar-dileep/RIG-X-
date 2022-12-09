@@ -24,6 +24,7 @@ router.get('/login', auth.adminMustLogout, controllers.adminLogin)
 router.post('/login', auth.mustLogoutAdminAPI, controllers.adminLoginPost)
 
 /*------------------------add-product------------------------------*/
+
 router.get('/add-products', auth.verifyAdmin, controllers.addProducts)
 
 //chartGraph
@@ -117,7 +118,7 @@ router.get('/coupons', auth.verifyAdmin, controllers.coupons)
 
 router.get('/add-coupons', auth.verifyAdmin, controllers.addCoupons)
 
-router.post('/add_coupon', auth.verifyAdmin, controllers.addNewCoupen)
+router.post('/add-coupon', auth.verifyAdmin, controllers.addNewCoupen)
 
 router.get('/generate_coupon', auth.verifyAdmin, controllers.generateCoupon)
 

@@ -24,7 +24,7 @@
                 <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
+                <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Coupons</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Wallet</a>
@@ -51,12 +51,52 @@
               </div><!-- .End .tab-pane -->
 
               <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                <p>No order has been made yet.</p>
-                <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                <table class="table align-middle mb-0 bg-white">
+                  <thead class="bg-light">
+                    <tr>
+                      <th>#</th>
+                      <th>Coupon code</th>
+                      <th>Status</th>
+                      <th>Expiry</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% coupon.forEach((elements,index)=>{ %>
+                    <tr>
+                      <td><%=index+1%></td>
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <div class="ms-3">
+                            <p class="fw-bold mb-1"><%= elements.couponName %> </p>
+                            <p class="text-muted mb-0"><%=elements.deescription%></p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span class="badge badge-primary rounded-pill d-inline">status </span>
+                      </td>
+                      <% const getDate=(date)=>{
+                                    let orderDate = new Date(date)
+
+                                    let day = orderDate.getDate();
+                                    let month = orderDate.getMonth();
+                                    let year = orderDate.getFullYear();
+
+                                    return `${isNaN(day)?00:day}-${isNaN(month)?00:month}-${isNaN(year)?0000:year}`
+
+                                    } %>
+                      <td>
+
+                        <p class="fw-bold mb-1"><%= getDate(elements.expiry)%> </p>
+                      </td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
               </div><!-- .End .tab-pane -->
 
               <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-                <div class="card mx-auto" style="width: 40rem;" >
+                <div class="card mx-auto" style="width: 40rem;">
                   <div class="card-body">
                     <h4 class="card-text">Wallet balance : Rs.<%= walletBalance %> </h4>
                   </div>
@@ -340,49 +380,49 @@
                     </div>
                   </div>
                 </div><!-- .End .tab-pane -->
-
-                <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-                  <form action="#">
-                    <div class="row">
-                      <div class="col-sm-6">
-                        <label>First Name *</label>
-                        <input type="text" class="form-control" required>
-                      </div><!-- End .col-sm-6 -->
-
-                      <div class="col-sm-6">
-                        <label>Last Name *</label>
-                        <input type="text" class="form-control" required>
-                      </div><!-- End .col-sm-6 -->
-                    </div><!-- End .row -->
-
-                    <label>Display Name *</label>
-                    <input type="text" class="form-control" required>
-                    <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-                    <label>Email address *</label>
-                    <input type="email" class="form-control" required>
-
-                    <label>Current password (leave blank to leave unchanged)</label>
-                    <input type="password" class="form-control">
-
-                    <label>New password (leave blank to leave unchanged)</label>
-                    <input type="password" class="form-control">
-
-                    <label>Confirm new password</label>
-                    <input type="password" class="form-control mb-2">
-
-                    <button type="submit" class="btn btn-outline-primary-2">
-                      <span>SAVE CHANGES</span>
-                      <i class="icon-long-arrow-right"></i>
-                    </button>
-                  </form>
-                </div><!-- .End .tab-pane -->
               </div>
-            </div><!-- End .col-lg-9 -->
-          </div><!-- End .row -->
-        </div><!-- End .container -->
-      </div><!-- End .dashboard -->
-    </div><!-- End .page-content -->
+              <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
+                <form action="#">
+                  <div class="row">
+                    <div class="col-sm-6">
+                      <label>First Name *</label>
+                      <input type="text" class="form-control" required>
+                    </div><!-- End .col-sm-6 -->
+
+                    <div class="col-sm-6">
+                      <label>Last Name *</label>
+                      <input type="text" class="form-control" required>
+                    </div><!-- End .col-sm-6 -->
+                  </div><!-- End .row -->
+
+                  <label>Display Name *</label>
+                  <input type="text" class="form-control" required>
+                  <small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+
+                  <label>Email address *</label>
+                  <input type="email" class="form-control" required>
+
+                  <label>Current password (leave blank to leave unchanged)</label>
+                  <input type="password" class="form-control">
+
+                  <label>New password (leave blank to leave unchanged)</label>
+                  <input type="password" class="form-control">
+
+                  <label>Confirm new password</label>
+                  <input type="password" class="form-control mb-2">
+
+                  <button type="submit" class="btn btn-outline-primary-2">
+                    <span>SAVE CHANGES</span>
+                    <i class="icon-long-arrow-right"></i>
+                  </button>
+                </form>
+              </div><!-- .End .tab-pane -->
+            </div>
+          </div><!-- End .col-lg-9 -->
+        </div><!-- End .row -->
+      </div><!-- End .container -->
+    </div><!-- End .dashboard -->
+  </div><!-- End .page-content -->
 </main><!-- End .main -->
 
 

@@ -10,7 +10,7 @@ const { verifyUser } = require('../controllers/auth');
 
 
 /* GET home page. */
-router.get('/', auth.verifyUser, controllers.landingPage);
+router.get('/', controllers.landingPage);
 
 /*------------------------login------------------------*/
 
@@ -34,9 +34,13 @@ router.get('/otp-verify', auth.mustLogout, controllers.otpVerify)
 
 /*------------------------pages------------------------*/
 
-router.get('/shop', auth.verifyUser, controllers.shopPage);
+router.get('/getProductData', controllers.getProductData)
 
-router.get('/product/:id', auth.verifyUser, controllers.productPage)
+/*------------------------pages------------------------*/
+
+router.get('/shop', controllers.shopPage);
+
+router.get('/product/:id', controllers.productPage)
 
 router.get('/about-us', auth.verifyUser, controllers.aboutUsPage)
 
@@ -126,7 +130,19 @@ router.get('/order-invoice-products',auth.verifyUser,controllers.orderInvoicePro
 
 /*--------------------------category-page-------------------------*/
 
-router.get('/category',auth.verifyUser,controllers.categoryPage)
+router.get('/category',controllers.categoryPage)
+
+/*--------------------------shop-by-category-page-------------------------*/
+
+router.get('/shop-category',controllers.shopCategoryPage)
+
+/*-----------------------------coupon-validator-------------------------------*/ 
+
+router.get('/coupon-validator',auth.verifyUser,controllers.couponValidator)
+
+router.get('/coupon-verify',auth.verifyUser,controllers.couponVerify)
+
+router.get('/apply-coupon',auth.verifyUser,controllers.applyCoupon)
 
 //logout
 

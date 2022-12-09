@@ -41,14 +41,13 @@
                 <%= index+1 %>
               </td>
               <td>
-                <%= element.coupon %>
+                <%= element.couponName %>
               </td>
               <td>
-                <%= element.amountValidity %>
+                <%= element.expiry %>
               </td>
               <td>
-                <%= element.amount %>
-                <%= element.percentage%> 
+                <%= element.discountPercentage%> 
               </td>
               <% const getDate=(date)=>{
                 let orderDate = new Date(date)
@@ -60,7 +59,7 @@
 
               } %>
               <td>
-                <%= getDate(element.validityTill)  %>
+                <%= getDate(element.expiry)  %>
               </td>
             </tr>
 

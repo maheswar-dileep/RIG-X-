@@ -1,115 +1,229 @@
 <% if (locals.nav){%>
 
-    <header class="header">
-        <div class="header-top">
-            <div class="container">
-                <div class="header-left">
-                    <div class="header-dropdown">
-                        <a href="#">Usd</a>
-                        <div class="header-menu">
-                            <ul>
-                                <li><a href="#">Eur</a></li>
-                                <li><a href="#">Usd</a></li>
-                            </ul>
-                        </div><!-- End .header-menu -->
-                    </div><!-- End .header-dropdown -->
+<style>
+  .search-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+  }
 
-                    <div class="header-dropdown">
-                        <a href="#">Eng</a>
-                        <div class="header-menu">
-                            <ul>
-                                <li><a href="#">English</a></li>
-                                <li><a href="#">French</a></li>
-                                <li><a href="#">Spanish</a></li>
-                            </ul>
-                        </div><!-- End .header-menu -->
-                    </div><!-- End .header-dropdown -->
-                </div><!-- End .header-left -->
+  .card {
+    border-bottom: 0.4px solid black;
+    /* background-color: white; */
+    padding: 1.0rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
 
-                <div class="header-right">
-                    <ul class="top-menu">
-                        <li>
-                            <a href="#">Links</a>
-                            <ul>
-                                <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
-                                <li><a href="/wishlist"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
-                                <li><a href="/account"><i class="icon-user"></i><%= locals.userName %></a></li>
-                                <li><a href="/logout">logout</a></li>
-                            </ul>
-                        </li>
-                    </ul><!-- End .top-menu -->
-                </div><!-- End .header-right -->
-            </div><!-- End .container -->
-        </div><!-- End .header-top -->
+  .card>.header {
+    margin-bottom: .25rem;
+  }
 
-        <div class="header-middle sticky-header">
-            <div class="container">
-                <div class="header-left">
-                    <button class="mobile-menu-toggler">
-                        <span class="sr-only">Toggle mobile menu</span>
-                        <i class="icon-bars"></i>
-                    </button>
+  .card>.body {
+    font-size: .8rem;
+    color: #777;
+  }
 
-                    <a href="/" class="logo">
-                        <img src="/images/logo.png" alt="RIG-X-" width="105" height="25">
-                    </a>
+  .hide {
+    display: none;
+  }
 
-                    <nav class="main-nav">
-                        <ul class="menu sf-arrows">
-                            <li class="megamenu-container ">
-                                <a href="/">Home</a>
-                            </li>
-                            <li>
-                                <a href="/shop">Shop</a>
-                            </li>
-                            <li>
-                                <a href="/category">Category</a>
-                            </li>
-                            <li>
-                                <a href="/account">Account</a>
-                            </li>
-                            <li>
-                                <a href="/orders">Orders</a>
-                            </li>
-                            <li>
-                                <a href="about-us">About</a>
-                            </li>
-                        </ul><!-- End .menu -->
-                    </nav><!-- End .main-nav -->
-                </div><!-- End .header-left -->
+  .sdiv {
+    position: absolute;
+    z-index: 3;
+    top: 114px;
+    left: 30.08%;
+    width: 570px;
+  }
 
-                <div class="header-right">
-                    <div class="header-search">
-                        <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                        <form action="#" method="get">
-                            <div class="header-search-wrapper">
-                                <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                    required>
-                            </div><!-- End .header-search-wrapper -->
-                        </form>
-                    </div><!-- End .header-search -->
-                    <div class="dropdown compare-dropdown">
-                        <a href="/account" class="dropdown-toggle" role="button">
-                            <div class="icon">
-                                <i class="icon-user"></i>
-                            </div>
-                        </a>
-                    </div><!-- End .compare-dropdown -->
+  .searchBar {
+    z-index: 3;
+  }
+</style>
 
-                    <div class="dropdown cart-dropdown">
-                        <a href="/cart" class="dropdown-toggle" role="button">
-                            <i class="icon-shopping-cart"></i>
-                            <span id="cart-count" class="cart-count">
-                                <%= locals.cartCount %>
-                            </span>
-                        </a>
-                    </div><!-- End .cart-dropdown -->
+<header class="header">
+  <div class="header-top">
+    <div class="container">
+      <div class="header-left">
+        <div class="header-dropdown">
+          <a href="#">Usd</a>
+          <div class="header-menu">
+            <ul>
+              <li><a href="#">Eur</a></li>
+              <li><a href="#">Usd</a></li>
+            </ul>
+          </div><!-- End .header-menu -->
+        </div><!-- End .header-dropdown -->
 
-                </div><!-- End .header-right -->
-            </div><!-- End .container -->
-        </div><!-- End .header-middle -->
-    </header><!-- End .header -->
+        <div class="header-dropdown">
+          <a href="#">Eng</a>
+          <div class="header-menu">
+            <ul>
+              <li><a href="#">English</a></li>
+              <li><a href="#">French</a></li>
+              <li><a href="#">Spanish</a></li>
+            </ul>
+          </div><!-- End .header-menu -->
+        </div><!-- End .header-dropdown -->
+      </div><!-- End .header-left -->
 
+      <div class="header-right">
+        <ul class="top-menu">
+          <li>
+            <a href="#">Links</a>
+            <ul>
+              <li><a href="/wishlist"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
+              <li><a href="/account"><i class="icon-user"></i><%= locals.userName %></a></li>
+              <li><a href="/logout">logout</a></li>
+            </ul>
+          </li>
+        </ul><!-- End .top-menu -->
+      </div><!-- End .header-right -->
+    </div><!-- End .container -->
+  </div><!-- End .header-top -->
 
-    <% } %>
+  <div class="header-middle sticky-header">
+    <div class="container">
+      <div class="header-left">
+        <button class="mobile-menu-toggler">
+          <span class="sr-only">Toggle mobile menu</span>
+          <i class="icon-bars"></i>
+        </button>
+
+        <a href="/" class="logo">
+          <img src="/images/logo.png" alt="RIG-X-" width="105" height="25">
+        </a>
+
+        <nav class="main-nav">
+          <ul class="menu sf-arrows">
+            <li class="megamenu-container ">
+              <a href="/">Home</a>
+            </li>
+            <li>
+              <a href="/shop">Shop</a>
+            </li>
+            <li>
+              <a href="/category">Category</a>
+            </li>
+            <li>
+              <a href="/account">Account</a>
+            </li>
+            <li>
+              <a href="/orders">Orders</a>
+            </li>
+            <li>
+              <a href="about-us">About</a>
+            </li>
+          </ul><!-- End .menu -->
+        </nav><!-- End .main-nav -->
+      </div><!-- End .header-left -->
+
+      <div class="header-right">
+        <div class="header-search">
+          <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+          <form action="#" method="get">
+            <div class="header-search-wrapper">
+              <label for="q" class="sr-only">Search</label>
+              <input type="search" class="form-control" onkeyup="closeSearch()" autocomplete="off" name="q" id="q" data-search placeholder="Search in..." required>
+            </div><!-- End .header-search-wrapper -->
+          </form>
+        </div><!-- End .header-search -->
+        <div class="dropdown compare-dropdown">
+          <a href="/account" class="dropdown-toggle" role="button">
+            <div class="icon">
+              <i class="icon-user"></i>
+            </div>
+          </a>
+        </div><!-- End .compare-dropdown -->
+
+        <div class="dropdown cart-dropdown">
+          <a href="/cart" class="dropdown-toggle" role="button">
+            <i class="icon-shopping-cart"></i>
+            <span id="cart-count" class="cart-count">
+              <%= locals.cartCount %>
+            </span>
+          </a>
+        </div><!-- End .cart-dropdown -->
+
+      </div><!-- End .header-right -->
+    </div><!-- End .container -->
+  </div><!-- End .header-middle -->
+</header><!-- End .header -->
+
+<div class=" mx-auto sdiv">
+  <div class="user-cards" data-user-cards-container></div>
+  <template data-user-template>
+    <div class="card" id="cardSearch" onclick="myFunction(this.querySelector('p'))" style="position: relative;">
+      <div class="header" data-header></div>
+      <div class="body" data-body></div>
+      <p class="_id" id="idSearch" hidden data-id></p>
+      <img data-img src="" style="height: 50px; width:50px; position: absolute; right: 10px;">
+    </div>
+  </template>
+</div>
+
+<script>
+  const userCardTemplate = document.querySelector("[data-user-template]")
+  const userCardContainer = document.querySelector("[data-user-cards-container]")
+  const searchInput = document.querySelector("[data-search]")
+  let boolSearch = userCardContainer.classList
+  if (searchInput.value.trim().length == 0) {
+    boolSearch.add("hide")
+  } else {
+    boolSearch.remove("hide")
+  }
+  let products = [new Set()]
+  searchInput.addEventListener("input", e => {
+    const value = e.target.value.trim().toLowerCase()
+    products.forEach(product => {
+      const isVisible =
+        product.name.toLowerCase().includes(value) ||
+        product.category.includes(value)
+      product.element.classList.toggle("hide", !isVisible)
+    })
+  })
+  fetch("/getProductData", {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      products = data.map(product => {
+        const card = userCardTemplate.content.cloneNode(true).children[0]
+        const header = card.querySelector("[data-header]")
+        const body = card.querySelector("[data-body]")
+        const id = card.querySelector("[data-id]")
+        const image = card.querySelector("[data-img]")
+        header.textContent = product.name
+        body.textContent = product.category
+        id.textContent = product._id
+        image.src = `/product-images/${product._id}0.jpg`
+        userCardContainer.append(card)
+        return {
+          name: product.name,
+          category: product.category,
+          id: product._id,
+          element: card
+        }
+      })
+    })
+
+  function myFunction(input) {
+    let tag = input.innerText
+    location.href = `/product/${tag}`
+  }
+
+  function closeSearch() {
+    let boolSearch = userCardContainer.classList
+    if (searchInput.value.trim().length == 0) {
+      boolSearch.add("hide")
+    } else {
+      boolSearch.remove("hide")
+    }
+  }
+</script>
+
+<% } %>

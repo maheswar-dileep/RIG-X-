@@ -129,13 +129,11 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 db.categories.find({ name: data.name }).then(async (category) => {
-                    let response = {}
                     if (category.length == 0) {
                         let categories = await db.categories(data)
                         categories.save()
-                        response.data = categories
-                        response.status = true
-                        resolve(response)
+
+                        resolve({status:true})
                     } else {
                         resolve({ status: false })
                     }
@@ -184,7 +182,7 @@ module.exports = {
                         $match:{category:cate}
                     }
                 ]).then((data)=>{
-                    console.log(data);
+                    resolve(data)
                 })
             } catch (error) {
                 console.log(error);

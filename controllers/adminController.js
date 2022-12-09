@@ -12,6 +12,7 @@ const pdf = require('pdf-creator-node')
 const { response, router } = require('../app')
 const { paymentMethodGraph } = require('../helpers/chartHelpers')
 const userHelpers = require('../helpers/userHelpers')
+const layoutNew = 'admin-2-layout'
 
 module.exports = {
 
@@ -33,7 +34,6 @@ module.exports = {
             let totalOrders = await chartHelpers.totalOrdersGraph()
             let monthlyPaid = await chartHelpers.revenueGraphMonthPaid()
             let RevenueByDay = await sales.getRevenueByDay()
-            console.log(RevenueByDay);
             chartHelpers.revenueGraphMonth().then((priceStat) => {
                 res.send({
                     monthlyPaid, priceStat, totalOrders, yearly, monthly, daily, RevenueByDay
@@ -143,7 +143,6 @@ module.exports = {
     },
 
     //editProducts
-
     editProducts: async (req, res) => {
         try {
 
@@ -259,13 +258,8 @@ module.exports = {
     },
 
     addCategoryPost: (req, res) => {
-        productHelpers.addCategories(req.body).then((data) => {
-
-            if (data.status) {
-                res.send({ value: "success" })
-            } else {
-                res.send({ value: "failed" })
-            }
+        productHelpers.addCategories(req.body).then((response) => {
+            res.send(response)
         })
     },
 
@@ -354,7 +348,7 @@ module.exports = {
 
     coupons: async (req, res) => {
         let coupon = await couponHelpers.getCoupons()
-        res.render('admin/coupons', { layout,coupon })
+        res.render('admin/coupons', { layout, coupon })
     },
 
     //add-coupons
@@ -367,15 +361,12 @@ module.exports = {
 
     addNewCoupen: (req, res) => {
         data = {
-            coupon: req.body.coupon,
-            discountAmount: req.body.discountAmount,
-            amount: req.body.discountAmount,
-            amountValidity: req.body.amountValidity,
-            percentage: req.body.discountPercentage,
-            discountType: req.body.discountType,
-            usageValidity: req.body.redeemTime,
-            validityTill: req.body.validity,
-            description: req.body.description
+            couponName: req.body.couponName,
+            expiry: req.body.expiry,
+            minPurchase: req.body.minPurchase,
+            description: req.body.description,
+            discountPercentage: req.body.discountPercentage,
+            maxDiscountValue: req.body.maxDiscountValue
         }
         console.log(data);
         couponHelpers.addNewCoupen(data).then((response) => {
@@ -515,7 +506,7 @@ module.exports = {
     landingPageNew: async (req, res, next) => {
         try {
             let totalOrders = await chartHelpers.totalOrdersGraph()
-            res.render('admin/admin_page_new', { layout: "admin-2-layout", totalOrders })
+            res.render('admin-2/admin_page_new', { layout: "admin-2-layout", totalOrders })
         } catch (err) {
             console.log(err)
         }
@@ -538,5 +529,196 @@ module.exports = {
         }
     },
 
+
+
+
+
+
+
+
+    /*=========================================admin-new=============================================*/
+    /*===========================admin-new=============================================*/
+
+
+
+    newProducts: (req, res) => {
+        try {
+            productHelpers.getAllProducts().then((products) => {
+                res.render('admin-2/products/products', {
+                    products: products, layout: layoutNew
+                })
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    //editProducts
+
+    newEditProducts: async (req, res) => {
+        try {
+
+            let products = await productHelpers.getProductDetails(req.params.id)
+            productHelpers.getAllCategories().then((category) => {
+                res.render('admin-2/products/edit-products', { category, products, layout: layoutNew })
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
+    },
+
+
+    newEditProductsPost: (req, res) => {
+        try {
+            prodId = req.params.id
+            console.log(req.body,prodId);
+            data = {
+                name: req.body.name,
+                category: req.body.category,
+                marketPrice: req.body.marketPrice,
+                offerPrice: req.body.offerPrice,
+                percent: req.body.percent,
+                quantity: req.body.quantity,
+                description: req.body.description
+            }
+            productHelpers.editProduct(prodId, data).then(() => {
+                const imgName = prodId;
+                req.files?.image0?.mv('./public/product-images/' + imgName + '0.jpg')
+                req.files?.image1?.mv('./public/product-images/' + imgName + '1.jpg')
+                req.files?.image2?.mv('./public/product-images/' + imgName + '2.jpg')
+                req.files?.image3?.mv('./public/product-images/' + imgName + '3.jpg')
+                res.redirect('/admin-panel/products')
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
+    },
+
+    //users 
+
+    newUsers: (req, res) => {
+        try {
+            adminHelpers.getAllUsers().then((users) => {
+                // console.log(users)
+                res.render('admin-2/users/users', {
+                    users,
+                    layout: layoutNew
+                })
+            })
+        }
+        catch (err) {
+            console.log(err);
+        }
+    },
+
+    //category
+
+    newCategory: (req, res) => {
+        productHelpers.getAllCategories().then((category) => {
+            res.render('admin-2/category/category', {
+                layout: layoutNew,
+                category
+            })
+        })
+    },
+
+    //addCategory
+
+    newAddCategory: (req, res) => {
+        res.render('admin-2/add-category', {
+            layout: layoutNew
+        })
+    },
+
+    newAddCategoryPost: (req, res) => {
+        productHelpers.addCategories(req.body).then((response) => {
+            res.send(response)
+        })
+    },
+    //deleteCategory
+
+    newDeleteCategory: (req, res) => {
+        id = req.params.id
+        productHelpers.deleteCategory(id).then((response) => {
+            res.json(response)
+        })
+    },
+
+    //editCategory
+
+    newEditCategory: async (req, res) => {
+        let category = await productHelpers.getCategoryDetails(req.params.id).then((category) => {
+            // console.log(category)
+            res.render('admin-2/category/edit-category', {
+                layout: layoutNew,
+                category: category
+            })
+        })
+    },
+
+    newEditCategoryPost: (req, res) => {
+        productHelpers.editCategory(req.params.id, req.body).then((data) => {
+            if (data.status) {
+                res.send({ value: 'success' })
+            } else {
+                res.send({ value: 'failed' })
+            }
+        })
+    },
+
+    //ordersPage
+
+    newOrdersPage: (req, res) => {
+        adminHelpers.ordersPage().then((orders) => {
+            res.render('admin-2/orders/orders', { layout: layoutNew, orders })
+        })
+    },
+
+    //orderViewMore
+
+    newOrderViewMore: (req, res) => {
+        adminHelpers.orderViewMore(req.params.id).then((orders) => {
+            res.render('admin-2/orders/order-view-more', { layout: layoutNew, orders })
+        })
+    },
+
+    newCoupons: async (req, res) => {
+        let coupon = await couponHelpers.getCoupons()
+        res.render('admin-2/coupon/coupon', { layout:layoutNew, coupon })
+    },
+
+    //add-coupons
+
+    addCoupons: (req, res) => {
+        res.render('admin/add-coupons', { layout })
+    },
+
+    //add-coupon-post
+
+    addNewCoupen: (req, res) => {
+        data = {
+            couponName: req.body.couponName,
+            expiry: req.body.expiry,
+            minPurchase: req.body.minPurchase,
+            description: req.body.description,
+            discountPercentage: req.body.discountPercentage,
+            maxDiscountValue: req.body.maxDiscountValue
+        }
+        console.log(data);
+        couponHelpers.addNewCoupen(data).then((response) => {
+            res.send(response)
+        })
+    },
+
+    // generateCoupon
+
+    generateCoupon: (req, res) => {
+        couponHelpers.generateCoupon().then((response) => {
+            res.send(response)
+        })
+
+    },
 
 }

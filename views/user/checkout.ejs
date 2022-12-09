@@ -37,13 +37,6 @@
           </div><!-- End .card -->
           <% }) %>
         </div><!-- End .custom-checkbox -->
-        <div class="checkout-discount mb-4">
-          <form action="#">
-            <input type="text" class="form-control" required id="checkout-discount-input">
-            <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to
-                enter your code</span></label>
-          </form>
-        </div><!-- End .checkout-discount -->
         <form action="#">
           <div class="row">
             <div class="col-lg-9">
@@ -156,16 +149,32 @@
                     </tr>
                     <tr class="summary-subtotal">
                       <td>Subtotal:</td>
-                      <td>$160.00</td>
+                     <td>₹ <%-total %>
                     </tr><!-- End .summary-subtotal -->
+                    <tr>
+                      <td>
+                        <div class="checkout-discount">
+                          <form action="#">
+                          <div class="cart-discount">
+                              <div class="input-group">
+                                <input type="text" class="form-control " autocomplete="off" required id="code" placeholder="coupon code">
+                                <div class="input-group-append">
+                                  <button class="btn btn-sm btn-outline-primary" style="width:3em; height: 3em;" type="button" onclick="couponValidator(this,'<%=total%>')"><i class="icon-long-arrow-right"></i></button>
+                                </div><!-- .End .input-group-append -->
+                              </div><!-- End .input-group -->
+                            </form>
+                            <p id="couponErr"></p>
+                          </div><!-- End .cart-discount -->
+                        </div><!-- End .checkout-discount -->
+                      </td>
+                    </tr>
                     <tr>
                       <td>Shipping:</td>
                       <td>Free shipping</td>
                     </tr>
                     <tr class="summary-total">
                       <td>Total:</td>
-                      <td>₹ <%-total %>
-                      </td>
+                      <td id="couponTotal">₹ <%-total %></td>
                     </tr><!-- End .summary-total -->
                   </tbody>
                 </table><!-- End .table table-summary -->
@@ -185,7 +194,7 @@
                   <label for="paypal">Paypal</label>
                   <div id="paypal"></div>
                 </h2>
-                
+
                 <button type="button" onclick="validation()" class="btn btn-outline-primary-2 btn-order btn-block">
                   <span class="btn-text">Place Order</span>
                   <span class="btn-hover-text">Proceed to Checkout</span>
@@ -355,7 +364,7 @@
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                 total : total,
+                total: total,
                 items: [{
                   id: 1,
                 }]
@@ -488,4 +497,54 @@
   }
 
 
+  function couponValidator(elem, total) {
+    code = document.getElementById('code').value.trim()
+
+    $.ajax({
+      url: '/coupon-validator?code=' + code,
+      method: 'get',
+      success: (response) => {
+        if (response.status == true) {
+
+          $.ajax({
+            url: '/coupon-verify?code=' + code,
+            method: 'get',
+            success: (response) => {
+              if (response.status == true) {
+
+                $.ajax({
+                  url: '/apply-coupon?code=' + code,
+                  method: 'get',
+                  success: (response) => {
+                    if (response.status == true) {
+                      console.log('success3', response);
+                      couponErr.style.color = '#19ff11'
+                      couponErr.innerText = 'Coupon Applied Succesfully'
+                      couponTotal.innerText = `₹ ${total-response.discountAmount}`
+                    } else {
+                      console.log('failed', response);
+                      couponErr.style.color = '#ff0707'
+                      couponErr.innerText = response.reason
+                    }
+                  }
+                })
+
+              } else {
+                couponErr.style.color = '#ff0707'
+                console.log('failed', response.reason);
+                couponErr.innerText = response.reason
+
+              }
+            }
+          })
+
+        } else {
+          couponErr.style.color = '#ff0707'
+          couponErr.innerText = response.reason
+          console.log('failed', response.reason);
+        }
+      }
+    })
+
+  }
 </script>

@@ -36,7 +36,8 @@ const usersSchema = new mongoose.Schema({
     wallet: {
         type: Number,
         default: 0
-    }
+    },
+    coupons:Array
 })
 
 // categories 
@@ -108,18 +109,16 @@ const stateSchema = new mongoose.Schema({
 
 //coupons
 const couponSchema = new mongoose.Schema({
-    coupon: String,
-    discountType: String,
-    amount: Number,
-    amountValidity: String,
-    percentage: Number,
-    description: String,
-    createdAt: {
-        type: Date,
-        default: new Date()
-    },
-    validityTill: Date,
-    usageValidity: Number
+    couponName:String,
+    expiry:Date,
+    minPurchase:Number,
+    discountPercentage:Number,
+    maxDiscountValue:Number,
+    description:String,
+    createdAt:{
+        type:Date,
+        default:new Date()
+    }
 })
 
 //banners
@@ -132,10 +131,7 @@ const bannerSchema = new mongoose.Schema({
 
 const categoryBanner = new mongoose.Schema({
     category: String,
-},
-{
-    capped:{max:3}
-})
+},)
 
 module.exports = {
     products: db.model('product', productschema),
