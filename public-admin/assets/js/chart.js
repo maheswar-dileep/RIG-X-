@@ -1,6 +1,6 @@
 var ctx = document.getElementById("chart-bars").getContext("2d");
 (function () {
-    fetch('/admin/chartGraph', {
+    fetch('/admin-panel/chartGraph', {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
@@ -130,7 +130,7 @@ var ctx = document.getElementById("chart-bars").getContext("2d");
                         borderWidth: 3,
                         backgroundColor: gradientStroke2,
                         fill: true,
-                        data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+                        data: [],
                         maxBarThickness: 6
                     },
                     ],
@@ -235,7 +235,7 @@ var ctx = document.getElementById("chart-bars").getContext("2d");
                         borderWidth: 3,
                         backgroundColor: gradientStroke2,
                         fill: true,
-                        data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
+                        data: [],
                         maxBarThickness: 6
                     },
                     ],

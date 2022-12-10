@@ -60,7 +60,7 @@ module.exports = {
 
     dailySales: () => {
         let date = new Date()
-        let thisDay = new Date().getDate()
+        let thisDay = date.getDate()
 
         return new Promise((resolve, reject) => {
             try {
@@ -95,6 +95,7 @@ module.exports = {
                         }
                     }
                 ]).then((data) => {
+                    console.log(data);
                     resolve({ status: true, data: data })
                 })
             } catch (err) {

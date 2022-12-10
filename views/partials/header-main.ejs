@@ -74,7 +74,11 @@
             <ul>
               <li><a href="/wishlist"><i class="icon-heart-o"></i>Wishlist <span>(3)</span></a></li>
               <li><a href="/account"><i class="icon-user"></i><%= locals.userName %></a></li>
+              <% if(locals .userName==undefined){%>
+              <li><a href="/login">login</a></li>
+              <%}else{ %>
               <li><a href="/logout">logout</a></li>
+              <%}%>
             </ul>
           </li>
         </ul><!-- End .top-menu -->
@@ -141,12 +145,12 @@
             <i class="icon-shopping-cart"></i>
             <span id="cart-count" class="cart-count">
               <%= locals.cartCount %>
-            </span>
-          </a>
-        </div><!-- End .cart-dropdown -->
+              </span>
+              </a>
+      </div><!-- End .cart-dropdown -->
 
-      </div><!-- End .header-right -->
-    </div><!-- End .container -->
+    </div><!-- End .header-right -->
+  </div><!-- End .container -->
   </div><!-- End .header-middle -->
 </header><!-- End .header -->
 

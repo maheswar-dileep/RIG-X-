@@ -4,7 +4,12 @@
      <div class="card  mt-2">
      <div class="card-header pb-0">
        <h6>Products Management</h6>
+       <div class="col-1 ml-3 ">
+         <a href="/admin-panel/add-products" class="btn btn-outline-info btn-sm">Add Products</a>
+       </div>
      </div>
+
+
      <div class="card-body px-0 pt-0 pb-2">
        <div class="table-responsive p-0">
          <table class="table align-items-center mb-0">
@@ -38,7 +43,7 @@
                </td>
                <td class="align-middle text-center text-sm">
                  <div class="ms-auto text-end">
-                   <a class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;" onclick="toast('<%- products._id%>')"><i class="far fa-trash-alt me-2"></i>Delete</a>
+                   <a class="btn btn-link text-danger text-gradient px-3 mb-0" onclick="toast('<%- products._id%>')"><i class="far fa-trash-alt me-2"></i>Delete</a>
                    <a class="btn btn-link text-dark px-3 mb-0" href="/admin-panel/edit-products/<%=products._id%>"><i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit</a>
                  </div>
                </td>

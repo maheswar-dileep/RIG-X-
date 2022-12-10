@@ -33,6 +33,7 @@ module.exports = {
     //landingPage
 
     landingPage: async (req, res, next) => {
+        req.session.returnTo = req.originalUrl
         let banners = await bannerHelpers.banner()
         let categoryBanner = await bannerHelpers.categoryFind()
         let coolers = await productHelpers.categoryPage('COOLER')
@@ -63,7 +64,8 @@ module.exports = {
         userHelpers.doLogin(req.body).then((data) => {
             if (data.status) {
                 req.session.user = data.user._id
-                res.send({ value: "success" })
+                res.send({ value: "success" ,url:req.session.returnTo})
+                console.log(req.session.returnTo);
             } else {
                 res.send({ value: "failed" })
             }
@@ -138,8 +140,9 @@ module.exports = {
     //shopPage
 
     shopPage: (req, res) => {
-        let userName = req.user.name
-        userHelpers.getCartCount(req.session.user).then((cartCount) => {
+        req.session.returnTo = req.originalUrl
+        let userName = req?.user?.name
+        userHelpers.getCartCount(req?.session?.user).then((cartCount) => {
             productHelpers.getAllProducts().then((products) => {
                 res.render('user/shop', { userName, cartCount, products, nav: true, footer: true })
             })
@@ -156,9 +159,10 @@ module.exports = {
     //productPage
 
     productPage: (req, res) => {
-        let userName = req.user.name
+        req.session.returnTo = req.originalUrl
+        let userName = req.user?.name
         let prodId = req.params.id
-        userHelpers.getCartCount(req.session.user).then((cartCount) => {
+        userHelpers.getCartCount(req.session?.user).then((cartCount) => {
             productHelpers.getProductDetails(prodId).then((product) => {
                 res.render('user/single-product', { userName, cartCount, product, nav: true, footer: true })
             })
@@ -198,6 +202,7 @@ module.exports = {
     },
 
     cart: async (req, res) => {
+        req.session.returnTo = req.originalUrl
         let userName = req?.user?.name
         let cartItems = await userHelpers.getCartProducts(req.session.user)
         let cartCount = await userHelpers.getCartCount(req.session.user)
@@ -274,6 +279,7 @@ module.exports = {
     //cancelOrder
 
     cancelOrder: (req, res) => {
+        console.log(req.body);
         userHelpers.cancelOrder(req.body, req.session.user).then(() => {
             res.json({ status: true })
         })
@@ -433,7 +439,7 @@ module.exports = {
                 cartCount,
                 nav: true,
                 foooter: true,
-                 userName,
+                userName,
                 data
             })
         })

@@ -22,28 +22,31 @@ router.get('/products', auth.verifyAdmin, controllers.newProducts)
 
 /*------------------------add-product------------------------------*/
 
-router.get('/add-products', auth.verifyAdmin, controllers.addProducts) //TODO
+router.get('/add-products', auth.verifyAdmin, controllers.newAddProducts)
 
+/*------------------------add-products------------------------------*/
+
+router.post('/add-products', auth.verifyAdmin, controllers.newAddProductsPost)
 /*------------------------delete-product------------------------------*/
 
-router.delete('/delete-products/:id', auth.verifyAdmin, controllers.deleteProducts)//TODO
+router.delete('/delete-products/:id', auth.verifyAdmin, controllers.newDeleteProducts)
 
 
 /*------------------------edit-product------------------------------*/
 
-router.get('/edit-products/:id', auth.verifyAdmin, controllers.newEditProducts)//TODO
+router.get('/edit-products/:id', auth.verifyAdmin, controllers.newEditProducts)
 
-router.post('/edit-products/:id', auth.verifyAdmin, controllers.newEditProductsPost)//TODO
+router.post('/edit-products/:id', auth.verifyAdmin, controllers.newEditProductsPost)
 
 /*---------------------users----------------------*/
 
-router.get('/users', auth.verifyAdmin, controllers.newUsers)//TODO
+router.get('/users', auth.verifyAdmin, controllers.newUsers)
 
 /*---------------block/unblock-users-------------*/
 
-router.put('/user-block/:id', auth.verifyAdmin, controllers.userBlock)//TODO
+router.put('/user-block/:id', auth.verifyAdmin, controllers.newUserBlock)
 
-router.put('/user-unblock/:id', auth.verifyAdmin, controllers.userUnblock)//TODO
+router.put('/user-unblock/:id', auth.verifyAdmin, controllers.newUserUnblock)
 
 /*--------------category-----------------*/
 
@@ -78,7 +81,7 @@ router.put('/admin-cancel-order', auth.verifyAdmin, controllers.cancelOrder)//TO
 
 /*----------------change-order-status-------------*/
 
-router.post('/change-order-status', auth.verifyAdmin, controllers.changeOrderStatus)
+router.post('/change-order-status', auth.verifyAdmin, controllers.newChangeOrderStatus)
 
 /*-----------------------Sales-Report-------------------*/
 

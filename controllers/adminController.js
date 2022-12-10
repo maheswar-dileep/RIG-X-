@@ -305,7 +305,7 @@ module.exports = {
     //cancelOrder
 
     cancelOrder: (req, res) => {
-        adminHelpers.cancelOrder(req.sesion.user, req.body).then((data) => {
+        adminHelpers.cancelOrder( req.body).then((data) => {
             res.json(data)
         })
     },
@@ -553,6 +553,48 @@ module.exports = {
         }
     },
 
+    //addProducts
+
+    newAddProducts: (req, res) => {
+        try {
+            productHelpers.getAllCategories().then((category) => {
+                res.render('admin-2/products/add-products', {
+                    layout: layoutNew, category
+                })
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
+    newAddProductsPost: (req, res) => {
+        try {
+            let data = {
+                name: req.body.name,
+                category: req.body.category,
+                marketPrice: req.body.marketPrice,
+                offerPrice: req.body.offerPrice,
+                percent: req.body.percent,
+                quantity: req.body.quantity,
+                description: req.body.description
+            }
+            productHelpers.addProducts(data).then((insertedId) => {
+                const imgName = insertedId;
+                req.files?.image?.forEach((element, index) => {
+                    element.mv('./public/product-images/' + imgName + index + '.jpg', (err, done) => {
+                        if (err) {
+                            console.log(err)
+                        }
+                    })
+                });
+                res.redirect('/admin-panel/products')
+            })
+        } catch (err) {
+            console.log(err);
+        }
+
+    },
+
     //editProducts
 
     newEditProducts: async (req, res) => {
@@ -572,7 +614,6 @@ module.exports = {
     newEditProductsPost: (req, res) => {
         try {
             prodId = req.params.id
-            console.log(req.body,prodId);
             data = {
                 name: req.body.name,
                 category: req.body.category,
@@ -596,12 +637,23 @@ module.exports = {
         }
     },
 
+    //deleteProducts
+
+    newDeleteProducts: (req, res) => {
+        try {
+            productHelpers.deleteProduct(req.params.id).then((response) => {
+                res.json(response)
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    },
+
     //users 
 
     newUsers: (req, res) => {
         try {
             adminHelpers.getAllUsers().then((users) => {
-                // console.log(users)
                 res.render('admin-2/users/users', {
                     users,
                     layout: layoutNew
@@ -611,6 +663,24 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
+    },
+
+    //userBlock/Unblock
+
+    newUserBlock: (req, res) => {
+        console.log("hi");
+        userId = req.params.id
+        adminHelpers.blockUser(userId).then((response) => {
+            res.json(response)
+        })
+    },
+
+    newUserUnblock: (req, res) => {
+        userId = req.params.id
+        console.log(userId);
+        adminHelpers.unblockUser(userId).then((response) => {
+            res.json(response)
+        })
     },
 
     //category
@@ -686,7 +756,7 @@ module.exports = {
 
     newCoupons: async (req, res) => {
         let coupon = await couponHelpers.getCoupons()
-        res.render('admin-2/coupon/coupon', { layout:layoutNew, coupon })
+        res.render('admin-2/coupon/coupon', { layout: layoutNew, coupon })
     },
 
     //add-coupons
@@ -721,4 +791,20 @@ module.exports = {
 
     },
 
+    //cancelOrder
+
+    newCancelOrder: (req, res) => {
+        adminHelpers.cancelOrder(req.sesion.user, req.body).then((data) => {
+            res.json(data)
+        })
+    },
+
+    //changeOrderStatus
+
+    newChangeOrderStatus: (req, res) => {
+        adminHelpers.changeOrderStatus(req.session.user, req.body).then((response) => {
+            res.json(response)
+        })
+    },
+        
 }

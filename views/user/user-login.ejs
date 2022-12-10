@@ -123,9 +123,14 @@
         .then((res)=>{
 
             if (res.value == "success") {
-                window.location.href = "/"
+                if(res.url){
+                    let url = res.url 
+                    window.location.href = `${url}`
+                }else{
+                    window.location.href = '/'
+                }
             } else {
-                
+                err1.innerText = "Invalid Username or Password"
             }
 
 

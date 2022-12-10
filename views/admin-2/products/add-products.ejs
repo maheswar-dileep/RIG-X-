@@ -6,7 +6,7 @@
 
       <br>
 
-      <form class="forms-sample" method="post" action="/admin/add-products" enctype="multipart/form-data">
+      <form class="forms-sample" method="post" action="/admin-panel/add-products" enctype="multipart/form-data">
 
         <div class="row">
           <div class="form-group col-md-5">
@@ -39,9 +39,9 @@
           <div class="form-group col-md-5">
             <div class="d-flex">
               <label for="exampleInputPassword4" class="w-25">Offer Percent</label>
-              <p id="err" class="text-danger d-flex justify-content-end w-75"></p>
+              <p id="percentErr" class="text-danger d-flex justify-content-end w-75"></p>
             </div>
-            <input type="number" autocomplete="off" class="form-control" id="percentVal" placeholder="Percent" onkeyup="calcOffer(this)" name="percent" required>
+            <input type="number" autocomplete="off" class="form-control" id="percentVal" placeholder="Percent" onkeyup="calcOffer()" name="percent" required>
           </div>
 
           <div class="form-group col-md-5">
@@ -97,13 +97,11 @@
             <input type="file" name="image" id="image" class="form-control" onchange="viewImage4(event)" required>
           </div>
 
-
           <div class="col-3">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary ml-3 mr-2 ">Submit</button>
             <button class="btn btn-light" onclick="history.back()">Cancel</button>
           </div>
-          <button type="submit" class="btn btn-primary ml-3 mr-2 col-md-2">Submit</button>
-          <button class="btn btn-light" ">Cancel</button>
+
         </div>
       </form>
     </div>
@@ -114,18 +112,24 @@
 
 
 <script>
+  function submit() {
+    document.getElementById('form').submit()
+
+  }
+
+
   function calcOffer(elem) {
-    let Mktprice = elem.parentElement.parentElement.querySelector('#marketPrice').value.trim()
-    let Percent = elem.value
+    let Mktprice = document.getElementById('marketPrice').value.trim()
+    let Percent = document.getElementById('percentVal').value.trim()
+    if (Percent >= 100) {
+      percentErr.innerText = "Offer Cannot be more than 100%"
+    } else {
+      let offerPrice = (Mktprice - (Mktprice * (Percent / 100)))
+      offerPrice = Math.round(offerPrice)
 
-    let offerPrice = (Mktprice - (Mktprice * (Percent / 100)))
-    offerPrice = Math.round(offerPrice)
-
-    let price = document.getElementById('offerPrice')
-    console.log(offerPrice);
-
-    price.value = offerPrice
-
+      let price = document.getElementById('offerPrice')
+      price.value = offerPrice
+    }
   }
 
   function viewImage1(event) {

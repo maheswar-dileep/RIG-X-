@@ -327,7 +327,9 @@
             <li class="nav-item">
               <a class="nav-link" data-toggle="tab" href="#settings1" role="tab">Every Month</a>
             </li>
-
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#Daily" role="tab">Day wise</a>
+            </li>
           </ul>
         </div>
         <div class="card-body" style="   border: 1px solid gray;">
@@ -342,6 +344,9 @@
                   <div class="card-body">
                     <button onclick="generateDailyReport('<%= daily?.data[0]?.total %>','<%= daily?.data[0]?.orders %>','<%= daily?.data[0]?.count %> ')" class="btn btn-outline-primary btn-round btn-sm float-right">
                       Download PDF
+                    </button>
+                    <button onclick="generateDailyReportexc()" class="btn btn-outline-primary btn-round btn-sm float-right">
+                      Download exel sheet
                     </button>
                     <h4 class="card-title">Daily Sales</h4>
 
@@ -385,6 +390,9 @@
                     <button onclick="generateMontlyReport()" class="btn btn-outline-primary btn-round btn-sm float-right">
                       Download PDF
                     </button>
+                    <button onclick="generateMontlyReportexc()" class="btn btn-outline-primary btn-round btn-sm float-right">
+                      Download exel sheet
+                    </button>
                     <h4 class="card-title">Monthly Sales</h4>
 
                     <div class="table-responsive pt-3">
@@ -424,6 +432,9 @@
                   <div class="card-body">
                     <button onclick="generateYearlyReport('<%= yearly.data[0].total %>','<%= yearly.data[0].orders %>','<%= yearly.data[0].count %>')" class="btn btn-outline-primary btn-round btn-sm float-right">
                       Download PDF
+                    </button>
+                    <button onclick="generateYearlyReportexc()" class="btn btn-outline-primary btn-round btn-sm float-right">
+                      Download exel sheet
                     </button>
                     <h4 class="card-title">Yearly Sales</h4>
 
@@ -467,6 +478,9 @@
                     <button onclick="everyMonth('<%-monthWise?.data%>')" class="btn btn-outline-primary btn-round btn-sm float-right">
                       Download PDF
                     </button>
+                    <button onclick="everyMonthexc()" class="btn btn-outline-primary btn-round btn-sm float-right">
+                      Download exel sheet
+                    </button>
                     <h4 class="card-title">Every Month Sales</h4>
 
                     <div class="table-responsive pt-3">
@@ -507,6 +521,9 @@
                   <div class="card-body">
                     <button onclick="everyDay()" class="btn btn-outline-primary btn-round btn-sm float-right">
                       Download PDF
+                    </button>
+                    <button onclick="everyDayexc()" class="btn btn-outline-primary btn-round btn-sm float-right">
+                      Download exel sheet
                     </button>
                     <h4 class="card-title">Day wise </h4>
 

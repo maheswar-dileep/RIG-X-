@@ -141,23 +141,29 @@ module.exports = {
 
 
 
-    cancelOrder: (userId, data) => {
+    cancelOrder: (data) => {
         console.log(data);
         return new Promise(async (resolve, reject) => {
+            // console.log(data.orderId);
             try {
-                let order = await db.order.find({ 'orders._id': data.orderId })
+                let order = await db.order.find({ 'orders._id': ObjectId(data.orderId) })
                 console.log('order->', order);
                 if (order) {
+
                     let orderIndex = order[0].orders.findIndex(order => order._id == data.orderId)
-                    console.log('orderindex=>', orderIndex);
+                    // console.log('orderindex=>', orderIndex);
                     let productIndex = order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.proId)
+
                     db.order.updateOne({ 'orders._id': data.orderId },
                         {
                             $set: {
                                 ['orders.' + orderIndex + '.productsDetails.' + productIndex + '.status']: false
                             }
+
                         }).then(() => {
+
                             //inventory
+
                             let quantity = order[0].orders[orderIndex].productsDetails[productIndex].quantity
                             console.log(quantity);
 
@@ -169,10 +175,12 @@ module.exports = {
                                     $inc: { quantity: quantity }
                                 }
                             ).then((e) => {
-                                console.log(e);
+                                // console.log(e);
                                 resolve({ status: true })
                             })
                         })
+
+
                 }
             } catch (err) {
                 console.log(err);
@@ -191,13 +199,13 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 let order = await db.order.find({ 'orders._id': data.orderId })
-                console.log(order[0].orders[0].productsDetails);
+                // console.log(order[0].orders[0].productsDetails);
                 let flag = 1
                 if (order) {
                     let orderIndex =await order[0].orders.findIndex(order => order._id == data.orderId)
-                    console.log(orderIndex);
+                    // console.log(orderIndex);
                     let productIndex =await  order[0].orders[orderIndex].productsDetails.findIndex(product => product._id == data.prodId)
-                    console.log(productIndex);
+                    // console.log(productIndex);
 
                      let data1 = await db.order.updateOne(
                         {
