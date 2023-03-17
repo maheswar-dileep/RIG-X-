@@ -2,7 +2,43 @@
 👋 Hi, I’m Maheswar Dileep <br>
 <h2>💫 About This Project</h2>
 
-This is my first full-Stack project I put my maximum to make this good.
+This is my first node.js project. It is an E-commerce application. Rig-X- is an E-commerce web application, especially for pc components and accessories where users can view products and buy them. It has almost every feature and function that are required for an E-commerce app.
+
+Major Features
+
+User Side:
+- Login and Registration for user
+- OTP Login
+- Product Search
+- Cart
+- Paypal Payment
+- Razorpay Payment
+
+Admin Side:
+- Product Management
+- Category Management
+- User Management
+- Product Offers
+- Coupon Offers
+- Sales Report Graph
+- Sales Report With Download Option
+
+Technologies Used:
+- Javascript
+- node.js
+- MongoDB
+- express
+- ejs
+- bootstrap
+- Twilio
+- Razorpay
+- AWS
+- nginx
+- razorpay
+- PayPal
+
+Project URL :- www.rigx.ml/
+
 
 # 💻 Techs Used:
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white) 
