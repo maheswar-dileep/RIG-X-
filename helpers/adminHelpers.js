@@ -16,7 +16,7 @@ module.exports = {
             try {
                 // console.log(userData);
                 if (data.email == userData.email) {
-                    bcrypt.compare(userData.password, data.password).then((loginTrue) => {
+                    bcrypt.compare(userData?.password, data?.password).then((loginTrue) => {
                         let response = {}
                         if (loginTrue) {
                             console.log('login successful');

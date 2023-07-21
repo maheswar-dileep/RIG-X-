@@ -710,7 +710,7 @@ module.exports = {
 
     generateRazorPay: async (userId, total) => {
         const ordersDetails = await db.order.find({ userId: userId })
-        let orders = ordersDetails[0].orders.slice().reverse()
+        let orders = ordersDetails[0]?.orders?.slice()?.reverse()
         let orderId = orders[0]._id
 
         console.log('orderId=>', orderId);

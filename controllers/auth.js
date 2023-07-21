@@ -4,8 +4,8 @@ const adminDataDB = require('../config/admin_pass');
 module.exports = {
     authInit: async (req, res, next) => {
         if (req.session.user) {
-            let userData = await db.users.findOne({ _id: req.session.user });
-            if (userData.blocked) {
+            let userData = await db.users.findOne({ _id: req?.session?.user });
+            if (userData?.blocked) {
                 req.user = null;
             } else {
                 req.user = userData;
@@ -15,7 +15,7 @@ module.exports = {
         };
 
         if (req.session?.admin) {
-            let adminData = adminDataDB.userid;
+            let adminData = adminDataDB?.userid;
             if (adminData.blocked) {
                 req.admin = null;
             } else {
