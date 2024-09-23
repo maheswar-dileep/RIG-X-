@@ -37,8 +37,6 @@ Technologies Used:
 - razorpay
 - PayPal
 
-Project URL :- www.rigx.ml/
-
 
 # 💻 Techs Used:
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat&logo=css3&logoColor=white) 
